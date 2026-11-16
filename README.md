@@ -73,3 +73,16 @@ The dashboard provides **two different percentages**:
 The calendar shows per-day completion percentages and soft color shading. Changing a recurrence schedule recalculates history; all user entries remain locally stored in the browser, not uploaded to GitHub.
 
 Hair care changes across seven evenings (including Wednesday moisturizing wash, Monday/Friday dandruff washes if prescribed, and recovery days); mental-wellness prompts, nourishing drink and meal suggestions, and gentle nighttime skincare guidance also vary by weekday. Lubricating eye drops remain in the evening on an editable every-two-days reminder; this schedule is for prompting, not a medical limit on when drops can be used. As always, follow product and clinician instructions.
+
+
+## Money Garden (private personal-finance tab)
+
+The **Money Garden** navigation tab is a responsive, blue-and-mocha personal budget and financial planning tracker. It includes a two-paycheck monthly income baseline for biweekly employees, editable spending envelopes, daily/weekly/monthly pacing, transaction history, bill dates, autopay flags, user-confirmed paid checkboxes, loan balances/interest/payoff illustrations, goal progress, and hypothetical net-income-raise scenarios.
+
+**Security boundary:** this is a static public GitHub Pages site. It **does not** receive data directly from Bank of America, Finances, Plaid, or loan servicers. It never requests or stores bank passwords, credentials, access tokens, or account numbers. Money Garden stores manually supplied/imported data in this browser's unencrypted localStorage under a separate key from the wellness tracker. This protects it from the public repository but is **not** suitable for shared devices or confidential banking secrets.
+
+To personalize it, download your **private Money Garden starter JSON file** from the chat, then open *Money Garden → Setup & privacy → Import Money Garden starter / backup JSON*. Private starter snapshots and transaction exports **must never be committed to this repository**. Refresh spending via the *Spending diary* CSV import (accepts Bank of America-style exports and the Finances transaction CSV format), and review transfer/credit-card payment categorizations to avoid double-counting. Backup/restore JSON remains local.
+
+Alerts are **in-app visual nudges only** and work when you open the website with updated data. The static site cannot send automatic emails/SMS or monitor linked accounts in the background. Any separate ChatGPT spending-monitoring task or Finances account connection is independent of the local website and must be managed in ChatGPT.
+
+All proposed category budgets and unverified bill dates are **editable planning assumptions**. The calculated 'unallocated in this plan' is *not* a safe-to-spend available bank balance. Confirm current cash, remaining bills, payment timing, and expenses outside connected accounts before making spending decisions. Estimated loan payoff durations use a simplified monthly-interest model, not lender payoff quotes.
