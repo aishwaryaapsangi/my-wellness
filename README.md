@@ -1,16 +1,21 @@
 # Bloom & Balance — My Wellness Garden 🌷
 
-A date-driven, editable scrapbook-style wellness tracker built with **React 19, Vite, and Tailwind CSS v4**. The project is a static client-side app: no login, backend, telemetry or remote journal storage.
+A date-driven, editable **seven-day** scrapbook-style wellness tracker built with **React 19, Vite, and Tailwind CSS v4**. The project is a static client-side app: no login, backend, telemetry or remote journal storage.
 
 ## Your day, not another dashboard
 
-- **Sunrise ritual**: hydration/rotating drinks, intentions, optional gua sha, skin barrier care, journaling, *and only the hair or eye-care steps scheduled for the selected day*.
-- **After work**: rotating 3-ab/1-upper/1-lower training plan, food ideas, recovery and optional work catch-up.
-- **Sunset ritual**: a 9 PM reset, gentle skincare, conditional scalp treatments, optional heatless curls, eye compresses, journaling, reading and a gentle bedtime target.
+- **Sunrise ritual**: optional 5 AM coding (Mon/Wed/Fri) or 6 AM gentle run (Tue/Thu/Sat), sunlight, prayer, rotating drinks, gentle gua sha (skip irritation), barrier care, daily journal and eye-care checks. **Hair care is in the evening, not the morning.**
+- **After work**: rotating 3-ab/1-upper/1-lower training plan, food ideas, recovery, optional 8–9 PM catch-up and a weekend social block tied to real plans.
+- **Sunset ritual**: all-seven-day rotating, detailed hair routine (Mon/Fri dandruff wash, Tue scalp rest, Wed moisture, Thu optional scalp tonic, Sat recovery, Sun wash-or-rest), a 9 PM reset, gentle skincare, optional heatless curls, eye compresses, gratitude, a *different mental wellness prompt every day*, reading, and a gentle sleep target.
 - **Nourish & move**: vegetarian breakfast, pre-workout, post-workout and dinner suggestions change with weekday; rotating lemon, kefir, chia and green-smoothie ideas.
-- **Calendar**: select any date, see whether hair care or exercise is due and view what you completed on that date.
+- **Calendar + seven-day atlas**: select any date, see that day’s hair care, movement, mood focus and saved social events, with interactive completion dots.
+- **Mind & social garden**: add your own dated outings, meetups, calls and notes; the event automatically feeds that date’s rituals (and the weekend connection block), stays only in the browser, and appears as a lavender calendar dot. Includes seven rotating small social-confidence challenges.
 - **Ritual Studio**: click a routine and edit its text, steps, time, section and recurrence (**daily, chosen weekdays, every N days from a chosen anchor, or optional/as-needed**). Add your own recurring reminders.
-- **Privacy**: daily mood, energy, stress, journal entries, completed rituals and water count stay in the same browser's localStorage. Export/import a JSON backup under **My Space**. Backups contain sensitive notes—treat them privately.
+- **Privacy**: your social calendar, daily mood, energy, stress, journal entries, completed rituals and water count stay in the same browser's localStorage. Export/import a JSON backup under **My Space**. Backups contain sensitive notes—treat them privately.
+
+## How recurrence works
+
+All built-in reminders are editable. In **Ritual Studio**, change a ritual to daily, specific weekdays, every N days (with a start date), or optional; the selected day recalculates instantly. The seven-day atlas reflects customized hair schedules as well. Hairwash product steps are examples based on the supplied planner, **not prescriptions**. Morning early coding/running blocks are optional goals: prioritise adequate sleep, especially with a 10 PM bedtime and 5 AM wakeup. Gua sha is always skippable if skin is irritated.
 
 ## Run locally
 
