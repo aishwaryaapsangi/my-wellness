@@ -50,3 +50,25 @@ test('editing hair recurrence changes dates, including weekly preview data',()=>
  assert.equal(scheduledItems(changed,'2026-11-16').some(t=>t.id==='hair-keto'),false);
  assert.equal(scheduledItems(changed,'2026-11-17').some(t=>t.id==='hair-keto'),true);
 });
+
+test('nighttime lubricating drops keep two-day cadence and remain editable',()=>{
+ const eye=t('eyedrops');
+ assert.equal(eye.phase,'sunset');
+ assert.equal(eye.time,'9:17 PM');
+ assert.equal(due(eye,'2026-11-16'),true);
+ assert.equal(due(eye,'2026-11-17'),false);
+ const changed=mergedTasks({'eyedrops':{schedule:{type:'interval',every:3,anchor:'2026-11-17'}}}).find(x=>x.id==='eyedrops');
+ assert.equal(changed.phase,'sunset');
+ assert.equal(due(changed,'2026-11-20'),true);
+});
+test('elegant morning preparation appears daily with hair care still at night',()=>{
+ for(let i=0;i<7;i++){
+  const date=offset('2026-11-15',i);
+  const ready=scheduledItems(DEFAULT_TASKS,date).find(x=>x.id==='get-ready');
+  assert.equal(ready?.phase,'sunrise');
+  assert.equal(ready?.time,'8:20 AM');
+  assert.match(ready?.steps.join(' ')||'',/iron/i);
+  assert.match(ready?.steps.join(' ')||'',/hair/i);
+  assert.ok(scheduledItems(DEFAULT_TASKS,date).filter(x=>x.tag==='hair').every(x=>x.phase==='sunset'));
+ }
+});
