@@ -13,6 +13,9 @@ export const weekday = (key)=>fromKey(key).getDay();
 export const dateTitle = (key)=>new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'}).format(fromKey(key));
 export const monthTitle = (key)=>new Intl.DateTimeFormat('en-US',{month:'long',year:'numeric'}).format(fromKey(key));
 export function monthGrid(key){const d=fromKey(key);const first = new Date(d.getFullYear(),d.getMonth(),1,12);const start=new Date(first);start.setDate(1-first.getDay());return Array.from({length:42},(_,i)=>{const v=new Date(start);v.setDate(start.getDate()+i);return keyOf(v)})}
+export const PERIOD_START='2026-11-16', PERIOD_END='2026-12-31';
+export const inPeriod=k=>typeof k==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(k)&&k>=PERIOD_START&&k<=PERIOD_END;
+export const clampPeriod=k=>!k||k<PERIOD_START?PERIOD_START:k>PERIOD_END?PERIOD_END:k;
 export const standard = {type:'daily',days:[],every:2,anchor:'2026-11-16'};
 const daily = ()=>({...standard});
 const days = (...numbers)=>({type:'days',days:numbers,every:2,anchor:'2026-11-16'});
@@ -123,9 +126,18 @@ export const HAIR_WEEK_LABELS = ['Gentle wash or rest','Dandruff wash','Rest & r
 export function socialPlansForDate(events,date){return (Array.isArray(events)?events:[]).filter(e=>e && e.date===date && e.title?.trim()).sort((a,b)=>(a.time||'').localeCompare(b.time||''));}
 export function eventDisplayTime(value){if(!value)return '';const m=String(value).match(/^(\d{1,2}):(\d{2})$/);if(!m)return String(value);const h=Number(m[1]);return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;}
 export function timeValue(value){if(!value)return 9999;const m=String(value).match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);if(!m)return 9999;let h=Number(m[1]);if(m[3])h=(h%12)+(m[3].toUpperCase()==='PM'?12:0);return h*60+Number(m[2]);}
+export const SKINCARE_ROTATION=[
+ 'Sunday: gentle moisturization and lip care; no extra actives.',
+ 'Monday: barrier check; moisturize tight areas.',
+ 'Tuesday: care for dry lips and hands; avoid peels.',
+ 'Wednesday: hydrating night with a bland cream.',
+ 'Thursday: if anything stings, simplify your routine.',
+ 'Friday: gentle removal of sunscreen and soothing cream.',
+ 'Saturday: basic cleanser and moisturizer are enough.'
+];
 export function scheduledItems(tasks,date,state={}){
   const optionalIds=state.optional?.[date]||[];
-  const items=tasks.filter(t=>due(t,date)||optionalIds.includes(t.id)).map(t=>({...t,time:timeForDate(t,date)}));
+  const items=tasks.filter(t=>due(t,date)||optionalIds.includes(t.id)).map(t=>{const a={...t,time:timeForDate(t,date)};return a.id==='skincare-pm'?{...a,subtitle:SKINCARE_ROTATION[weekday(date)],steps:[...a.steps,'TONIGHT · '+SKINCARE_ROTATION[weekday(date)]]}:a});
   const plans=socialPlansForDate(state.socialEvents,date);
   if(plans.length){
     const steps=plans.map(p=>`${p.time?`${eventDisplayTime(p.time)} · `:''}${p.title}${p.place?` at ${p.place}`:''}${p.note?` — ${p.note}`:''}`);
@@ -134,4 +146,22 @@ export function scheduledItems(tasks,date,state={}){
     else items.push({id:'social-plans-for-date',phase:'after',title:`My social plans · ${plans.length} today`,tag:'mind',subtitle:plans.map(p=>p.title).join(' + '),schedule:{type:'days',days:[weekday(date)]},steps:[...steps,'You can edit these plans in Mind & social.'],time:eventDisplayTime(plans[0].time)||'3:00 PM',readOnlyDetails:true,note:'Local to your browser; no invitations are sent.',icon:'heart'});
   }
   return items.sort((a,b)=>timeValue(a.time)-timeValue(b.time)||a.id.localeCompare(b.id));
+}
+
+export function elapsedPeriodDates(asOf=keyOf(new Date())){
+ if(asOf<PERIOD_START)return [];
+ const last=asOf>PERIOD_END?PERIOD_END:asOf;const dates=[];
+ for(let k=PERIOD_START;k<=last;k=offset(k,1))dates.push(k);
+ return dates;
+}
+export function dayProgress(tasks,date,state={}){
+ if(!inPeriod(date))return {date,completed:0,scheduled:0,percent:0};
+ const items=scheduledItems(tasks,date,state),checked=state.completion?.[date]||{};
+ const completed=items.filter(x=>checked[x.id]===true).length;
+ return {date,completed,scheduled:items.length,percent:items.length?Math.round(completed/items.length*100):0};
+}
+export function periodProgress(tasks,state={},asOf=keyOf(new Date())){
+ const days=elapsedPeriodDates(asOf).map(d=>dayProgress(tasks,d,state));
+ const completed=days.reduce((n,d)=>n+d.completed,0),scheduled=days.reduce((n,d)=>n+d.scheduled,0);
+ return {completed,scheduled,percent:scheduled?Math.round(completed/scheduled*100):0,daysElapsed:days.length,daysTotal:46,activeDays:days.filter(d=>d.completed>0).length,days};
 }
