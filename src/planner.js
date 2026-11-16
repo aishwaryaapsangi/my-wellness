@@ -7,15 +7,18 @@ export const PHASES = [
   { id:'sunset', label:'Sunset ritual', icon:'moon', strap:'A little reset, then real rest' },
 ];
 export const keyOf = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+// This first tracking season is intentionally finite. There are 46 days in total.
+export const PERIOD_START='2026-11-16';
+export const PERIOD_END='2026-12-31';
+export const inPeriod = key=>typeof key==='string' && /^\d{4}-\d{2}-\d{2}$/.test(key) && key>=PERIOD_START && key<=PERIOD_END;
+export const clampPeriod = key=>typeof key!=='string'||key<PERIOD_START?PERIOD_START:key>PERIOD_END?PERIOD_END:key;
+
 export function fromKey(key){const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d,12)}
 export const offset = (key,number)=>{const d=fromKey(key);d.setDate(d.getDate()+number);return keyOf(d)};
 export const weekday = (key)=>fromKey(key).getDay();
 export const dateTitle = (key)=>new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'}).format(fromKey(key));
 export const monthTitle = (key)=>new Intl.DateTimeFormat('en-US',{month:'long',year:'numeric'}).format(fromKey(key));
 export function monthGrid(key){const d=fromKey(key);const first = new Date(d.getFullYear(),d.getMonth(),1,12);const start=new Date(first);start.setDate(1-first.getDay());return Array.from({length:42},(_,i)=>{const v=new Date(start);v.setDate(start.getDate()+i);return keyOf(v)})}
-export const PERIOD_START='2026-11-16', PERIOD_END='2026-12-31';
-export const inPeriod=k=>typeof k==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(k)&&k>=PERIOD_START&&k<=PERIOD_END;
-export const clampPeriod=k=>!k||k<PERIOD_START?PERIOD_START:k>PERIOD_END?PERIOD_END:k;
 export const standard = {type:'daily',days:[],every:2,anchor:'2026-11-16'};
 const daily = ()=>({...standard});
 const days = (...numbers)=>({type:'days',days:numbers,every:2,anchor:'2026-11-16'});
@@ -126,18 +129,19 @@ export const HAIR_WEEK_LABELS = ['Gentle wash or rest','Dandruff wash','Rest & r
 export function socialPlansForDate(events,date){return (Array.isArray(events)?events:[]).filter(e=>e && e.date===date && e.title?.trim()).sort((a,b)=>(a.time||'').localeCompare(b.time||''));}
 export function eventDisplayTime(value){if(!value)return '';const m=String(value).match(/^(\d{1,2}):(\d{2})$/);if(!m)return String(value);const h=Number(m[1]);return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;}
 export function timeValue(value){if(!value)return 9999;const m=String(value).match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);if(!m)return 9999;let h=Number(m[1]);if(m[3])h=(h%12)+(m[3].toUpperCase()==='PM'?12:0);return h*60+Number(m[2]);}
-export const SKINCARE_ROTATION=[
- 'Sunday: gentle moisturization and lip care; no extra actives.',
- 'Monday: barrier check; moisturize tight areas.',
- 'Tuesday: care for dry lips and hands; avoid peels.',
- 'Wednesday: hydrating night with a bland cream.',
- 'Thursday: if anything stings, simplify your routine.',
- 'Friday: gentle removal of sunscreen and soothing cream.',
- 'Saturday: basic cleanser and moisturizer are enough.'
+// Gentle, non-exfoliating skincare notes rotate without requiring more products.
+export const SKINCARE_ROTATION = [
+ 'Sunday · moisture reset: keep things simple; moisturize, protect lips, and avoid active treatments.',
+ 'Monday · barrier check: notice any tightness or irritation and use a generous bland moisturizer.',
+ 'Tuesday · lip and hand comfort: reapply plain balm or ointment as needed; skip peeling products.',
+ 'Wednesday · hydrating night: apply moisturizer to slightly damp skin; avoid acids and scrubs.',
+ 'Thursday · skin comfort check: if a product stings, pause it and simplify your routine.',
+ 'Friday · gentle recovery: remove sunscreen without tugging and nourish dry patches.',
+ 'Saturday · soft reset: a calm, fragrance-free routine is enough; no extra exfoliation needed.'
 ];
 export function scheduledItems(tasks,date,state={}){
   const optionalIds=state.optional?.[date]||[];
-  const items=tasks.filter(t=>due(t,date)||optionalIds.includes(t.id)).map(t=>{const a={...t,time:timeForDate(t,date)};return a.id==='skincare-pm'?{...a,subtitle:SKINCARE_ROTATION[weekday(date)],steps:[...a.steps,'TONIGHT · '+SKINCARE_ROTATION[weekday(date)]]}:a});
+  const items=tasks.filter(t=>due(t,date)||optionalIds.includes(t.id)).map(t=>{const item={...t,time:timeForDate(t,date)};return t.id==='skincare-pm'?{...item,subtitle:SKINCARE_ROTATION[weekday(date)],steps:[...t.steps,`TONIGHT'S BARRIER NOTE · ${SKINCARE_ROTATION[weekday(date)]}`]}:item;});
   const plans=socialPlansForDate(state.socialEvents,date);
   if(plans.length){
     const steps=plans.map(p=>`${p.time?`${eventDisplayTime(p.time)} · `:''}${p.title}${p.place?` at ${p.place}`:''}${p.note?` — ${p.note}`:''}`);
@@ -148,20 +152,36 @@ export function scheduledItems(tasks,date,state={}){
   return items.sort((a,b)=>timeValue(a.time)-timeValue(b.time)||a.id.localeCompare(b.id));
 }
 
+// An explicit as-of date makes this logic testable; the UI always passes local today.
 export function elapsedPeriodDates(asOf=keyOf(new Date())){
  if(asOf<PERIOD_START)return [];
- const last=asOf>PERIOD_END?PERIOD_END:asOf;const dates=[];
- for(let k=PERIOD_START;k<=last;k=offset(k,1))dates.push(k);
- return dates;
+ const end=asOf>PERIOD_END?PERIOD_END:asOf;
+ const keys=[];
+ for(let key=PERIOD_START;key<=end;key=offset(key,1))keys.push(key);
+ return keys;
 }
 export function dayProgress(tasks,date,state={}){
  if(!inPeriod(date))return {date,completed:0,scheduled:0,percent:0};
- const items=scheduledItems(tasks,date,state),checked=state.completion?.[date]||{};
- const completed=items.filter(x=>checked[x.id]===true).length;
- return {date,completed,scheduled:items.length,percent:items.length?Math.round(completed/items.length*100):0};
+ const scheduled=scheduledItems(tasks,date,state);
+ const check=state.completion?.[date]||{};
+ const completed=scheduled.filter(item=>check[item.id]===true).length;
+ return {date,completed,scheduled:scheduled.length,percent:scheduled.length?Math.round(completed/scheduled.length*100):0};
+}
+// The OVERALL goal uses a fixed Nov 16–Dec 31 denominator from day one.
+// Only the separate daysElapsed label follows the current calendar date.
+export function periodDates(){
+ const dates=[];
+ for(let date=PERIOD_START;date<=PERIOD_END;date=offset(date,1))dates.push(date);
+ return dates;
 }
 export function periodProgress(tasks,state={},asOf=keyOf(new Date())){
- const days=elapsedPeriodDates(asOf).map(d=>dayProgress(tasks,d,state));
- const completed=days.reduce((n,d)=>n+d.completed,0),scheduled=days.reduce((n,d)=>n+d.scheduled,0);
- return {completed,scheduled,percent:scheduled?Math.round(completed/scheduled*100):0,daysElapsed:days.length,daysTotal:46,activeDays:days.filter(d=>d.completed>0).length,days};
+ const dates=periodDates();
+ const perDay=dates.map(date=>dayProgress(tasks,date,state));
+ const completed=perDay.reduce((sum,entry)=>sum+entry.completed,0);
+ const scheduled=perDay.reduce((sum,entry)=>sum+entry.scheduled,0);
+ const activeDays=perDay.filter(entry=>entry.completed>0).length;
+ const strongDays=perDay.filter(entry=>entry.scheduled>0 && entry.completed/entry.scheduled>=0.8).length;
+ // Display one decimal: a single checked box moves a 46-day goal ~0.1%, not 5%.
+ const percent=scheduled?Number((completed/scheduled*100).toFixed(1)):0;
+ return {completed,scheduled,percent,daysElapsed:elapsedPeriodDates(asOf).length,activeDays,strongDays,start:PERIOD_START,end:PERIOD_END,daysTotal:dates.length,perDay};
 }
