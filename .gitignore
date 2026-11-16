@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.local
+Money_Garden_Private_Starter*.json
+*money-garden-private-backup*.json
+*bank-statement*.csv
+*transactions-private*.csv
