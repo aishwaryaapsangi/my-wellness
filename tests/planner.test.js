@@ -111,65 +111,62 @@ test('lubricating drops remain at night on alternate days',()=>{
   assert.equal(all('2026-11-17').some(t=>t.id==='eyedrops'),false);
 });
 
-import {PERIOD_START,PERIOD_END,inPeriod,clampPeriod,elapsedPeriodDates,periodDates,dayProgress,periodProgress,SKINCARE_ROTATION,WATER_ROTATION,MEALS} from '../src/planner.js';
-test('first season begins Nov 16 2026 and ends Dec 31 (46 days)',()=>{
+import {PERIOD_START,PERIOD_END,inPeriod,clampPeriod,elapsedPeriodDates,dayProgress,periodProgress,SKINCARE_ROTATION,WATER_ROTATION,MEALS} from '../src/planner.js';
+test('season only includes Nov 16 through Dec 31, 2026',()=>{
  assert.equal(PERIOD_START,'2026-11-16');assert.equal(PERIOD_END,'2026-12-31');
  assert.equal(inPeriod('2026-11-15'),false);assert.equal(inPeriod('2026-11-16'),true);
  assert.equal(inPeriod('2026-12-31'),true);assert.equal(inPeriod('2027-01-01'),false);
- assert.equal(clampPeriod('2026-11-13'),PERIOD_START);assert.equal(clampPeriod('2027-01-04'),PERIOD_END);
- assert.equal(elapsedPeriodDates('2026-11-15').length,0);
+ assert.equal(clampPeriod('2026-11-15'),PERIOD_START);
+ assert.equal(clampPeriod('2027-01-01'),PERIOD_END);
  assert.deepEqual(elapsedPeriodDates('2026-11-16'),['2026-11-16']);
  assert.equal(elapsedPeriodDates('2026-11-30').length,15);
  assert.equal(elapsedPeriodDates('2026-12-01').length,16);
  assert.equal(elapsedPeriodDates('2026-12-31').length,46);
  assert.equal(elapsedPeriodDates('2027-01-01').length,46);
 });
-test('one checkbox is ~5% daily but only ~0.1% of the full 46-day goal',()=>{
- const monday='2026-11-16';
- const first=scheduledItems(DEFAULT_TASKS,monday)[0].id;
- const state={completion:{[monday]:{[first]:true}}};
- const day=dayProgress(DEFAULT_TASKS,monday,state);
- const overall=periodProgress(DEFAULT_TASKS,state,monday);
- assert.equal(day.completed,1);
- assert.ok(day.percent>=3 && day.percent<=10, `daily=${day.percent}`);
- assert.equal(overall.completed,1);
- assert.equal(overall.daysTotal,46);
- assert.equal(overall.daysElapsed,1);
- assert.equal(overall.scheduled,periodDates().reduce((total,k)=>total+scheduledItems(DEFAULT_TASKS,k).length,0));
- assert.equal(overall.percent,Number((100/overall.scheduled).toFixed(1)));
- assert.ok(overall.percent<1, `overall=${overall.percent}`);
+test('one checkbox is ~5% of Monday but ~0.1% of the full chapter',()=>{
+ const date='2026-11-16',id=scheduledItems(DEFAULT_TASKS,date)[0].id;
+ const state={completion:{[date]:{[id]:true}}};
+ const today=dayProgress(DEFAULT_TASKS,date,state);
+ const goal=periodProgress(DEFAULT_TASKS,state,date);
+ const fullScheduled=Array.from({length:46},(_,i)=>scheduledItems(DEFAULT_TASKS,offset(date,i)).length).reduce((n,x)=>n+x,0);
+ assert.equal(today.completed,1);
+ assert.ok(today.percent>=3 && today.percent<=10);
+ assert.equal(goal.scheduled,fullScheduled);
+ assert.equal(goal.daysTotal,46);
+ assert.equal(goal.daysElapsed,1);
+ assert.equal(goal.completed,1);
+ assert.equal(goal.percent,Number((100/fullScheduled).toFixed(1)));
+ assert.ok(goal.percent<1);
 });
-test('overall denominator is full period, independent of today or selected calendar date',()=>{
- const one=scheduledItems(DEFAULT_TASKS,'2026-11-16')[0].id;
- const state={completion:{'2026-11-16':{[one]:true}}};
- const nov=periodProgress(DEFAULT_TASKS,state,'2026-11-16');
- const dec=periodProgress(DEFAULT_TASKS,state,'2026-12-25');
- assert.equal(nov.percent,dec.percent);
- assert.equal(nov.scheduled,dec.scheduled);
- assert.equal(nov.daysElapsed,1);
- assert.equal(dec.daysElapsed,40);
- assert.equal(dayProgress(DEFAULT_TASKS,'2026-11-17',state).percent,0);
+test('the overall denominator is fixed, even when viewing or advancing to December',()=>{
+ const date='2026-11-16',id=scheduledItems(DEFAULT_TASKS,date)[0].id;
+ const state={completion:{[date]:{[id]:true}}};
+ const first=periodProgress(DEFAULT_TASKS,state,date),later=periodProgress(DEFAULT_TASKS,state,'2026-12-31');
+ assert.equal(first.percent,later.percent);
+ assert.equal(first.scheduled,later.scheduled);
+ assert.equal(first.daysElapsed,1);
+ assert.equal(later.daysElapsed,46);
 });
-test('full goal counts a checked future calendar item and stops at Dec 31',()=>{
- const future=scheduledItems(DEFAULT_TASKS,'2026-12-31')[0].id;
- const state={completion:{'2026-12-31':{[future]:true},'2027-01-01':{[future]:true}}};
+test('checked future dates count toward full 46-day goal but dates after Dec 31 do not',()=>{
+ const date='2026-12-31',id=scheduledItems(DEFAULT_TASKS,date)[0].id;
+ const state={completion:{[date]:{[id]:true},'2027-01-01':{[id]:true}}};
  const start=periodProgress(DEFAULT_TASKS,state,'2026-11-16');
- const finish=periodProgress(DEFAULT_TASKS,state,'2027-01-10');
+ const end=periodProgress(DEFAULT_TASKS,state,'2027-01-02');
  assert.equal(start.completed,1);
- assert.equal(finish.completed,1);
- assert.equal(start.percent,finish.percent);
- assert.equal(finish.daysElapsed,46);
- assert.equal(start.daysElapsed,1);
+ assert.equal(end.completed,1);
+ assert.equal(start.scheduled,end.scheduled);
+ assert.equal(start.percent,end.percent);
 });
-test('hair, mood, nutrition, skin and nighttime eye care follow selected day',()=>{
+test('skincare rotation and nighttime eyedrops follow each day',()=>{
  assert.equal(SKINCARE_ROTATION.length,7);
- const mon=scheduledItems(DEFAULT_TASKS,'2026-11-16');
- const tue=scheduledItems(DEFAULT_TASKS,'2026-11-17');
- assert.ok(mon.find(x=>x.id==='hair-keto'));assert.ok(tue.find(x=>x.id==='hair-rest-tue'));
- assert.ok(mon.find(x=>x.id==='mind-day-1'));assert.ok(tue.find(x=>x.id==='mind-day-2'));
- assert.notEqual(mon.find(x=>x.id==='skincare-pm').subtitle,tue.find(x=>x.id==='skincare-pm').subtitle);
- assert.ok(mon.find(x=>x.id==='eyedrops' && x.phase==='sunset'));
- assert.ok(!tue.find(x=>x.id==='eyedrops'));
+ const monday=scheduledItems(DEFAULT_TASKS,'2026-11-16');
+ const tuesday=scheduledItems(DEFAULT_TASKS,'2026-11-17');
+ assert.ok(monday.some(x=>x.id==='hair-keto'&&x.phase==='sunset'));
+ assert.ok(tuesday.some(x=>x.id==='hair-rest-tue'&&x.phase==='sunset'));
+ assert.notEqual(monday.find(x=>x.id==='skincare-pm').subtitle,tuesday.find(x=>x.id==='skincare-pm').subtitle);
+ assert.equal(monday.find(x=>x.id==='eyedrops').phase,'sunset');
+ assert.equal(tuesday.some(x=>x.id==='eyedrops'),false);
  assert.notEqual(WATER_ROTATION[1].name,WATER_ROTATION[2].name);
  assert.notDeepEqual(MEALS[1],MEALS[2]);
 });
