@@ -33,7 +33,8 @@ function inferCategory(name,primary,amount){
   const n=String(name||'').toLowerCase(),p=String(primary||'').toLowerCase();
   if(n.includes('the cubby')||n.includes('coffee cubby')||n.includes('starbucks')||n.includes('dunkin'))return 'Coffee & dining';
   if(n.includes('student loan')||n.includes('aidvantage')||n.includes('education loan')||n.includes('department of education')||n.includes('cri '))return 'Student loans';
-  if(n.includes('zelle')||n.includes('venmo')||p==='transfers'||n.includes('payment from checking')||n.includes('transfer from checking')||n.includes('transfer to checking')||n.includes('credit card payment'))return 'Transfer / exclude';
+  if(n.includes('zelle')||n.includes('venmo'))return 'Other';
+  if(p==='transfers'||n.includes('payment from checking')||n.includes('transfer from checking')||n.includes('transfer to checking')||n.includes('credit card payment'))return 'Transfer / exclude';
   if(p==='groceries'||n.includes('stop & shop')||n.includes('whole foods')||n.includes('patel brothers'))return 'Groceries';
   if(p==='transportation'||n.includes('shell')||n.includes('exxon')||n.includes('fuel'))return 'Gas & transport';
   if(p==='dining_drinks'||n.includes('ubereats')||n.includes('uber eats')||n.includes('cafe'))return 'Coffee & dining';
