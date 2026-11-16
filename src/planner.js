@@ -105,16 +105,17 @@ export const SOCIAL_CHALLENGES = [
 export const MIND_WEEK_LABELS = ['Reflect & reset','Self-image','Social confidence','Stress release','Voice & boundaries','Play & creativity','Explore & connect'];
 export const HAIR_WEEK_LABELS = ['Gentle wash or rest','Dandruff wash','Rest & replenish','Moisture wash','Scalp treatment','Dandruff wash','Recovery & ends'];
 export function socialPlansForDate(events,date){return (Array.isArray(events)?events:[]).filter(e=>e && e.date===date && e.title?.trim()).sort((a,b)=>(a.time||'').localeCompare(b.time||''));}
+export function eventDisplayTime(value){if(!value)return '';const m=String(value).match(/^(\d{1,2}):(\d{2})$/);if(!m)return String(value);const h=Number(m[1]);return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;}
 export function timeValue(value){if(!value)return 9999;const m=String(value).match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);if(!m)return 9999;let h=Number(m[1]);if(m[3])h=(h%12)+(m[3].toUpperCase()==='PM'?12:0);return h*60+Number(m[2]);}
 export function scheduledItems(tasks,date,state={}){
   const optionalIds=state.optional?.[date]||[];
   const items=tasks.filter(t=>due(t,date)||optionalIds.includes(t.id)).map(t=>({...t}));
   const plans=socialPlansForDate(state.socialEvents,date);
   if(plans.length){
-    const steps=plans.map(p=>`${p.time?`${p.time} · `:''}${p.title}${p.place?` at ${p.place}`:''}${p.note?` — ${p.note}`:''}`);
+    const steps=plans.map(p=>`${p.time?`${eventDisplayTime(p.time)} · `:''}${p.title}${p.place?` at ${p.place}`:''}${p.note?` — ${p.note}`:''}`);
     const index=items.findIndex(t=>t.id==='weekend-connection');
-    if(index>=0){items[index]={...items[index],subtitle:`${plans.length} saved plan${plans.length===1?'':'s'} for today · ${plans.map(p=>p.title).join(' + ')}`,steps:[...steps,'Show up as yourself, allow flexibility, and enjoy your time.']};}
-    else items.push({id:'social-plans-for-date',phase:'after',title:`My social plans · ${plans.length} today`,tag:'mind',subtitle:plans.map(p=>p.title).join(' + '),schedule:{type:'days',days:[weekday(date)]},steps:[...steps,'You can edit these plans in Mind & social.'],time:plans[0].time||'3:00 PM',note:'Local to your browser; no invitations are sent.',icon:'heart'});
+    if(index>=0){items[index]={...items[index],readOnlyDetails:true,time:eventDisplayTime(plans[0].time)||items[index].time,subtitle:`${plans.length} saved plan${plans.length===1?'':'s'} for today · ${plans.map(p=>p.title).join(' + ')}`,steps:[...steps,'Show up as yourself, allow flexibility, and enjoy your time.']};}
+    else items.push({id:'social-plans-for-date',phase:'after',title:`My social plans · ${plans.length} today`,tag:'mind',subtitle:plans.map(p=>p.title).join(' + '),schedule:{type:'days',days:[weekday(date)]},steps:[...steps,'You can edit these plans in Mind & social.'],time:eventDisplayTime(plans[0].time)||'3:00 PM',readOnlyDetails:true,note:'Local to your browser; no invitations are sent.',icon:'heart'});
   }
   return items.sort((a,b)=>timeValue(a.time)-timeValue(b.time)||a.id.localeCompare(b.id));
 }
