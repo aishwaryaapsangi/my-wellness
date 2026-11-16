@@ -13,6 +13,7 @@ const DEFAULT = {
 const dollars=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(Number(n)||0);
 const asNumber=v=>Math.max(0,Number(v)||0);
 const uid=()=>Math.random().toString(36).slice(2,10);
+const txnHash=input=>{let h=2166136261;for(let i=0;i<input.length;i++)h=Math.imul(h^input.charCodeAt(i),16777619);return 'tx-'+(h>>>0).toString(16).padStart(8,'0')};
 const ymd=date=>{const d=new Date(date);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const monthLabel=m=>new Date(m+'-01T12:00:00').toLocaleDateString('en-US',{month:'long',year:'numeric'});
 const startOfWeek=date=>{const d=new Date(date+'T12:00:00');d.setDate(d.getDate()-(d.getDay()+6)%7);return ymd(d)};
@@ -72,7 +73,7 @@ function parseTransactionsCSV(text,rules){
     const pending=get(row,'pending').toLowerCase()==='true';
     if(pending)continue;
     const category=inferCategory(name,primary,signed);
-    const id=get(row,'transaction_id')||[date,name,signed,get(row,'account_name','account')].join('|').toLowerCase();
+    const id=get(row,'transaction_id')?txnHash(get(row,'transaction_id')):[date,name,signed,get(row,'account_name','account')].join('|').toLowerCase();
     out.push({...{id,date,name,amount:Math.round(Math.abs(signed)*100)/100,type:signed>=0?'income':'expense',category,account:get(row,'account_name','account')||'',source:'import'},category:applyRules({name,amount:signed,category},rules)});
   }
   if(!out.length)throw Error('There were no usable posted transactions in that file.');
