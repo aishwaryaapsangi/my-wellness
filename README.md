@@ -4,8 +4,8 @@ A date-driven, editable **seven-day** scrapbook-style wellness tracker built wit
 
 ## Your day, not another dashboard
 
-- **Sunrise ritual**: optional 5 AM coding (Mon/Wed/Fri) or 6 AM gentle run (Tue/Thu/Sat), sunlight, prayer, rotating drinks, gentle gua sha (skip irritation), barrier care, daily journal and eye-care checks. **Hair care is in the evening, not the morning.**
-- **After work**: rotating 3-ab/1-upper/1-lower training plan, food ideas, recovery, optional 8–9 PM catch-up and a weekend social block tied to real plans.
+- **Sunrise ritual**: optional 5 AM coding (Mon/Wed/Fri) or 6 AM gentle run (Tue/Thu/Sat), sunlight, prayer, rotating drinks, gentle gua sha (skip irritation), barrier care, daily journal, polished get-ready routine (pressed outfit + cared-for hair) and an early weekday work-start target. **Hair care and lubricating eye drops are scheduled in the evening, not the morning.**
+- **After work**: rotating 3-ab/1-upper/1-lower training plan, food ideas, recovery, a 3:30 PM homecoming goal (subject to approved hours and actual travel), a protected weekday 6:45 PM Google/DSA coding block, optional 8–9 PM catch-up and a weekend social block tied to real plans.
 - **Sunset ritual**: all-seven-day rotating, detailed hair routine (Mon/Fri dandruff wash, Tue scalp rest, Wed moisture, Thu optional scalp tonic, Sat recovery, Sun wash-or-rest), a 9 PM reset, gentle skincare, optional heatless curls, eye compresses, gratitude, a *different mental wellness prompt every day*, reading, and a gentle sleep target.
 - **Nourish & move**: vegetarian breakfast, pre-workout, post-workout and dinner suggestions change with weekday; rotating lemon, kefir, chia and green-smoothie ideas.
 - **Calendar + seven-day atlas**: select any date, see that day’s hair care, movement, mood focus and saved social events, with interactive completion dots.
@@ -15,7 +15,7 @@ A date-driven, editable **seven-day** scrapbook-style wellness tracker built wit
 
 ## How recurrence works
 
-All built-in reminders are editable. In **Ritual Studio**, change a ritual to daily, specific weekdays, every N days (with a start date), or optional; the selected day recalculates instantly. The seven-day atlas reflects customized hair schedules as well. Hairwash product steps are examples based on the supplied planner, **not prescriptions**. Morning early coding/running blocks are optional goals: prioritise adequate sleep, especially with a 10 PM bedtime and 5 AM wakeup. Gua sha is always skippable if skin is irritated.
+All built-in reminders are editable. In **Ritual Studio**, change a ritual to daily, specific weekdays, every N days (with a start date), or optional; the selected day recalculates instantly. The seven-day atlas reflects customized hair schedules as well. Hairwash product steps are examples based on the supplied planner, **not prescriptions**. Default **weekday** morning ritual times run earlier to fit a 7–7:30 AM work start, while **weekends** have a gentler, later time schedule. Editing any item time in Ritual Studio overrides the dynamic weekend preset. Being **home at 3:30 PM** is a goal, not the same as leaving the office at 3:30 PM; allow commute time and follow approved work hours. Morning early coding/running blocks are optional goals: prioritise adequate sleep, especially with a 10 PM bedtime and 5 AM wakeup. Gua sha is always skippable if skin is irritated.
 
 ## Run locally
 

@@ -66,9 +66,47 @@ test('elegant morning preparation appears daily with hair care still at night',(
   const date=offset('2026-11-15',i);
   const ready=scheduledItems(DEFAULT_TASKS,date).find(x=>x.id==='get-ready');
   assert.equal(ready?.phase,'sunrise');
-  assert.equal(ready?.time,'8:20 AM');
+  assert.equal(ready?.time,i===0||i===6?'9:05 AM':'6:40 AM');
   assert.match(ready?.steps.join(' ')||'',/iron/i);
   assert.match(ready?.steps.join(' ')||'',/hair/i);
   assert.ok(scheduledItems(DEFAULT_TASKS,date).filter(x=>x.tag==='hair').every(x=>x.phase==='sunset'));
  }
+});
+
+
+test('weekday 7:00–7:30 work goal and 3:30 home target are explicitly conditional',()=>{
+  const mon=all('2026-11-16');
+  const work=mon.find(t=>t.id==='workday-start');
+  const home=mon.find(t=>t.id==='home-by-three');
+  assert.equal(work?.phase,'sunrise');
+  assert.equal(work?.time,'7:10 AM');
+  assert.equal(home?.phase,'after');
+  assert.equal(home?.time,'3:30 PM');
+  assert.match(home?.steps.join(' ')||'',/commute/i);
+  const sun=all('2026-11-22');
+  assert.equal(sun.some(t=>t.id==='workday-start'),false);
+  assert.equal(sun.some(t=>t.id==='home-by-three'),false);
+});
+test('after-work coding appears on weekdays and leaves weekends open',()=>{
+  const mon=all('2026-11-16').find(t=>t.id==='after-code');
+  assert.equal(mon?.phase,'after');
+  assert.equal(mon?.time,'6:45 PM');
+  assert.match(mon?.steps.join(' ')||'',/LeetCode/);
+  assert.equal(all('2026-11-22').some(t=>t.id==='after-code'),false);
+});
+test('weekday and weekend mornings flow earlier or later without overriding custom times',()=>{
+  const mon=all('2026-11-16');
+  const sat=all('2026-11-21');
+  assert.equal(mon.find(t=>t.id==='breakfast')?.time,'6:55 AM');
+  assert.equal(mon.find(t=>t.id==='get-ready')?.time,'6:40 AM');
+  assert.equal(sat.find(t=>t.id==='breakfast')?.time,'9:20 AM');
+  assert.equal(sat.find(t=>t.id==='get-ready')?.time,'9:05 AM');
+  const edited=mergedTasks({'get-ready':{time:'7:05 AM'}});
+  assert.equal(scheduledItems(edited,'2026-11-21').find(t=>t.id==='get-ready')?.time,'7:05 AM');
+});
+test('lubricating drops remain at night on alternate days',()=>{
+  const mon=all('2026-11-16');
+  assert.equal(mon.find(t=>t.id==='eyedrops')?.phase,'sunset');
+  assert.equal(mon.find(t=>t.id==='eyedrops')?.time,'9:17 PM');
+  assert.equal(all('2026-11-17').some(t=>t.id==='eyedrops'),false);
 });
