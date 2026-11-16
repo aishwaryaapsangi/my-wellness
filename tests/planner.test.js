@@ -110,3 +110,49 @@ test('lubricating drops remain at night on alternate days',()=>{
   assert.equal(mon.find(t=>t.id==='eyedrops')?.time,'9:17 PM');
   assert.equal(all('2026-11-17').some(t=>t.id==='eyedrops'),false);
 });
+
+import {PERIOD_START,PERIOD_END,inPeriod,clampPeriod,elapsedPeriodDates,dayProgress,periodProgress,SKINCARE_ROTATION,WATER_ROTATION,MEALS} from '../src/planner.js';
+test('season only includes Nov 16 through Dec 31, 2026',()=>{
+ assert.equal(PERIOD_START,'2026-11-16');assert.equal(PERIOD_END,'2026-12-31');
+ assert.equal(inPeriod('2026-11-15'),false);assert.equal(inPeriod('2026-11-16'),true);
+ assert.equal(inPeriod('2026-12-31'),true);assert.equal(inPeriod('2027-01-01'),false);
+ assert.equal(clampPeriod('2026-11-15'),PERIOD_START);
+ assert.equal(clampPeriod('2027-01-01'),PERIOD_END);
+ assert.deepEqual(elapsedPeriodDates('2026-11-16'),['2026-11-16']);
+ assert.equal(elapsedPeriodDates('2026-11-30').length,15);
+ assert.equal(elapsedPeriodDates('2026-12-01').length,16);
+ assert.equal(elapsedPeriodDates('2026-12-31').length,46);
+ assert.equal(elapsedPeriodDates('2027-01-01').length,46);
+});
+test('selected-day progress is independent of elapsed period percentage',()=>{
+ const monday=scheduledItems(DEFAULT_TASKS,'2026-11-16');
+ const state={completion:{'2026-11-16':{[monday[0].id]:true}}};
+ const day=dayProgress(DEFAULT_TASKS,'2026-11-16',state);
+ assert.equal(day.completed,1);
+ assert.ok(day.percent>0);
+ const season=periodProgress(DEFAULT_TASKS,state,'2026-11-17');
+ assert.equal(season.daysElapsed,2);
+ assert.equal(season.completed,1);
+ assert.equal(season.activeDays,1);
+ assert.equal(season.scheduled,scheduledItems(DEFAULT_TASKS,'2026-11-16').length+scheduledItems(DEFAULT_TASKS,'2026-11-17').length);
+ assert.equal(season.percent,Math.round(100/season.scheduled));
+});
+test('future days do not lower overall consistency until they arrive',()=>{
+ const future=scheduledItems(DEFAULT_TASKS,'2026-12-31')[0].id;
+ const state={completion:{'2026-12-31':{[future]:true}}};
+ assert.equal(periodProgress(DEFAULT_TASKS,state,'2026-11-16').completed,0);
+ assert.equal(periodProgress(DEFAULT_TASKS,state,'2026-12-31').completed,1);
+ assert.equal(periodProgress(DEFAULT_TASKS,state,'2027-01-02').completed,1);
+});
+test('skincare rotation and nighttime eyedrops follow each day',()=>{
+ assert.equal(SKINCARE_ROTATION.length,7);
+ const monday=scheduledItems(DEFAULT_TASKS,'2026-11-16');
+ const tuesday=scheduledItems(DEFAULT_TASKS,'2026-11-17');
+ assert.ok(monday.some(x=>x.id==='hair-keto'&&x.phase==='sunset'));
+ assert.ok(tuesday.some(x=>x.id==='hair-rest-tue'&&x.phase==='sunset'));
+ assert.notEqual(monday.find(x=>x.id==='skincare-pm').subtitle,tuesday.find(x=>x.id==='skincare-pm').subtitle);
+ assert.equal(monday.find(x=>x.id==='eyedrops').phase,'sunset');
+ assert.equal(tuesday.some(x=>x.id==='eyedrops'),false);
+ assert.notEqual(WATER_ROTATION[1].name,WATER_ROTATION[2].name);
+ assert.notDeepEqual(MEALS[1],MEALS[2]);
+});
