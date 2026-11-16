@@ -60,3 +60,16 @@ This is a customizable **habit tracker, not medical guidance or a medication adm
 - `tests/planner.test.js` — recurrence/date/split unit checks using Node's built-in test runner.
 
 Adapted from the project owner's personal routine references. The UI artwork is original SVG created for this project rather than copies of reference websites.
+
+## November 16–December 31, 2026 · first wellness season
+
+This first season spans **46 days**, beginning Monday, November 16 and ending Thursday, December 31. All day pickers and calendar views are bounded to this period.
+
+The dashboard provides **two different percentages**:
+
+- **Selected day:** completed checkmarks divided by scheduled rituals on whichever day you are viewing.
+- **Overall so far:** all completed checkmarks divided by all scheduled rituals for dates from November 16 through the actual current day (or December 31 after the season ends). Unchecked days count as 0; future days are excluded.
+
+The calendar shows per-day completion percentages and soft color shading. Changing a recurrence schedule recalculates history; all user entries remain locally stored in the browser, not uploaded to GitHub.
+
+Hair care changes across seven evenings (including Wednesday moisturizing wash, Monday/Friday dandruff washes if prescribed, and recovery days); mental-wellness prompts, nourishing drink and meal suggestions, and gentle nighttime skincare guidance also vary by weekday. Lubricating eye drops remain in the evening on an editable every-two-days reminder; this schedule is for prompting, not a medical limit on when drops can be used. As always, follow product and clinician instructions.
