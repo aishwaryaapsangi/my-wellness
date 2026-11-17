@@ -62,7 +62,7 @@ export default function LiveBankPanel({onChange}){
    if(error)throw error;if(!data?.link_token)throw Error(data?.error||'Unable to start a secure bank connection');
    sessionStorage.setItem(STORAGE,data.link_token);
    const handler=window.Plaid.create({token:data.link_token,onSuccess:async(publicToken)=>{
-    try{setWorking(true);await exchange(publicToken);sessionStorage.removeItem(STORAGE);await load(user);setStatus('Bank accounts linked. Transactions appear below automatically.')}
+    try{setWorking(true);const result=await exchange(publicToken);sessionStorage.removeItem(STORAGE);await load(user);setStatus(result?.sync_pending?'Bank account linked. Plaid is preparing the initial transaction history; use Refresh to check when it becomes available.':'Bank accounts linked. The available posted transactions are displayed below.')}
     catch(e){setStatus('Linking failed: '+e.message)}
     finally{busy.current=false;setWorking(false)}
    },onExit:(err)=>{if(err)setStatus('Bank authorization stopped: '+(err.display_message||err.error_message||'Please retry'));busy.current=false;setWorking(false)}});
