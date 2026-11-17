@@ -88,9 +88,24 @@ export const WEEKLY_SPRINTS=raw.map((r,i)=>({
  java:i<10?'Java fluency and collections':i<23?'Java collections, recursion and design': 'Java implementation, APIs and review',
  revisionWeek:(i+1)%4===0,biweekly:(i+1)%2===0
 }));
-export function weekIndexFor(date){const difference=Math.floor((Date.parse(date+'T12:00:00Z')-Date.parse(PLAN_START+'T12:00:00Z'))/86400000);return Math.max(0,Math.min(WEEKLY_SPRINTS.length-1,Math.floor(difference/7)))}
-export function sprintForDate(date){return WEEKLY_SPRINTS[weekIndexFor(date)]}
-export function monthForDate(date){return MONTH_FOCUS.find(m=>m.key===date.slice(0,7))||MONTH_FOCUS[MONTH_FOCUS.length-1]}
+export function weekIndexFor(date){const difference=Math.floor((Date.parse(date+'T12:00:00Z')-Date.parse(PLAN_START+'T12:00:00Z'))/86400000);return Math.max(0,Math.floor(difference/7))}
+export function sprintForDate(date){
+ const i=weekIndexFor(date);
+ if(i<WEEKLY_SPRINTS.length)return WEEKLY_SPRINTS[i];
+ // A living sprint after the initial roadmap: no fake graduation at week 44.
+ const template=WEEKLY_SPRINTS[i%WEEKLY_SPRINTS.length];
+ return {...template,id:'week-'+(i+1),index:i+1,monday:addStudyDays(PLAN_START,i*7),ends:addStudyDays(PLAN_START,i*7+6),
+   dsa:'Mixed micro-concept retrieval + weakest DSA pattern',career:'Review live SWE roles and your application next actions',
+   project:'Maintain or improve one real engineering artifact',revisionWeek:(i+1)%4===0,biweekly:(i+1)%2===0};
+}
+export function monthForDate(date){
+ const existing=MONTH_FOCUS.find(m=>m.key===date.slice(0,7));
+ if(existing)return existing;
+ const template=MONTH_FOCUS[MONTH_FOCUS.length-1];
+ return {...template,key:date.slice(0,7),title:date.slice(0,7)+' · Continuing Google SWE journey',stage:'Keep practicing until the offer',
+ dsa:'One new atomic skill while available; active recall across ALL DSA families continues indefinitely.',
+ proof:'Recall the oldest due skills, redo unseen LeetCode, and record independent evidence rather than checking off whole families.'};
+}
 export function sprintDates(sprint){return Array.from({length:7},(_,i)=>addStudyDays(sprint.monday,i))}
 export const DAY_NAMES=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 export const DAY_ROLE=[
