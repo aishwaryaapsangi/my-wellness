@@ -23,7 +23,7 @@ Deno.serve(async(req)=>{
    if(existing&&existing.user_id!==user.id)return json(req,{error:"This bank connection already belongs to another user"},409);
    const encrypted_access_token=await protect(exchanged.access_token);
    const {data:item,error}=await db.from("money_bank_items").upsert({
-     ...(existing?.id?{id:existing.id}:{user_id:user.id}),plaid_item_id:exchanged.item_id,
+     user_id:user.id,...(existing?.id?{id:existing.id}:{}),plaid_item_id:exchanged.item_id,
      encrypted_access_token,cursor:null
    },{onConflict:"plaid_item_id"}).select("id,user_id,encrypted_access_token,cursor").single();
    if(error)throw error;
