@@ -97,6 +97,19 @@ export const MICRO_CONCEPTS=[
   "order": 7
  },
  {
+  "id": "hashmap-operations",
+  "family": "HashMap / HashSet",
+  "title": "HashMap: put, get, containsKey, getOrDefault",
+  "goal": "Practice key→value lookup and distinguish missing keys from a stored null.",
+  "syntax": "Map<String,Integer> m=new HashMap<>();\nm.put(\"a\",3);\nint count=m.getOrDefault(\"x\",0);",
+  "recall": "What do get, containsKey and getOrDefault return for missing keys?",
+  "trap": "HashMap iteration order is not guaranteed; choose a stable map only if ordering matters.",
+  "problemId": 1,
+  "page": 25,
+  "role": "curated-DSA",
+  "order": 8
+ },
+ {
   "id": "arrays-copy",
   "family": "Arrays & ArrayList",
   "title": "Arrays.copyOf / copyOfRange",
@@ -107,7 +120,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1470,
   "page": 19,
   "role": "curated",
-  "order": 8
+  "order": 9
  },
  {
   "id": "hb-s21-1",
@@ -121,7 +134,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-1",
   "role": "handbook",
-  "order": 9
+  "order": 10
  },
  {
   "id": "hb-s21-2",
@@ -135,7 +148,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-2",
   "role": "handbook",
-  "order": 10
+  "order": 11
+ },
+ {
+  "id": "hashmap-update",
+  "family": "HashMap / HashSet",
+  "title": "HashMap: putIfAbsent, computeIfAbsent and merge",
+  "goal": "Learn conditional insertion and frequency accumulation without duplicate lookups.",
+  "syntax": "Map<Character,Integer> f=new HashMap<>();\nf.merge('a',1,Integer::sum);",
+  "recall": "How could you count every letter using merge or getOrDefault?",
+  "trap": "computeIfAbsent mapping functions must return a value; beware unintended state changes.",
+  "problemId": 242,
+  "page": 25,
+  "role": "curated-DSA",
+  "order": 12
  },
  {
   "id": "arrays-fill",
@@ -148,7 +174,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1920,
   "page": 19,
   "role": "curated",
-  "order": 11
+  "order": 13
  },
  {
   "id": "hb-s21-3",
@@ -162,7 +188,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-3",
   "role": "handbook",
-  "order": 12
+  "order": 14
  },
  {
   "id": "hb-s21-4",
@@ -176,7 +202,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-4",
   "role": "handbook",
-  "order": 13
+  "order": 15
+ },
+ {
+  "id": "hashmap-traverse",
+  "family": "HashMap / HashSet",
+  "title": "HashMap views: keySet, values and entrySet",
+  "goal": "Iterate keys, values, or key-value pairs; use Map.Entry for efficient access.",
+  "syntax": "for(Map.Entry<String,Integer> e:m.entrySet())\n  System.out.println(e.getKey()+\"=\"+e.getValue());",
+  "recall": "Which view would you use to sum frequencies vs print keys?",
+  "trap": "Do not rely on HashMap traversal order for interview output.",
+  "problemId": 1,
+  "page": 25,
+  "role": "curated-DSA",
+  "order": 16
  },
  {
   "id": "arrays-compare",
@@ -189,7 +228,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 118,
   "page": 19,
   "role": "curated",
-  "order": 14
+  "order": 17
  },
  {
   "id": "hb-s21-5",
@@ -203,7 +242,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-5",
   "role": "handbook",
-  "order": 15
+  "order": 18
  },
  {
   "id": "hb-s21-6",
@@ -217,7 +256,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-6",
   "role": "handbook",
-  "order": 16
+  "order": 19
+ },
+ {
+  "id": "hashset-ops",
+  "family": "HashMap / HashSet",
+  "title": "HashSet: add, contains and remove",
+  "goal": "Use a set for uniqueness and O(1) expected membership, and distinguish add’s boolean result.",
+  "syntax": "Set<Integer> seen=new HashSet<>();\nboolean fresh=seen.add(7); // true\nseen.contains(7); // true",
+  "recall": "What does add return for a duplicate? Why use Set instead of List?",
+  "trap": "Set discards duplicates and doesn't provide indexed get(i).",
+  "problemId": 217,
+  "page": 25,
+  "role": "curated-DSA",
+  "order": 20
  },
  {
   "id": "arrays-search",
@@ -230,7 +282,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 704,
   "page": 19,
   "role": "curated",
-  "order": 17
+  "order": 21
  },
  {
   "id": "hb-s21-7",
@@ -244,7 +296,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-7",
   "role": "handbook",
-  "order": 18
+  "order": 22
  },
  {
   "id": "hb-s21-8",
@@ -258,7 +310,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-8",
   "role": "handbook",
-  "order": 19
+  "order": 23
+ },
+ {
+  "id": "hashkey-equality",
+  "family": "HashMap / HashSet",
+  "title": "equals/hashCode for hash keys",
+  "goal": "Explain why equal objects need equal hash codes and why mutable keys are risky.",
+  "syntax": "record Key(int x,int y) {}\nSet<Key> visited=new HashSet<>();",
+  "recall": "Can a mutated key become impossible to find in a HashMap? Why?",
+  "trap": "Overriding equals without a consistent hashCode breaks hash-based behavior.",
+  "problemId": 49,
+  "page": 31,
+  "role": "curated-DSA",
+  "order": 24
  },
  {
   "id": "arrays-order",
@@ -271,7 +336,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1051,
   "page": 19,
   "role": "curated",
-  "order": 20
+  "order": 25
  },
  {
   "id": "hb-s21-9",
@@ -285,7 +350,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-9",
   "role": "handbook",
-  "order": 21
+  "order": 26
  },
  {
   "id": "hb-s21-10",
@@ -299,7 +364,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-10",
   "role": "handbook",
-  "order": 22
+  "order": 27
+ },
+ {
+  "id": "string-basics",
+  "family": "Strings & characters",
+  "title": "String charAt / substring / indexOf",
+  "goal": "Know immutable String operations and exclusive substring end indices.",
+  "syntax": "String s=\"abcd\";\nchar c=s.charAt(1); // 'b'\nString part=s.substring(1,3); // \"bc\"",
+  "recall": "Explain substring(1,3) without running it.",
+  "trap": "A String is immutable; concatenate in a loop with StringBuilder where appropriate.",
+  "problemId": 125,
+  "page": 21,
+  "role": "curated-DSA",
+  "order": 28
  },
  {
   "id": "arrays-deep",
@@ -312,7 +390,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 118,
   "page": 19,
   "role": "curated",
-  "order": 23
+  "order": 29
  },
  {
   "id": "hb-s21-11",
@@ -326,7 +404,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-11",
   "role": "handbook",
-  "order": 24
+  "order": 30
  },
  {
   "id": "hb-s21-12",
@@ -340,7 +418,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-12",
   "role": "handbook",
-  "order": 25
+  "order": 31
+ },
+ {
+  "id": "stringbuilder-api",
+  "family": "Strings & characters",
+  "title": "StringBuilder append, insert, delete and reverse",
+  "goal": "Use mutable StringBuilder to build or reverse text efficiently.",
+  "syntax": "StringBuilder b=new StringBuilder(\"ab\");\nb.append('c').reverse(); // \"cba\"",
+  "recall": "Trace what append then reverse returns and why append is chainable.",
+  "trap": "StringBuilder methods mutate the same builder; toString returns a String.",
+  "problemId": 1768,
+  "page": 21,
+  "role": "curated-DSA",
+  "order": 32
  },
  {
   "id": "arrays-parallel",
@@ -353,7 +444,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1480,
   "page": 19,
   "role": "curated",
-  "order": 26
+  "order": 33
  },
  {
   "id": "hb-s21-13",
@@ -367,7 +458,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-13",
   "role": "handbook",
-  "order": 27
+  "order": 34
  },
  {
   "id": "hb-s21-14",
@@ -381,7 +472,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-14",
   "role": "handbook",
-  "order": 28
+  "order": 35
+ },
+ {
+  "id": "list-node",
+  "family": "Linked lists",
+  "title": "Node.next and linked list traversal",
+  "goal": "Understand singly linked references, null terminator and O(n) indexed lookup.",
+  "syntax": "class Node {int val;Node next;Node(int v){val=v;}}\nfor(Node p=head;p!=null;p=p.next)System.out.println(p.val);",
+  "recall": "Trace head → next → null; why is get(i) unlike ArrayList get(i)?",
+  "trap": "A linked list has no O(1) random access from head.",
+  "problemId": 206,
+  "page": 46,
+  "role": "curated-DSA",
+  "order": 36
  },
  {
   "id": "arrays-aslist",
@@ -394,7 +498,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1470,
   "page": 19,
   "role": "curated",
-  "order": 29
+  "order": 37
  },
  {
   "id": "hb-s21-15",
@@ -408,7 +512,7 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-15",
   "role": "handbook",
-  "order": 30
+  "order": 38
  },
  {
   "id": "hb-s21-16",
@@ -422,7 +526,20 @@ export const MICRO_CONCEPTS=[
   "page": 21,
   "sourceSkillId": "s21-16",
   "role": "handbook",
-  "order": 31
+  "order": 39
+ },
+ {
+  "id": "list-dummy",
+  "family": "Linked lists",
+  "title": "Dummy head for list insertion/deletion",
+  "goal": "Use a sentinel node to avoid special-casing deletion of the first actual node.",
+  "syntax": "Node dummy=new Node(0);\ndummy.next=head;\nNode prev=dummy;",
+  "recall": "Delete the first matching node; show which reference prev.next must point to.",
+  "trap": "Always return dummy.next, not the old head, after potentially deleting it.",
+  "problemId": 21,
+  "page": 46,
+  "role": "curated-DSA",
+  "order": 40
  },
  {
   "id": "arrays-stream",
@@ -435,7 +552,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1732,
   "page": 29,
   "role": "curated",
-  "order": 32
+  "order": 41
  },
  {
   "id": "hb-s25-1",
@@ -449,7 +566,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-1",
   "role": "handbook",
-  "order": 33
+  "order": 42
  },
  {
   "id": "hb-s25-2",
@@ -463,7 +580,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-2",
   "role": "handbook",
-  "order": 34
+  "order": 43
+ },
+ {
+  "id": "list-fastslow",
+  "family": "Linked lists",
+  "title": "Fast/slow pointers and cycle detection",
+  "goal": "Advance slow one step, fast two; identify loop, midpoint and null guards.",
+  "syntax": "while(fast!=null&&fast.next!=null){\n slow=slow.next;fast=fast.next.next;\n}",
+  "recall": "What must be checked before dereferencing fast.next.next?",
+  "trap": "Without null guards, fast/slow pointer code throws.",
+  "problemId": 141,
+  "page": 46,
+  "role": "curated-DSA",
+  "order": 44
  },
  {
   "id": "arrays-spliterator",
@@ -476,7 +606,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1920,
   "page": 19,
   "role": "curated",
-  "order": 35
+  "order": 45
  },
  {
   "id": "hb-s25-3",
@@ -490,7 +620,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-3",
   "role": "handbook",
-  "order": 36
+  "order": 46
  },
  {
   "id": "hb-s25-4",
@@ -504,7 +634,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-4",
   "role": "handbook",
-  "order": 37
+  "order": 47
+ },
+ {
+  "id": "list-reverse",
+  "family": "Linked lists",
+  "title": "Reverse a linked list using prev/curr/next",
+  "goal": "Rewire next references while preserving the unread tail.",
+  "syntax": "Node prev=null,curr=head;\nwhile(curr!=null){Node next=curr.next;curr.next=prev;prev=curr;curr=next;}",
+  "recall": "Reverse 1→2→3 and explain why next must be saved.",
+  "trap": "Reassigning curr.next before storing the next node loses the rest of the list.",
+  "problemId": 206,
+  "page": 46,
+  "role": "curated-DSA",
+  "order": 48
  },
  {
   "id": "list-bulk",
@@ -517,7 +660,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 27,
   "page": 23,
   "role": "curated",
-  "order": 38
+  "order": 49
  },
  {
   "id": "hb-s25-5",
@@ -531,7 +674,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-5",
   "role": "handbook",
-  "order": 39
+  "order": 50
  },
  {
   "id": "hb-s25-6",
@@ -545,7 +688,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-6",
   "role": "handbook",
-  "order": 40
+  "order": 51
+ },
+ {
+  "id": "stack-deque",
+  "family": "Stacks & queues",
+  "title": "ArrayDeque stack: push / pop / peek",
+  "goal": "Use ArrayDeque as a LIFO stack; name empty-stack behavior.",
+  "syntax": "Deque<Integer> st=new ArrayDeque<>();\nst.push(2);st.push(5);\nint last=st.pop(); // 5",
+  "recall": "Predict next pop, peek and isEmpty behavior.",
+  "trap": "Avoid Stack legacy class by default; pop on empty Deque throws.",
+  "problemId": 20,
+  "page": 45,
+  "role": "curated-DSA",
+  "order": 52
  },
  {
   "id": "list-replaceall",
@@ -558,7 +714,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1051,
   "page": 23,
   "role": "curated",
-  "order": 41
+  "order": 53
  },
  {
   "id": "hb-s25-7",
@@ -572,7 +728,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-7",
   "role": "handbook",
-  "order": 42
+  "order": 54
  },
  {
   "id": "hb-s25-8",
@@ -586,7 +742,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-8",
   "role": "handbook",
-  "order": 43
+  "order": 55
+ },
+ {
+  "id": "queue-deque",
+  "family": "Stacks & queues",
+  "title": "ArrayDeque queue: offer / poll / peek",
+  "goal": "Use ArrayDeque as a FIFO queue; understand poll null vs remove throwing on empty.",
+  "syntax": "Deque<Integer> q=new ArrayDeque<>();\nq.offer(2);q.offer(5);\nint first=q.poll(); // 2",
+  "recall": "Which value does peek return now, and what is poll on empty?",
+  "trap": "ArrayDeque does not permit null values; avoid confusing offer with push.",
+  "problemId": 102,
+  "page": 45,
+  "role": "curated-DSA",
+  "order": 56
  },
  {
   "id": "list-views",
@@ -599,7 +768,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 88,
   "page": 23,
   "role": "curated",
-  "order": 44
+  "order": 57
  },
  {
   "id": "hb-s25-9",
@@ -613,7 +782,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-9",
   "role": "handbook",
-  "order": 45
+  "order": 58
  },
  {
   "id": "hb-s25-10",
@@ -627,7 +796,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-10",
   "role": "handbook",
-  "order": 46
+  "order": 59
+ },
+ {
+  "id": "monotone-stack",
+  "family": "Stacks & queues",
+  "title": "Monotonic stack of indices",
+  "goal": "Maintain increasing/decreasing values to find next greater/smaller efficiently.",
+  "syntax": "while(!st.isEmpty()&&a[st.peek()]<a[i]){\n int j=st.pop(); answer[j]=i-j;\n}",
+  "recall": "Why store indices instead of values for Daily Temperatures?",
+  "trap": "Monotonic means the stack order obeys an invariant; name it explicitly.",
+  "problemId": 739,
+  "page": 45,
+  "role": "curated-DSA",
+  "order": 60
  },
  {
   "id": "list-iteration",
@@ -640,7 +822,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 283,
   "page": 23,
   "role": "curated",
-  "order": 47
+  "order": 61
  },
  {
   "id": "hb-s25-11",
@@ -654,7 +836,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-11",
   "role": "handbook",
-  "order": 48
+  "order": 62
  },
  {
   "id": "hb-s25-12",
@@ -668,7 +850,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-12",
   "role": "handbook",
-  "order": 49
+  "order": 63
+ },
+ {
+  "id": "tree-recursion",
+  "family": "Trees & BST",
+  "title": "Tree DFS: preorder/inorder/postorder",
+  "goal": "Trace recursive order relative to left/right recursive calls.",
+  "syntax": "void inorder(Node n){if(n==null)return;\n inorder(n.left);visit(n);inorder(n.right);\n}",
+  "recall": "For root 2 with children 1,3, list three traversal orders.",
+  "trap": "Every recursion needs a null base case; tree height determines call-stack depth.",
+  "problemId": 104,
+  "page": 48,
+  "role": "curated-DSA",
+  "order": 64
  },
  {
   "id": "list-foreach",
@@ -681,7 +876,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1732,
   "page": 29,
   "role": "curated",
-  "order": 50
+  "order": 65
  },
  {
   "id": "hb-s25-13",
@@ -695,7 +890,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-13",
   "role": "handbook",
-  "order": 51
+  "order": 66
  },
  {
   "id": "hb-s25-14",
@@ -709,7 +904,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-14",
   "role": "handbook",
-  "order": 52
+  "order": 67
+ },
+ {
+  "id": "tree-bfs",
+  "family": "Trees & BST",
+  "title": "Tree level order with a queue",
+  "goal": "Traverse breadth-first, capturing one level by reading queue size at level start.",
+  "syntax": "Queue<TreeNode> q=new ArrayDeque<>();q.offer(root);\nwhile(!q.isEmpty()){int n=q.size();for(int i=0;i<n;i++){TreeNode x=q.poll();}}",
+  "recall": "How do you keep node values separated by depth?",
+  "trap": "Offer children only if non-null; update queue inside loop.",
+  "problemId": 102,
+  "page": 48,
+  "role": "curated-DSA",
+  "order": 68
  },
  {
   "id": "list-convert",
@@ -722,7 +930,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1470,
   "page": 29,
   "role": "curated",
-  "order": 53
+  "order": 69
  },
  {
   "id": "hb-s25-15",
@@ -736,7 +944,7 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-15",
   "role": "handbook",
-  "order": 54
+  "order": 70
  },
  {
   "id": "hb-s25-16",
@@ -750,7 +958,20 @@ export const MICRO_CONCEPTS=[
   "page": 25,
   "sourceSkillId": "s25-16",
   "role": "handbook",
-  "order": 55
+  "order": 71
+ },
+ {
+  "id": "bst-search",
+  "family": "Trees & BST",
+  "title": "BST ordering and logarithmic search",
+  "goal": "Compare search target to each node; descend left/right if BST invariant holds.",
+  "syntax": "while(root!=null&&root.val!=key)\n root=key<root.val?root.left:root.right;",
+  "recall": "When is BST search O(log n) and when O(n)?",
+  "trap": "A skewed BST loses logarithmic search behavior.",
+  "problemId": 98,
+  "page": 48,
+  "role": "curated-DSA",
+  "order": 72
  },
  {
   "id": "list-capacity",
@@ -763,7 +984,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1389,
   "page": 23,
   "role": "curated",
-  "order": 56
+  "order": 73
  },
  {
   "id": "hb-s33-1",
@@ -777,7 +998,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-1",
   "role": "handbook",
-  "order": 57
+  "order": 74
  },
  {
   "id": "hb-s33-2",
@@ -791,7 +1012,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-2",
   "role": "handbook",
-  "order": 58
+  "order": 75
+ },
+ {
+  "id": "heap-priority",
+  "family": "Heaps & tries",
+  "title": "PriorityQueue: offer, peek, poll",
+  "goal": "Understand min-heap default and comparator to build max-heap or custom priority.",
+  "syntax": "PriorityQueue<Integer> min=new PriorityQueue<>();\nmin.offer(9);min.offer(2);min.poll(); // 2",
+  "recall": "What is time complexity for offer/poll and peek?",
+  "trap": "PriorityQueue iteration is NOT sorted order.",
+  "problemId": 215,
+  "page": 50,
+  "role": "curated-DSA",
+  "order": 76
  },
  {
   "id": "list-clone",
@@ -804,7 +1038,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 118,
   "page": 23,
   "role": "curated",
-  "order": 59
+  "order": 77
  },
  {
   "id": "hb-s33-3",
@@ -818,7 +1052,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-3",
   "role": "handbook",
-  "order": 60
+  "order": 78
  },
  {
   "id": "hb-s33-4",
@@ -832,7 +1066,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-4",
   "role": "handbook",
-  "order": 61
+  "order": 79
+ },
+ {
+  "id": "heap-topk",
+  "family": "Heaps & tries",
+  "title": "Top-K using a fixed-size min-heap",
+  "goal": "Maintain k best values with PriorityQueue and remove the smallest whenever size>k.",
+  "syntax": "PriorityQueue<Integer> top=new PriorityQueue<>();\nfor(int x:nums){top.offer(x);if(top.size()>k)top.poll();}",
+  "recall": "Why does peek hold the kth-largest value at the end?",
+  "trap": "Min-heap size-k and max-heap of all values are different tradeoffs.",
+  "problemId": 347,
+  "page": 50,
+  "role": "curated-DSA",
+  "order": 80
  },
  {
   "id": "list-21",
@@ -845,7 +1092,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 27,
   "page": 23,
   "role": "curated",
-  "order": 62
+  "order": 81
  },
  {
   "id": "hb-s33-5",
@@ -859,7 +1106,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-5",
   "role": "handbook",
-  "order": 63
+  "order": 82
  },
  {
   "id": "hb-s33-6",
@@ -873,7 +1120,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-6",
   "role": "handbook",
-  "order": 64
+  "order": 83
+ },
+ {
+  "id": "trie-prefix",
+  "family": "Heaps & tries",
+  "title": "Trie insert and prefix traversal",
+  "goal": "Map each character to a child node; mark isWord at the last character.",
+  "syntax": "class Node {Map<Character,Node> next=new HashMap<>();boolean word;}",
+  "recall": "How can search(word) differ from startsWith(prefix)?",
+  "trap": "Prefix match alone does not establish full-word membership.",
+  "problemId": 208,
+  "page": 50,
+  "role": "curated-DSA",
+  "order": 84
  },
  {
   "id": "collections-order",
@@ -886,7 +1146,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 189,
   "page": 27,
   "role": "curated",
-  "order": 65
+  "order": 85
  },
  {
   "id": "hb-s33-7",
@@ -900,7 +1160,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-7",
   "role": "handbook",
-  "order": 66
+  "order": 86
  },
  {
   "id": "hb-s33-8",
@@ -914,7 +1174,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-8",
   "role": "handbook",
-  "order": 67
+  "order": 87
+ },
+ {
+  "id": "graph-adj",
+  "family": "Graphs & grids",
+  "title": "Adjacency lists and graph direction",
+  "goal": "Build neighbors for each vertex; distinguish directed vs undirected edges.",
+  "syntax": "List<List<Integer>> adj=new ArrayList<>();\nfor(int i=0;i<n;i++)adj.add(new ArrayList<>());\nadj.get(u).add(v);",
+  "recall": "What extra edge is needed when an edge is undirected?",
+  "trap": "Initialize every list first; a graph can contain cycles.",
+  "problemId": 200,
+  "page": 51,
+  "role": "curated-DSA",
+  "order": 88
  },
  {
   "id": "collections-swap",
@@ -927,7 +1200,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1470,
   "page": 27,
   "role": "curated",
-  "order": 68
+  "order": 89
  },
  {
   "id": "hb-s33-9",
@@ -941,7 +1214,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-9",
   "role": "handbook",
-  "order": 69
+  "order": 90
  },
  {
   "id": "hb-s33-10",
@@ -955,7 +1228,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-10",
   "role": "handbook",
-  "order": 70
+  "order": 91
+ },
+ {
+  "id": "graph-bfs",
+  "family": "Graphs & grids",
+  "title": "Graph BFS with visited on enqueue",
+  "goal": "Use a queue and visited set; mark before enqueuing so nodes aren't duplicated.",
+  "syntax": "Queue<Integer> q=new ArrayDeque<>();\nq.offer(start);seen.add(start);\nwhile(!q.isEmpty()){int u=q.poll();for(int v:adj.get(u))if(seen.add(v))q.offer(v);}",
+  "recall": "Why not mark visited only after removing from the queue?",
+  "trap": "Without visited, a cyclic graph can loop forever.",
+  "problemId": 200,
+  "page": 51,
+  "role": "curated-DSA",
+  "order": 92
  },
  {
   "id": "collections-helpers",
@@ -968,7 +1254,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 414,
   "page": 27,
   "role": "curated",
-  "order": 71
+  "order": 93
  },
  {
   "id": "hb-s33-11",
@@ -982,7 +1268,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-11",
   "role": "handbook",
-  "order": 72
+  "order": 94
  },
  {
   "id": "hb-s33-12",
@@ -996,7 +1282,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-12",
   "role": "handbook",
-  "order": 73
+  "order": 95
+ },
+ {
+  "id": "graph-dfs",
+  "family": "Graphs & grids",
+  "title": "Graph DFS and cycle protection",
+  "goal": "Use recursion or explicit stack and visited to explore a connected component.",
+  "syntax": "void dfs(int u){if(!seen.add(u))return;\n for(int v:adj.get(u))dfs(v);\n}",
+  "recall": "What is DFS complexity O(V+E), and what is call-stack cost?",
+  "trap": "Avoid DFS recursion overflow for very deep inputs; switch to stack as needed.",
+  "problemId": 133,
+  "page": 51,
+  "role": "curated-DSA",
+  "order": 96
  },
  {
   "id": "collections-views",
@@ -1009,7 +1308,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 217,
   "page": 27,
   "role": "curated",
-  "order": 74
+  "order": 97
  },
  {
   "id": "hb-s33-13",
@@ -1023,7 +1322,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-13",
   "role": "handbook",
-  "order": 75
+  "order": 98
  },
  {
   "id": "hb-s33-14",
@@ -1037,7 +1336,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-14",
   "role": "handbook",
-  "order": 76
+  "order": 99
+ },
+ {
+  "id": "graph-topo",
+  "family": "Graphs & grids",
+  "title": "Topological order (Kahn's algorithm)",
+  "goal": "Track indegree, queue zero-indegree nodes, and remove outgoing edges.",
+  "syntax": "for(int i=0;i<n;i++)if(indegree[i]==0)q.offer(i);\nwhile(!q.isEmpty()){int u=q.poll();for(int v:adj.get(u))if(--indegree[v]==0)q.offer(v);}",
+  "recall": "Why does a directed cycle prevent a full ordering?",
+  "trap": "Topological sorting applies to directed acyclic graphs, not every graph.",
+  "problemId": 207,
+  "page": 53,
+  "role": "curated-DSA",
+  "order": 100
  },
  {
   "id": "array-refs",
@@ -1050,7 +1362,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1431,
   "page": 31,
   "role": "curated",
-  "order": 77
+  "order": 101
  },
  {
   "id": "hb-s33-15",
@@ -1064,7 +1376,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-15",
   "role": "handbook",
-  "order": 78
+  "order": 102
  },
  {
   "id": "hb-s33-16",
@@ -1078,7 +1390,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-16",
   "role": "handbook",
-  "order": 79
+  "order": 103
+ },
+ {
+  "id": "graph-dijkstra",
+  "family": "Graphs & grids",
+  "title": "Weighted shortest path: Dijkstra",
+  "goal": "Use a priority queue of (distance,node) when weights are nonnegative.",
+  "syntax": "if(dist[v]>dist[u]+w){dist[v]=dist[u]+w;pq.offer(new State(dist[v],v));}",
+  "recall": "Why is ordinary BFS wrong when positive weights differ?",
+  "trap": "Dijkstra requires nonnegative edge weights; skip stale queue entries.",
+  "problemId": 743,
+  "page": 53,
+  "role": "curated-DSA",
+  "order": 104
  },
  {
   "id": "array-covariance",
@@ -1091,7 +1416,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 118,
   "page": 31,
   "role": "curated",
-  "order": 80
+  "order": 105
  },
  {
   "id": "hb-s33-17",
@@ -1105,7 +1430,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-17",
   "role": "handbook",
-  "order": 81
+  "order": 106
  },
  {
   "id": "hb-s33-18",
@@ -1119,7 +1444,20 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-18",
   "role": "handbook",
-  "order": 82
+  "order": 107
+ },
+ {
+  "id": "rec-backtrack",
+  "family": "Recursion & backtracking",
+  "title": "Backtracking: choose, explore, undo",
+  "goal": "Build a recursion tree and explicitly undo shared mutable state.",
+  "syntax": "path.add(value);search(next);path.remove(path.size()-1);",
+  "recall": "What goes wrong if you forget the undo step?",
+  "trap": "Keep choices and their cleanup symmetric before returning.",
+  "problemId": 78,
+  "page": 55,
+  "role": "curated-DSA",
+  "order": 108
  },
  {
   "id": "array-shallow",
@@ -1132,7 +1470,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1572,
   "page": 31,
   "role": "curated",
-  "order": 83
+  "order": 109
  },
  {
   "id": "hb-s33-19",
@@ -1146,7 +1484,7 @@ export const MICRO_CONCEPTS=[
   "page": 33,
   "sourceSkillId": "s33-19",
   "role": "handbook",
-  "order": 84
+  "order": 110
  },
  {
   "id": "hb-s37-1",
@@ -1160,7 +1498,20 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-1",
   "role": "handbook",
-  "order": 85
+  "order": 111
+ },
+ {
+  "id": "greedy-proof",
+  "family": "Greedy & intervals",
+  "title": "Greedy choice versus counterexamples",
+  "goal": "Give a local decision rule, then justify why it cannot harm the global optimum.",
+  "syntax": "Arrays.sort(intervals,(a,b)->Integer.compare(a[1],b[1]));",
+  "recall": "Why might sorting by earliest END help interval scheduling?",
+  "trap": "Greedy does not work by default—find a counterexample before assuming it does.",
+  "problemId": 435,
+  "page": 57,
+  "role": "curated-DSA",
+  "order": 112
  },
  {
   "id": "array-scan",
@@ -1173,7 +1524,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1732,
   "page": 35,
   "role": "curated",
-  "order": 86
+  "order": 113
  },
  {
   "id": "hb-s37-2",
@@ -1187,7 +1538,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-2",
   "role": "handbook",
-  "order": 87
+  "order": 114
  },
  {
   "id": "hb-s37-3",
@@ -1201,7 +1552,20 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-3",
   "role": "handbook",
-  "order": 88
+  "order": 115
+ },
+ {
+  "id": "dp-state",
+  "family": "Dynamic programming",
+  "title": "DP state, transition and base case",
+  "goal": "Write dp[i], recurrence, base cases and evaluation order before coding.",
+  "syntax": "int[] dp=new int[n+1];dp[0]=0;\ndp[1]=1;\nfor(int i=2;i<=n;i++)dp[i]=dp[i-1]+dp[i-2];",
+  "recall": "Explain the difference between memoization and bottom-up tabulation.",
+  "trap": "Choosing an incomplete state can make the recurrence wrong.",
+  "problemId": 70,
+  "page": 58,
+  "role": "curated-DSA",
+  "order": 116
  },
  {
   "id": "array-inplace",
@@ -1214,7 +1578,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 27,
   "page": 39,
   "role": "curated",
-  "order": 89
+  "order": 117
  },
  {
   "id": "hb-s37-4",
@@ -1228,7 +1592,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-4",
   "role": "handbook",
-  "order": 90
+  "order": 118
  },
  {
   "id": "hb-s37-5",
@@ -1242,7 +1606,20 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-5",
   "role": "handbook",
-  "order": 91
+  "order": 119
+ },
+ {
+  "id": "dp-knapsack",
+  "family": "Dynamic programming",
+  "title": "0/1 knapsack and reverse iteration",
+  "goal": "Use reverse iteration over capacities so each item is used at most once.",
+  "syntax": "for(int value:values)for(int s=target;s>=value;s--)\n dp[s]|=dp[s-value];",
+  "recall": "Why loop backwards for 0/1 and forward for unbounded knapsack?",
+  "trap": "Forward loop incorrectly allows reusing an item in a 0/1 problem.",
+  "problemId": 416,
+  "page": 58,
+  "role": "curated-DSA",
+  "order": 120
  },
  {
   "id": "array-opposite",
@@ -1255,7 +1632,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 167,
   "page": 39,
   "role": "curated",
-  "order": 92
+  "order": 121
  },
  {
   "id": "hb-s37-6",
@@ -1269,7 +1646,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-6",
   "role": "handbook",
-  "order": 93
+  "order": 122
  },
  {
   "id": "hb-s37-7",
@@ -1283,7 +1660,20 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-7",
   "role": "handbook",
-  "order": 94
+  "order": 123
+ },
+ {
+  "id": "dp-grid",
+  "family": "Dynamic programming",
+  "title": "2D grid DP and boundary checks",
+  "goal": "Define dp[r][c] from top/left states and initialize first row/column.",
+  "syntax": "dp[r][c]=grid[r][c]+Math.min(dp[r-1][c],dp[r][c-1]);",
+  "recall": "Which cells need boundary treatment? Draw the 2×2 table.",
+  "trap": "Don't read dp[-1][c] on the first row.",
+  "problemId": 64,
+  "page": 58,
+  "role": "curated-DSA",
+  "order": 124
  },
  {
   "id": "array-merge",
@@ -1296,7 +1686,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 88,
   "page": 39,
   "role": "curated",
-  "order": 95
+  "order": 125
  },
  {
   "id": "hb-s37-8",
@@ -1310,7 +1700,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-8",
   "role": "handbook",
-  "order": 96
+  "order": 126
  },
  {
   "id": "hb-s37-9",
@@ -1324,7 +1714,20 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-9",
   "role": "handbook",
-  "order": 97
+  "order": 127
+ },
+ {
+  "id": "sort-comparator",
+  "family": "Sorting & binary search",
+  "title": "Comparator without integer overflow",
+  "goal": "Sort objects by a field with Integer.compare rather than subtraction.",
+  "syntax": "Arrays.sort(items,(x,y)->Integer.compare(x.end,y.end));",
+  "recall": "Why is x.end-y.end unsafe for extreme integers?",
+  "trap": "Comparator must be consistent and satisfy transitivity.",
+  "problemId": 56,
+  "page": 44,
+  "role": "curated-DSA",
+  "order": 128
  },
  {
   "id": "array-prefix",
@@ -1337,7 +1740,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1480,
   "page": 42,
   "role": "curated",
-  "order": 98
+  "order": 129
  },
  {
   "id": "hb-s37-10",
@@ -1351,7 +1754,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-10",
   "role": "handbook",
-  "order": 99
+  "order": 130
  },
  {
   "id": "hb-s37-11",
@@ -1365,7 +1768,20 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-11",
   "role": "handbook",
-  "order": 100
+  "order": 131
+ },
+ {
+  "id": "binary-bound",
+  "family": "Sorting & binary search",
+  "title": "Binary search: bound invariant and overflow-safe midpoint",
+  "goal": "Maintain a shrinking ordered range and avoid overflow in mid.",
+  "syntax": "int mid=lo+(hi-lo)/2;\nif(a[mid]<target)lo=mid+1;else hi=mid-1;",
+  "recall": "Trace a target not found in a 1-element array.",
+  "trap": "Check loop invariant and off-by-one; only search sorted/monotone conditions.",
+  "problemId": 704,
+  "page": 43,
+  "role": "curated-DSA",
+  "order": 132
  },
  {
   "id": "array-difference",
@@ -1378,7 +1794,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 560,
   "page": 42,
   "role": "curated",
-  "order": 101
+  "order": 133
  },
  {
   "id": "hb-s37-12",
@@ -1392,7 +1808,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-12",
   "role": "handbook",
-  "order": 102
+  "order": 134
  },
  {
   "id": "hb-s37-13",
@@ -1406,7 +1822,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-13",
   "role": "handbook",
-  "order": 103
+  "order": 135
  },
  {
   "id": "array-sliding",
@@ -1419,7 +1835,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 643,
   "page": 41,
   "role": "curated",
-  "order": 104
+  "order": 136
  },
  {
   "id": "hb-s37-14",
@@ -1433,7 +1849,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-14",
   "role": "handbook",
-  "order": 105
+  "order": 137
  },
  {
   "id": "hb-s37-15",
@@ -1447,7 +1863,7 @@ export const MICRO_CONCEPTS=[
   "page": 37,
   "sourceSkillId": "s37-15",
   "role": "handbook",
-  "order": 106
+  "order": 138
  },
  {
   "id": "array-varwindow",
@@ -1460,7 +1876,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 209,
   "page": 41,
   "role": "curated",
-  "order": 107
+  "order": 139
  },
  {
   "id": "hb-s43-1",
@@ -1474,7 +1890,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-1",
   "role": "handbook",
-  "order": 108
+  "order": 140
  },
  {
   "id": "hb-s43-2",
@@ -1488,7 +1904,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-2",
   "role": "handbook",
-  "order": 109
+  "order": 141
  },
  {
   "id": "array-cyclic",
@@ -1501,7 +1917,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1365,
   "page": 35,
   "role": "curated",
-  "order": 110
+  "order": 142
  },
  {
   "id": "hb-s43-3",
@@ -1515,7 +1931,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-3",
   "role": "handbook",
-  "order": 111
+  "order": 143
  },
  {
   "id": "hb-s43-4",
@@ -1529,7 +1945,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-4",
   "role": "handbook",
-  "order": 112
+  "order": 144
  },
  {
   "id": "array-matrixscan",
@@ -1542,7 +1958,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 1572,
   "page": 42,
   "role": "curated",
-  "order": 113
+  "order": 145
  },
  {
   "id": "hb-s43-5",
@@ -1556,7 +1972,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-5",
   "role": "handbook",
-  "order": 114
+  "order": 146
  },
  {
   "id": "hb-s43-6",
@@ -1570,7 +1986,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-6",
   "role": "handbook",
-  "order": 115
+  "order": 147
  },
  {
   "id": "array-sortpattern",
@@ -1583,7 +1999,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 704,
   "page": 43,
   "role": "curated",
-  "order": 116
+  "order": 148
  },
  {
   "id": "hb-s43-7",
@@ -1597,7 +2013,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-7",
   "role": "handbook",
-  "order": 117
+  "order": 149
  },
  {
   "id": "hb-s43-8",
@@ -1611,7 +2027,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-8",
   "role": "handbook",
-  "order": 118
+  "order": 150
  },
  {
   "id": "array-monostack",
@@ -1624,7 +2040,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 739,
   "page": 45,
   "role": "curated",
-  "order": 119
+  "order": 151
  },
  {
   "id": "hb-s43-9",
@@ -1638,7 +2054,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-9",
   "role": "handbook",
-  "order": 120
+  "order": 152
  },
  {
   "id": "hb-s43-10",
@@ -1652,7 +2068,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-10",
   "role": "handbook",
-  "order": 121
+  "order": 153
  },
  {
   "id": "array-edgecases",
@@ -1665,7 +2081,7 @@ export const MICRO_CONCEPTS=[
   "problemId": 414,
   "page": 33,
   "role": "curated",
-  "order": 122
+  "order": 154
  },
  {
   "id": "hb-s43-11",
@@ -1679,7 +2095,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-11",
   "role": "handbook",
-  "order": 123
+  "order": 155
  },
  {
   "id": "hb-s43-12",
@@ -1693,7 +2109,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-12",
   "role": "handbook",
-  "order": 124
+  "order": 156
  },
  {
   "id": "hb-s17-1",
@@ -1707,7 +2123,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-1",
   "role": "handbook",
-  "order": 125
+  "order": 157
  },
  {
   "id": "hb-s43-13",
@@ -1721,7 +2137,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-13",
   "role": "handbook",
-  "order": 126
+  "order": 158
  },
  {
   "id": "hb-s43-14",
@@ -1735,7 +2151,7 @@ export const MICRO_CONCEPTS=[
   "page": 43,
   "sourceSkillId": "s43-14",
   "role": "handbook",
-  "order": 127
+  "order": 159
  },
  {
   "id": "hb-s17-2",
@@ -1749,7 +2165,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-2",
   "role": "handbook",
-  "order": 128
+  "order": 160
  },
  {
   "id": "hb-s44-1",
@@ -1763,7 +2179,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-1",
   "role": "handbook",
-  "order": 129
+  "order": 161
  },
  {
   "id": "hb-s44-2",
@@ -1777,7 +2193,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-2",
   "role": "handbook",
-  "order": 130
+  "order": 162
  },
  {
   "id": "hb-s17-3",
@@ -1791,7 +2207,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-3",
   "role": "handbook",
-  "order": 131
+  "order": 163
  },
  {
   "id": "hb-s44-3",
@@ -1805,7 +2221,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-3",
   "role": "handbook",
-  "order": 132
+  "order": 164
  },
  {
   "id": "hb-s44-4",
@@ -1819,7 +2235,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-4",
   "role": "handbook",
-  "order": 133
+  "order": 165
  },
  {
   "id": "hb-s17-4",
@@ -1833,7 +2249,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-4",
   "role": "handbook",
-  "order": 134
+  "order": 166
  },
  {
   "id": "hb-s44-5",
@@ -1847,7 +2263,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-5",
   "role": "handbook",
-  "order": 135
+  "order": 167
  },
  {
   "id": "hb-s44-6",
@@ -1861,7 +2277,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-6",
   "role": "handbook",
-  "order": 136
+  "order": 168
  },
  {
   "id": "hb-s17-5",
@@ -1875,7 +2291,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-5",
   "role": "handbook",
-  "order": 137
+  "order": 169
  },
  {
   "id": "hb-s44-7",
@@ -1889,7 +2305,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-7",
   "role": "handbook",
-  "order": 138
+  "order": 170
  },
  {
   "id": "hb-s44-8",
@@ -1903,7 +2319,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-8",
   "role": "handbook",
-  "order": 139
+  "order": 171
  },
  {
   "id": "hb-s17-6",
@@ -1917,7 +2333,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-6",
   "role": "handbook",
-  "order": 140
+  "order": 172
  },
  {
   "id": "hb-s44-9",
@@ -1931,7 +2347,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-9",
   "role": "handbook",
-  "order": 141
+  "order": 173
  },
  {
   "id": "hb-s44-10",
@@ -1945,7 +2361,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-10",
   "role": "handbook",
-  "order": 142
+  "order": 174
  },
  {
   "id": "hb-s17-7",
@@ -1959,7 +2375,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-7",
   "role": "handbook",
-  "order": 143
+  "order": 175
  },
  {
   "id": "hb-s44-11",
@@ -1973,7 +2389,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-11",
   "role": "handbook",
-  "order": 144
+  "order": 176
  },
  {
   "id": "hb-s44-12",
@@ -1987,7 +2403,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-12",
   "role": "handbook",
-  "order": 145
+  "order": 177
  },
  {
   "id": "hb-s17-8",
@@ -2001,7 +2417,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-8",
   "role": "handbook",
-  "order": 146
+  "order": 178
  },
  {
   "id": "hb-s44-13",
@@ -2015,7 +2431,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-13",
   "role": "handbook",
-  "order": 147
+  "order": 179
  },
  {
   "id": "hb-s44-14",
@@ -2029,7 +2445,7 @@ export const MICRO_CONCEPTS=[
   "page": 44,
   "sourceSkillId": "s44-14",
   "role": "handbook",
-  "order": 148
+  "order": 180
  },
  {
   "id": "hb-s17-9",
@@ -2043,7 +2459,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-9",
   "role": "handbook",
-  "order": 149
+  "order": 181
  },
  {
   "id": "hb-s45-1",
@@ -2057,7 +2473,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-1",
   "role": "handbook",
-  "order": 150
+  "order": 182
  },
  {
   "id": "hb-s45-2",
@@ -2071,7 +2487,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-2",
   "role": "handbook",
-  "order": 151
+  "order": 183
  },
  {
   "id": "hb-s17-10",
@@ -2085,7 +2501,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-10",
   "role": "handbook",
-  "order": 152
+  "order": 184
  },
  {
   "id": "hb-s45-3",
@@ -2099,7 +2515,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-3",
   "role": "handbook",
-  "order": 153
+  "order": 185
  },
  {
   "id": "hb-s45-4",
@@ -2113,7 +2529,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-4",
   "role": "handbook",
-  "order": 154
+  "order": 186
  },
  {
   "id": "hb-s17-11",
@@ -2127,7 +2543,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-11",
   "role": "handbook",
-  "order": 155
+  "order": 187
  },
  {
   "id": "hb-s45-5",
@@ -2141,7 +2557,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-5",
   "role": "handbook",
-  "order": 156
+  "order": 188
  },
  {
   "id": "hb-s45-6",
@@ -2155,7 +2571,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-6",
   "role": "handbook",
-  "order": 157
+  "order": 189
  },
  {
   "id": "hb-s17-12",
@@ -2169,7 +2585,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-12",
   "role": "handbook",
-  "order": 158
+  "order": 190
  },
  {
   "id": "hb-s45-7",
@@ -2183,7 +2599,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-7",
   "role": "handbook",
-  "order": 159
+  "order": 191
  },
  {
   "id": "hb-s45-8",
@@ -2197,7 +2613,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-8",
   "role": "handbook",
-  "order": 160
+  "order": 192
  },
  {
   "id": "hb-s17-13",
@@ -2211,7 +2627,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-13",
   "role": "handbook",
-  "order": 161
+  "order": 193
  },
  {
   "id": "hb-s45-9",
@@ -2225,7 +2641,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-9",
   "role": "handbook",
-  "order": 162
+  "order": 194
  },
  {
   "id": "hb-s45-10",
@@ -2239,7 +2655,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-10",
   "role": "handbook",
-  "order": 163
+  "order": 195
  },
  {
   "id": "hb-s17-14",
@@ -2253,7 +2669,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-14",
   "role": "handbook",
-  "order": 164
+  "order": 196
  },
  {
   "id": "hb-s45-11",
@@ -2267,7 +2683,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-11",
   "role": "handbook",
-  "order": 165
+  "order": 197
  },
  {
   "id": "hb-s45-12",
@@ -2281,7 +2697,7 @@ export const MICRO_CONCEPTS=[
   "page": 45,
   "sourceSkillId": "s45-12",
   "role": "handbook",
-  "order": 166
+  "order": 198
  },
  {
   "id": "hb-s17-15",
@@ -2295,7 +2711,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-15",
   "role": "handbook",
-  "order": 167
+  "order": 199
  },
  {
   "id": "hb-s46-1",
@@ -2309,7 +2725,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-1",
   "role": "handbook",
-  "order": 168
+  "order": 200
  },
  {
   "id": "hb-s46-2",
@@ -2323,7 +2739,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-2",
   "role": "handbook",
-  "order": 169
+  "order": 201
  },
  {
   "id": "hb-s17-16",
@@ -2337,7 +2753,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-16",
   "role": "handbook",
-  "order": 170
+  "order": 202
  },
  {
   "id": "hb-s46-3",
@@ -2351,7 +2767,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-3",
   "role": "handbook",
-  "order": 171
+  "order": 203
  },
  {
   "id": "hb-s46-4",
@@ -2365,7 +2781,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-4",
   "role": "handbook",
-  "order": 172
+  "order": 204
  },
  {
   "id": "hb-s17-17",
@@ -2379,7 +2795,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-17",
   "role": "handbook",
-  "order": 173
+  "order": 205
  },
  {
   "id": "hb-s46-5",
@@ -2393,7 +2809,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-5",
   "role": "handbook",
-  "order": 174
+  "order": 206
  },
  {
   "id": "hb-s46-6",
@@ -2407,7 +2823,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-6",
   "role": "handbook",
-  "order": 175
+  "order": 207
  },
  {
   "id": "hb-s17-18",
@@ -2421,7 +2837,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-18",
   "role": "handbook",
-  "order": 176
+  "order": 208
  },
  {
   "id": "hb-s46-7",
@@ -2435,7 +2851,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-7",
   "role": "handbook",
-  "order": 177
+  "order": 209
  },
  {
   "id": "hb-s46-8",
@@ -2449,7 +2865,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-8",
   "role": "handbook",
-  "order": 178
+  "order": 210
  },
  {
   "id": "hb-s17-19",
@@ -2463,7 +2879,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-19",
   "role": "handbook",
-  "order": 179
+  "order": 211
  },
  {
   "id": "hb-s46-9",
@@ -2477,7 +2893,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-9",
   "role": "handbook",
-  "order": 180
+  "order": 212
  },
  {
   "id": "hb-s46-10",
@@ -2491,7 +2907,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-10",
   "role": "handbook",
-  "order": 181
+  "order": 213
  },
  {
   "id": "hb-s17-20",
@@ -2505,7 +2921,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-20",
   "role": "handbook",
-  "order": 182
+  "order": 214
  },
  {
   "id": "hb-s46-11",
@@ -2519,7 +2935,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-11",
   "role": "handbook",
-  "order": 183
+  "order": 215
  },
  {
   "id": "hb-s46-12",
@@ -2533,7 +2949,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-12",
   "role": "handbook",
-  "order": 184
+  "order": 216
  },
  {
   "id": "hb-s17-21",
@@ -2547,7 +2963,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-21",
   "role": "handbook",
-  "order": 185
+  "order": 217
  },
  {
   "id": "hb-s46-13",
@@ -2561,7 +2977,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-13",
   "role": "handbook",
-  "order": 186
+  "order": 218
  },
  {
   "id": "hb-s46-14",
@@ -2575,7 +2991,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-14",
   "role": "handbook",
-  "order": 187
+  "order": 219
  },
  {
   "id": "hb-s17-22",
@@ -2589,7 +3005,7 @@ export const MICRO_CONCEPTS=[
   "page": 17,
   "sourceSkillId": "s17-22",
   "role": "handbook",
-  "order": 188
+  "order": 220
  },
  {
   "id": "hb-s46-15",
@@ -2603,7 +3019,7 @@ export const MICRO_CONCEPTS=[
   "page": 46,
   "sourceSkillId": "s46-15",
   "role": "handbook",
-  "order": 189
+  "order": 221
  },
  {
   "id": "hb-s48-1",
@@ -2617,7 +3033,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-1",
   "role": "handbook",
-  "order": 190
+  "order": 222
  },
  {
   "id": "hb-s19-1",
@@ -2631,7 +3047,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-1",
   "role": "handbook",
-  "order": 191
+  "order": 223
  },
  {
   "id": "hb-s48-2",
@@ -2645,7 +3061,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-2",
   "role": "handbook",
-  "order": 192
+  "order": 224
  },
  {
   "id": "hb-s48-3",
@@ -2659,7 +3075,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-3",
   "role": "handbook",
-  "order": 193
+  "order": 225
  },
  {
   "id": "hb-s19-2",
@@ -2673,7 +3089,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-2",
   "role": "handbook",
-  "order": 194
+  "order": 226
  },
  {
   "id": "hb-s48-4",
@@ -2687,7 +3103,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-4",
   "role": "handbook",
-  "order": 195
+  "order": 227
  },
  {
   "id": "hb-s48-5",
@@ -2701,7 +3117,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-5",
   "role": "handbook",
-  "order": 196
+  "order": 228
  },
  {
   "id": "hb-s19-3",
@@ -2715,7 +3131,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-3",
   "role": "handbook",
-  "order": 197
+  "order": 229
  },
  {
   "id": "hb-s48-6",
@@ -2729,7 +3145,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-6",
   "role": "handbook",
-  "order": 198
+  "order": 230
  },
  {
   "id": "hb-s48-7",
@@ -2743,7 +3159,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-7",
   "role": "handbook",
-  "order": 199
+  "order": 231
  },
  {
   "id": "hb-s19-4",
@@ -2757,7 +3173,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-4",
   "role": "handbook",
-  "order": 200
+  "order": 232
  },
  {
   "id": "hb-s48-8",
@@ -2771,7 +3187,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-8",
   "role": "handbook",
-  "order": 201
+  "order": 233
  },
  {
   "id": "hb-s48-9",
@@ -2785,7 +3201,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-9",
   "role": "handbook",
-  "order": 202
+  "order": 234
  },
  {
   "id": "hb-s19-5",
@@ -2799,7 +3215,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-5",
   "role": "handbook",
-  "order": 203
+  "order": 235
  },
  {
   "id": "hb-s48-10",
@@ -2813,7 +3229,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-10",
   "role": "handbook",
-  "order": 204
+  "order": 236
  },
  {
   "id": "hb-s48-11",
@@ -2827,7 +3243,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-11",
   "role": "handbook",
-  "order": 205
+  "order": 237
  },
  {
   "id": "hb-s19-6",
@@ -2841,7 +3257,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-6",
   "role": "handbook",
-  "order": 206
+  "order": 238
  },
  {
   "id": "hb-s48-12",
@@ -2855,7 +3271,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-12",
   "role": "handbook",
-  "order": 207
+  "order": 239
  },
  {
   "id": "hb-s48-13",
@@ -2869,7 +3285,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-13",
   "role": "handbook",
-  "order": 208
+  "order": 240
  },
  {
   "id": "hb-s19-7",
@@ -2883,7 +3299,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-7",
   "role": "handbook",
-  "order": 209
+  "order": 241
  },
  {
   "id": "hb-s48-14",
@@ -2897,7 +3313,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-14",
   "role": "handbook",
-  "order": 210
+  "order": 242
  },
  {
   "id": "hb-s48-15",
@@ -2911,7 +3327,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-15",
   "role": "handbook",
-  "order": 211
+  "order": 243
  },
  {
   "id": "hb-s19-8",
@@ -2925,7 +3341,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-8",
   "role": "handbook",
-  "order": 212
+  "order": 244
  },
  {
   "id": "hb-s48-16",
@@ -2939,7 +3355,7 @@ export const MICRO_CONCEPTS=[
   "page": 48,
   "sourceSkillId": "s48-16",
   "role": "handbook",
-  "order": 213
+  "order": 245
  },
  {
   "id": "hb-s50-1",
@@ -2953,7 +3369,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-1",
   "role": "handbook",
-  "order": 214
+  "order": 246
  },
  {
   "id": "hb-s19-9",
@@ -2967,7 +3383,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-9",
   "role": "handbook",
-  "order": 215
+  "order": 247
  },
  {
   "id": "hb-s50-2",
@@ -2981,7 +3397,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-2",
   "role": "handbook",
-  "order": 216
+  "order": 248
  },
  {
   "id": "hb-s50-3",
@@ -2995,7 +3411,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-3",
   "role": "handbook",
-  "order": 217
+  "order": 249
  },
  {
   "id": "hb-s19-10",
@@ -3009,7 +3425,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-10",
   "role": "handbook",
-  "order": 218
+  "order": 250
  },
  {
   "id": "hb-s50-4",
@@ -3023,7 +3439,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-4",
   "role": "handbook",
-  "order": 219
+  "order": 251
  },
  {
   "id": "hb-s50-5",
@@ -3037,7 +3453,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-5",
   "role": "handbook",
-  "order": 220
+  "order": 252
  },
  {
   "id": "hb-s19-11",
@@ -3051,7 +3467,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-11",
   "role": "handbook",
-  "order": 221
+  "order": 253
  },
  {
   "id": "hb-s50-6",
@@ -3065,7 +3481,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-6",
   "role": "handbook",
-  "order": 222
+  "order": 254
  },
  {
   "id": "hb-s50-7",
@@ -3079,7 +3495,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-7",
   "role": "handbook",
-  "order": 223
+  "order": 255
  },
  {
   "id": "hb-s19-12",
@@ -3093,7 +3509,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-12",
   "role": "handbook",
-  "order": 224
+  "order": 256
  },
  {
   "id": "hb-s50-8",
@@ -3107,7 +3523,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-8",
   "role": "handbook",
-  "order": 225
+  "order": 257
  },
  {
   "id": "hb-s50-9",
@@ -3121,7 +3537,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-9",
   "role": "handbook",
-  "order": 226
+  "order": 258
  },
  {
   "id": "hb-s19-13",
@@ -3135,7 +3551,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-13",
   "role": "handbook",
-  "order": 227
+  "order": 259
  },
  {
   "id": "hb-s50-10",
@@ -3149,7 +3565,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-10",
   "role": "handbook",
-  "order": 228
+  "order": 260
  },
  {
   "id": "hb-s50-11",
@@ -3163,7 +3579,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-11",
   "role": "handbook",
-  "order": 229
+  "order": 261
  },
  {
   "id": "hb-s19-14",
@@ -3177,7 +3593,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-14",
   "role": "handbook",
-  "order": 230
+  "order": 262
  },
  {
   "id": "hb-s50-12",
@@ -3191,7 +3607,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-12",
   "role": "handbook",
-  "order": 231
+  "order": 263
  },
  {
   "id": "hb-s50-13",
@@ -3205,7 +3621,7 @@ export const MICRO_CONCEPTS=[
   "page": 50,
   "sourceSkillId": "s50-13",
   "role": "handbook",
-  "order": 232
+  "order": 264
  },
  {
   "id": "hb-s19-15",
@@ -3219,7 +3635,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-15",
   "role": "handbook",
-  "order": 233
+  "order": 265
  },
  {
   "id": "hb-s51-1",
@@ -3233,7 +3649,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-1",
   "role": "handbook",
-  "order": 234
+  "order": 266
  },
  {
   "id": "hb-s51-2",
@@ -3247,7 +3663,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-2",
   "role": "handbook",
-  "order": 235
+  "order": 267
  },
  {
   "id": "hb-s19-16",
@@ -3261,7 +3677,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-16",
   "role": "handbook",
-  "order": 236
+  "order": 268
  },
  {
   "id": "hb-s51-3",
@@ -3275,7 +3691,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-3",
   "role": "handbook",
-  "order": 237
+  "order": 269
  },
  {
   "id": "hb-s51-4",
@@ -3289,7 +3705,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-4",
   "role": "handbook",
-  "order": 238
+  "order": 270
  },
  {
   "id": "hb-s19-17",
@@ -3303,7 +3719,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-17",
   "role": "handbook",
-  "order": 239
+  "order": 271
  },
  {
   "id": "hb-s51-5",
@@ -3317,7 +3733,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-5",
   "role": "handbook",
-  "order": 240
+  "order": 272
  },
  {
   "id": "hb-s51-6",
@@ -3331,7 +3747,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-6",
   "role": "handbook",
-  "order": 241
+  "order": 273
  },
  {
   "id": "hb-s19-18",
@@ -3345,7 +3761,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-18",
   "role": "handbook",
-  "order": 242
+  "order": 274
  },
  {
   "id": "hb-s51-7",
@@ -3359,7 +3775,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-7",
   "role": "handbook",
-  "order": 243
+  "order": 275
  },
  {
   "id": "hb-s51-8",
@@ -3373,7 +3789,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-8",
   "role": "handbook",
-  "order": 244
+  "order": 276
  },
  {
   "id": "hb-s19-19",
@@ -3387,7 +3803,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-19",
   "role": "handbook",
-  "order": 245
+  "order": 277
  },
  {
   "id": "hb-s51-9",
@@ -3401,7 +3817,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-9",
   "role": "handbook",
-  "order": 246
+  "order": 278
  },
  {
   "id": "hb-s51-10",
@@ -3415,7 +3831,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-10",
   "role": "handbook",
-  "order": 247
+  "order": 279
  },
  {
   "id": "hb-s19-20",
@@ -3429,7 +3845,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-20",
   "role": "handbook",
-  "order": 248
+  "order": 280
  },
  {
   "id": "hb-s51-11",
@@ -3443,7 +3859,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-11",
   "role": "handbook",
-  "order": 249
+  "order": 281
  },
  {
   "id": "hb-s51-12",
@@ -3457,7 +3873,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-12",
   "role": "handbook",
-  "order": 250
+  "order": 282
  },
  {
   "id": "hb-s19-21",
@@ -3471,7 +3887,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-21",
   "role": "handbook",
-  "order": 251
+  "order": 283
  },
  {
   "id": "hb-s51-13",
@@ -3485,7 +3901,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-13",
   "role": "handbook",
-  "order": 252
+  "order": 284
  },
  {
   "id": "hb-s51-14",
@@ -3499,7 +3915,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-14",
   "role": "handbook",
-  "order": 253
+  "order": 285
  },
  {
   "id": "hb-s19-22",
@@ -3513,7 +3929,7 @@ export const MICRO_CONCEPTS=[
   "page": 19,
   "sourceSkillId": "s19-22",
   "role": "handbook",
-  "order": 254
+  "order": 286
  },
  {
   "id": "hb-s51-15",
@@ -3527,7 +3943,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-15",
   "role": "handbook",
-  "order": 255
+  "order": 287
  },
  {
   "id": "hb-s51-16",
@@ -3541,7 +3957,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-16",
   "role": "handbook",
-  "order": 256
+  "order": 288
  },
  {
   "id": "hb-s23-1",
@@ -3555,7 +3971,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-1",
   "role": "handbook",
-  "order": 257
+  "order": 289
  },
  {
   "id": "hb-s51-17",
@@ -3569,7 +3985,7 @@ export const MICRO_CONCEPTS=[
   "page": 51,
   "sourceSkillId": "s51-17",
   "role": "handbook",
-  "order": 258
+  "order": 290
  },
  {
   "id": "hb-s53-1",
@@ -3583,7 +3999,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-1",
   "role": "handbook",
-  "order": 259
+  "order": 291
  },
  {
   "id": "hb-s23-2",
@@ -3597,7 +4013,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-2",
   "role": "handbook",
-  "order": 260
+  "order": 292
  },
  {
   "id": "hb-s53-2",
@@ -3611,7 +4027,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-2",
   "role": "handbook",
-  "order": 261
+  "order": 293
  },
  {
   "id": "hb-s53-3",
@@ -3625,7 +4041,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-3",
   "role": "handbook",
-  "order": 262
+  "order": 294
  },
  {
   "id": "hb-s23-3",
@@ -3639,7 +4055,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-3",
   "role": "handbook",
-  "order": 263
+  "order": 295
  },
  {
   "id": "hb-s53-4",
@@ -3653,7 +4069,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-4",
   "role": "handbook",
-  "order": 264
+  "order": 296
  },
  {
   "id": "hb-s53-5",
@@ -3667,7 +4083,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-5",
   "role": "handbook",
-  "order": 265
+  "order": 297
  },
  {
   "id": "hb-s23-4",
@@ -3681,7 +4097,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-4",
   "role": "handbook",
-  "order": 266
+  "order": 298
  },
  {
   "id": "hb-s53-6",
@@ -3695,7 +4111,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-6",
   "role": "handbook",
-  "order": 267
+  "order": 299
  },
  {
   "id": "hb-s53-7",
@@ -3709,7 +4125,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-7",
   "role": "handbook",
-  "order": 268
+  "order": 300
  },
  {
   "id": "hb-s23-5",
@@ -3723,7 +4139,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-5",
   "role": "handbook",
-  "order": 269
+  "order": 301
  },
  {
   "id": "hb-s53-8",
@@ -3737,7 +4153,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-8",
   "role": "handbook",
-  "order": 270
+  "order": 302
  },
  {
   "id": "hb-s53-9",
@@ -3751,7 +4167,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-9",
   "role": "handbook",
-  "order": 271
+  "order": 303
  },
  {
   "id": "hb-s23-6",
@@ -3765,7 +4181,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-6",
   "role": "handbook",
-  "order": 272
+  "order": 304
  },
  {
   "id": "hb-s53-10",
@@ -3779,7 +4195,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-10",
   "role": "handbook",
-  "order": 273
+  "order": 305
  },
  {
   "id": "hb-s53-11",
@@ -3793,7 +4209,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-11",
   "role": "handbook",
-  "order": 274
+  "order": 306
  },
  {
   "id": "hb-s23-7",
@@ -3807,7 +4223,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-7",
   "role": "handbook",
-  "order": 275
+  "order": 307
  },
  {
   "id": "hb-s53-12",
@@ -3821,7 +4237,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-12",
   "role": "handbook",
-  "order": 276
+  "order": 308
  },
  {
   "id": "hb-s53-13",
@@ -3835,7 +4251,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-13",
   "role": "handbook",
-  "order": 277
+  "order": 309
  },
  {
   "id": "hb-s23-8",
@@ -3849,7 +4265,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-8",
   "role": "handbook",
-  "order": 278
+  "order": 310
  },
  {
   "id": "hb-s53-14",
@@ -3863,7 +4279,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-14",
   "role": "handbook",
-  "order": 279
+  "order": 311
  },
  {
   "id": "hb-s53-15",
@@ -3877,7 +4293,7 @@ export const MICRO_CONCEPTS=[
   "page": 53,
   "sourceSkillId": "s53-15",
   "role": "handbook",
-  "order": 280
+  "order": 312
  },
  {
   "id": "hb-s23-9",
@@ -3891,7 +4307,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-9",
   "role": "handbook",
-  "order": 281
+  "order": 313
  },
  {
   "id": "hb-s55-1",
@@ -3905,7 +4321,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-1",
   "role": "handbook",
-  "order": 282
+  "order": 314
  },
  {
   "id": "hb-s55-2",
@@ -3919,7 +4335,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-2",
   "role": "handbook",
-  "order": 283
+  "order": 315
  },
  {
   "id": "hb-s23-10",
@@ -3933,7 +4349,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-10",
   "role": "handbook",
-  "order": 284
+  "order": 316
  },
  {
   "id": "hb-s55-3",
@@ -3947,7 +4363,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-3",
   "role": "handbook",
-  "order": 285
+  "order": 317
  },
  {
   "id": "hb-s55-4",
@@ -3961,7 +4377,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-4",
   "role": "handbook",
-  "order": 286
+  "order": 318
  },
  {
   "id": "hb-s23-11",
@@ -3975,7 +4391,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-11",
   "role": "handbook",
-  "order": 287
+  "order": 319
  },
  {
   "id": "hb-s55-5",
@@ -3989,7 +4405,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-5",
   "role": "handbook",
-  "order": 288
+  "order": 320
  },
  {
   "id": "hb-s55-6",
@@ -4003,7 +4419,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-6",
   "role": "handbook",
-  "order": 289
+  "order": 321
  },
  {
   "id": "hb-s23-12",
@@ -4017,7 +4433,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-12",
   "role": "handbook",
-  "order": 290
+  "order": 322
  },
  {
   "id": "hb-s55-7",
@@ -4031,7 +4447,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-7",
   "role": "handbook",
-  "order": 291
+  "order": 323
  },
  {
   "id": "hb-s55-8",
@@ -4045,7 +4461,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-8",
   "role": "handbook",
-  "order": 292
+  "order": 324
  },
  {
   "id": "hb-s23-13",
@@ -4059,7 +4475,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-13",
   "role": "handbook",
-  "order": 293
+  "order": 325
  },
  {
   "id": "hb-s55-9",
@@ -4073,7 +4489,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-9",
   "role": "handbook",
-  "order": 294
+  "order": 326
  },
  {
   "id": "hb-s55-10",
@@ -4087,7 +4503,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-10",
   "role": "handbook",
-  "order": 295
+  "order": 327
  },
  {
   "id": "hb-s23-14",
@@ -4101,7 +4517,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-14",
   "role": "handbook",
-  "order": 296
+  "order": 328
  },
  {
   "id": "hb-s55-11",
@@ -4115,7 +4531,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-11",
   "role": "handbook",
-  "order": 297
+  "order": 329
  },
  {
   "id": "hb-s55-12",
@@ -4129,7 +4545,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-12",
   "role": "handbook",
-  "order": 298
+  "order": 330
  },
  {
   "id": "hb-s23-15",
@@ -4143,7 +4559,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-15",
   "role": "handbook",
-  "order": 299
+  "order": 331
  },
  {
   "id": "hb-s55-13",
@@ -4157,7 +4573,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-13",
   "role": "handbook",
-  "order": 300
+  "order": 332
  },
  {
   "id": "hb-s55-14",
@@ -4171,7 +4587,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-14",
   "role": "handbook",
-  "order": 301
+  "order": 333
  },
  {
   "id": "hb-s23-16",
@@ -4185,7 +4601,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-16",
   "role": "handbook",
-  "order": 302
+  "order": 334
  },
  {
   "id": "hb-s55-15",
@@ -4199,7 +4615,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-15",
   "role": "handbook",
-  "order": 303
+  "order": 335
  },
  {
   "id": "hb-s55-16",
@@ -4213,7 +4629,7 @@ export const MICRO_CONCEPTS=[
   "page": 55,
   "sourceSkillId": "s55-16",
   "role": "handbook",
-  "order": 304
+  "order": 336
  },
  {
   "id": "hb-s23-17",
@@ -4227,7 +4643,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-17",
   "role": "handbook",
-  "order": 305
+  "order": 337
  },
  {
   "id": "hb-s57-1",
@@ -4241,7 +4657,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-1",
   "role": "handbook",
-  "order": 306
+  "order": 338
  },
  {
   "id": "hb-s57-2",
@@ -4255,7 +4671,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-2",
   "role": "handbook",
-  "order": 307
+  "order": 339
  },
  {
   "id": "hb-s23-18",
@@ -4269,7 +4685,7 @@ export const MICRO_CONCEPTS=[
   "page": 23,
   "sourceSkillId": "s23-18",
   "role": "handbook",
-  "order": 308
+  "order": 340
  },
  {
   "id": "hb-s57-3",
@@ -4283,7 +4699,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-3",
   "role": "handbook",
-  "order": 309
+  "order": 341
  },
  {
   "id": "hb-s57-4",
@@ -4297,7 +4713,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-4",
   "role": "handbook",
-  "order": 310
+  "order": 342
  },
  {
   "id": "hb-s27-1",
@@ -4311,7 +4727,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-1",
   "role": "handbook",
-  "order": 311
+  "order": 343
  },
  {
   "id": "hb-s57-5",
@@ -4325,7 +4741,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-5",
   "role": "handbook",
-  "order": 312
+  "order": 344
  },
  {
   "id": "hb-s57-6",
@@ -4339,7 +4755,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-6",
   "role": "handbook",
-  "order": 313
+  "order": 345
  },
  {
   "id": "hb-s27-2",
@@ -4353,7 +4769,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-2",
   "role": "handbook",
-  "order": 314
+  "order": 346
  },
  {
   "id": "hb-s57-7",
@@ -4367,7 +4783,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-7",
   "role": "handbook",
-  "order": 315
+  "order": 347
  },
  {
   "id": "hb-s57-8",
@@ -4381,7 +4797,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-8",
   "role": "handbook",
-  "order": 316
+  "order": 348
  },
  {
   "id": "hb-s27-3",
@@ -4395,7 +4811,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-3",
   "role": "handbook",
-  "order": 317
+  "order": 349
  },
  {
   "id": "hb-s57-9",
@@ -4409,7 +4825,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-9",
   "role": "handbook",
-  "order": 318
+  "order": 350
  },
  {
   "id": "hb-s57-10",
@@ -4423,7 +4839,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-10",
   "role": "handbook",
-  "order": 319
+  "order": 351
  },
  {
   "id": "hb-s27-4",
@@ -4437,7 +4853,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-4",
   "role": "handbook",
-  "order": 320
+  "order": 352
  },
  {
   "id": "hb-s57-11",
@@ -4451,7 +4867,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-11",
   "role": "handbook",
-  "order": 321
+  "order": 353
  },
  {
   "id": "hb-s57-12",
@@ -4465,7 +4881,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-12",
   "role": "handbook",
-  "order": 322
+  "order": 354
  },
  {
   "id": "hb-s27-5",
@@ -4479,7 +4895,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-5",
   "role": "handbook",
-  "order": 323
+  "order": 355
  },
  {
   "id": "hb-s57-13",
@@ -4493,7 +4909,7 @@ export const MICRO_CONCEPTS=[
   "page": 57,
   "sourceSkillId": "s57-13",
   "role": "handbook",
-  "order": 324
+  "order": 356
  },
  {
   "id": "hb-s58-1",
@@ -4507,7 +4923,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-1",
   "role": "handbook",
-  "order": 325
+  "order": 357
  },
  {
   "id": "hb-s27-6",
@@ -4521,7 +4937,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-6",
   "role": "handbook",
-  "order": 326
+  "order": 358
  },
  {
   "id": "hb-s58-2",
@@ -4535,7 +4951,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-2",
   "role": "handbook",
-  "order": 327
+  "order": 359
  },
  {
   "id": "hb-s58-3",
@@ -4549,7 +4965,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-3",
   "role": "handbook",
-  "order": 328
+  "order": 360
  },
  {
   "id": "hb-s27-7",
@@ -4563,7 +4979,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-7",
   "role": "handbook",
-  "order": 329
+  "order": 361
  },
  {
   "id": "hb-s58-4",
@@ -4577,7 +4993,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-4",
   "role": "handbook",
-  "order": 330
+  "order": 362
  },
  {
   "id": "hb-s58-5",
@@ -4591,7 +5007,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-5",
   "role": "handbook",
-  "order": 331
+  "order": 363
  },
  {
   "id": "hb-s27-8",
@@ -4605,7 +5021,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-8",
   "role": "handbook",
-  "order": 332
+  "order": 364
  },
  {
   "id": "hb-s58-6",
@@ -4619,7 +5035,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-6",
   "role": "handbook",
-  "order": 333
+  "order": 365
  },
  {
   "id": "hb-s58-7",
@@ -4633,7 +5049,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-7",
   "role": "handbook",
-  "order": 334
+  "order": 366
  },
  {
   "id": "hb-s27-9",
@@ -4647,7 +5063,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-9",
   "role": "handbook",
-  "order": 335
+  "order": 367
  },
  {
   "id": "hb-s58-8",
@@ -4661,7 +5077,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-8",
   "role": "handbook",
-  "order": 336
+  "order": 368
  },
  {
   "id": "hb-s58-9",
@@ -4675,7 +5091,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-9",
   "role": "handbook",
-  "order": 337
+  "order": 369
  },
  {
   "id": "hb-s27-10",
@@ -4689,7 +5105,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-10",
   "role": "handbook",
-  "order": 338
+  "order": 370
  },
  {
   "id": "hb-s58-10",
@@ -4703,7 +5119,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-10",
   "role": "handbook",
-  "order": 339
+  "order": 371
  },
  {
   "id": "hb-s58-11",
@@ -4717,7 +5133,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-11",
   "role": "handbook",
-  "order": 340
+  "order": 372
  },
  {
   "id": "hb-s27-11",
@@ -4731,7 +5147,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-11",
   "role": "handbook",
-  "order": 341
+  "order": 373
  },
  {
   "id": "hb-s58-12",
@@ -4745,7 +5161,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-12",
   "role": "handbook",
-  "order": 342
+  "order": 374
  },
  {
   "id": "hb-s58-13",
@@ -4759,7 +5175,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-13",
   "role": "handbook",
-  "order": 343
+  "order": 375
  },
  {
   "id": "hb-s27-12",
@@ -4773,7 +5189,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-12",
   "role": "handbook",
-  "order": 344
+  "order": 376
  },
  {
   "id": "hb-s58-14",
@@ -4787,7 +5203,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-14",
   "role": "handbook",
-  "order": 345
+  "order": 377
  },
  {
   "id": "hb-s58-15",
@@ -4801,7 +5217,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-15",
   "role": "handbook",
-  "order": 346
+  "order": 378
  },
  {
   "id": "hb-s27-13",
@@ -4815,7 +5231,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-13",
   "role": "handbook",
-  "order": 347
+  "order": 379
  },
  {
   "id": "hb-s58-16",
@@ -4829,7 +5245,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-16",
   "role": "handbook",
-  "order": 348
+  "order": 380
  },
  {
   "id": "hb-s58-17",
@@ -4843,7 +5259,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-17",
   "role": "handbook",
-  "order": 349
+  "order": 381
  },
  {
   "id": "hb-s27-14",
@@ -4857,7 +5273,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-14",
   "role": "handbook",
-  "order": 350
+  "order": 382
  },
  {
   "id": "hb-s58-18",
@@ -4871,7 +5287,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-18",
   "role": "handbook",
-  "order": 351
+  "order": 383
  },
  {
   "id": "hb-s58-19",
@@ -4885,7 +5301,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-19",
   "role": "handbook",
-  "order": 352
+  "order": 384
  },
  {
   "id": "hb-s27-15",
@@ -4899,7 +5315,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-15",
   "role": "handbook",
-  "order": 353
+  "order": 385
  },
  {
   "id": "hb-s58-20",
@@ -4913,7 +5329,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-20",
   "role": "handbook",
-  "order": 354
+  "order": 386
  },
  {
   "id": "hb-s58-21",
@@ -4927,7 +5343,7 @@ export const MICRO_CONCEPTS=[
   "page": 58,
   "sourceSkillId": "s58-21",
   "role": "handbook",
-  "order": 355
+  "order": 387
  },
  {
   "id": "hb-s27-16",
@@ -4941,7 +5357,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-16",
   "role": "handbook",
-  "order": 356
+  "order": 388
  },
  {
   "id": "hb-s60-1",
@@ -4955,7 +5371,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-1",
   "role": "handbook",
-  "order": 357
+  "order": 389
  },
  {
   "id": "hb-s60-2",
@@ -4969,7 +5385,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-2",
   "role": "handbook",
-  "order": 358
+  "order": 390
  },
  {
   "id": "hb-s27-17",
@@ -4983,7 +5399,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-17",
   "role": "handbook",
-  "order": 359
+  "order": 391
  },
  {
   "id": "hb-s60-3",
@@ -4997,7 +5413,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-3",
   "role": "handbook",
-  "order": 360
+  "order": 392
  },
  {
   "id": "hb-s60-4",
@@ -5011,7 +5427,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-4",
   "role": "handbook",
-  "order": 361
+  "order": 393
  },
  {
   "id": "hb-s27-18",
@@ -5025,7 +5441,7 @@ export const MICRO_CONCEPTS=[
   "page": 27,
   "sourceSkillId": "s27-18",
   "role": "handbook",
-  "order": 362
+  "order": 394
  },
  {
   "id": "hb-s60-5",
@@ -5039,7 +5455,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-5",
   "role": "handbook",
-  "order": 363
+  "order": 395
  },
  {
   "id": "hb-s60-6",
@@ -5053,7 +5469,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-6",
   "role": "handbook",
-  "order": 364
+  "order": 396
  },
  {
   "id": "hb-s29-1",
@@ -5067,7 +5483,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-1",
   "role": "handbook",
-  "order": 365
+  "order": 397
  },
  {
   "id": "hb-s60-7",
@@ -5081,7 +5497,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-7",
   "role": "handbook",
-  "order": 366
+  "order": 398
  },
  {
   "id": "hb-s60-8",
@@ -5095,7 +5511,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-8",
   "role": "handbook",
-  "order": 367
+  "order": 399
  },
  {
   "id": "hb-s29-2",
@@ -5109,7 +5525,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-2",
   "role": "handbook",
-  "order": 368
+  "order": 400
  },
  {
   "id": "hb-s60-9",
@@ -5123,7 +5539,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-9",
   "role": "handbook",
-  "order": 369
+  "order": 401
  },
  {
   "id": "hb-s60-10",
@@ -5137,7 +5553,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-10",
   "role": "handbook",
-  "order": 370
+  "order": 402
  },
  {
   "id": "hb-s29-3",
@@ -5151,7 +5567,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-3",
   "role": "handbook",
-  "order": 371
+  "order": 403
  },
  {
   "id": "hb-s60-11",
@@ -5165,7 +5581,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-11",
   "role": "handbook",
-  "order": 372
+  "order": 404
  },
  {
   "id": "hb-s60-12",
@@ -5179,7 +5595,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-12",
   "role": "handbook",
-  "order": 373
+  "order": 405
  },
  {
   "id": "hb-s29-4",
@@ -5193,7 +5609,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-4",
   "role": "handbook",
-  "order": 374
+  "order": 406
  },
  {
   "id": "hb-s60-13",
@@ -5207,7 +5623,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-13",
   "role": "handbook",
-  "order": 375
+  "order": 407
  },
  {
   "id": "hb-s60-14",
@@ -5221,7 +5637,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-14",
   "role": "handbook",
-  "order": 376
+  "order": 408
  },
  {
   "id": "hb-s29-5",
@@ -5235,7 +5651,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-5",
   "role": "handbook",
-  "order": 377
+  "order": 409
  },
  {
   "id": "hb-s60-15",
@@ -5249,7 +5665,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-15",
   "role": "handbook",
-  "order": 378
+  "order": 410
  },
  {
   "id": "hb-s60-16",
@@ -5263,7 +5679,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-16",
   "role": "handbook",
-  "order": 379
+  "order": 411
  },
  {
   "id": "hb-s29-6",
@@ -5277,7 +5693,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-6",
   "role": "handbook",
-  "order": 380
+  "order": 412
  },
  {
   "id": "hb-s60-17",
@@ -5291,7 +5707,7 @@ export const MICRO_CONCEPTS=[
   "page": 60,
   "sourceSkillId": "s60-17",
   "role": "handbook",
-  "order": 381
+  "order": 413
  },
  {
   "id": "hb-s29-7",
@@ -5305,7 +5721,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-7",
   "role": "handbook",
-  "order": 382
+  "order": 414
  },
  {
   "id": "hb-s29-8",
@@ -5319,7 +5735,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-8",
   "role": "handbook",
-  "order": 383
+  "order": 415
  },
  {
   "id": "hb-s29-9",
@@ -5333,7 +5749,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-9",
   "role": "handbook",
-  "order": 384
+  "order": 416
  },
  {
   "id": "hb-s29-10",
@@ -5347,7 +5763,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-10",
   "role": "handbook",
-  "order": 385
+  "order": 417
  },
  {
   "id": "hb-s29-11",
@@ -5361,7 +5777,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-11",
   "role": "handbook",
-  "order": 386
+  "order": 418
  },
  {
   "id": "hb-s29-12",
@@ -5375,7 +5791,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-12",
   "role": "handbook",
-  "order": 387
+  "order": 419
  },
  {
   "id": "hb-s29-13",
@@ -5389,7 +5805,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-13",
   "role": "handbook",
-  "order": 388
+  "order": 420
  },
  {
   "id": "hb-s29-14",
@@ -5403,7 +5819,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-14",
   "role": "handbook",
-  "order": 389
+  "order": 421
  },
  {
   "id": "hb-s29-15",
@@ -5417,7 +5833,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-15",
   "role": "handbook",
-  "order": 390
+  "order": 422
  },
  {
   "id": "hb-s29-16",
@@ -5431,7 +5847,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-16",
   "role": "handbook",
-  "order": 391
+  "order": 423
  },
  {
   "id": "hb-s29-17",
@@ -5445,7 +5861,7 @@ export const MICRO_CONCEPTS=[
   "page": 29,
   "sourceSkillId": "s29-17",
   "role": "handbook",
-  "order": 392
+  "order": 424
  },
  {
   "id": "hb-s31-1",
@@ -5459,7 +5875,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-1",
   "role": "handbook",
-  "order": 393
+  "order": 425
  },
  {
   "id": "hb-s31-2",
@@ -5473,7 +5889,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-2",
   "role": "handbook",
-  "order": 394
+  "order": 426
  },
  {
   "id": "hb-s31-3",
@@ -5487,7 +5903,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-3",
   "role": "handbook",
-  "order": 395
+  "order": 427
  },
  {
   "id": "hb-s31-4",
@@ -5501,7 +5917,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-4",
   "role": "handbook",
-  "order": 396
+  "order": 428
  },
  {
   "id": "hb-s31-5",
@@ -5515,7 +5931,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-5",
   "role": "handbook",
-  "order": 397
+  "order": 429
  },
  {
   "id": "hb-s31-6",
@@ -5529,7 +5945,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-6",
   "role": "handbook",
-  "order": 398
+  "order": 430
  },
  {
   "id": "hb-s31-7",
@@ -5543,7 +5959,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-7",
   "role": "handbook",
-  "order": 399
+  "order": 431
  },
  {
   "id": "hb-s31-8",
@@ -5557,7 +5973,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-8",
   "role": "handbook",
-  "order": 400
+  "order": 432
  },
  {
   "id": "hb-s31-9",
@@ -5571,7 +5987,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-9",
   "role": "handbook",
-  "order": 401
+  "order": 433
  },
  {
   "id": "hb-s31-10",
@@ -5585,7 +6001,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-10",
   "role": "handbook",
-  "order": 402
+  "order": 434
  },
  {
   "id": "hb-s31-11",
@@ -5599,7 +6015,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-11",
   "role": "handbook",
-  "order": 403
+  "order": 435
  },
  {
   "id": "hb-s31-12",
@@ -5613,7 +6029,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-12",
   "role": "handbook",
-  "order": 404
+  "order": 436
  },
  {
   "id": "hb-s31-13",
@@ -5627,7 +6043,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-13",
   "role": "handbook",
-  "order": 405
+  "order": 437
  },
  {
   "id": "hb-s31-14",
@@ -5641,7 +6057,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-14",
   "role": "handbook",
-  "order": 406
+  "order": 438
  },
  {
   "id": "hb-s31-15",
@@ -5655,7 +6071,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-15",
   "role": "handbook",
-  "order": 407
+  "order": 439
  },
  {
   "id": "hb-s31-16",
@@ -5669,7 +6085,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-16",
   "role": "handbook",
-  "order": 408
+  "order": 440
  },
  {
   "id": "hb-s31-17",
@@ -5683,7 +6099,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-17",
   "role": "handbook",
-  "order": 409
+  "order": 441
  },
  {
   "id": "hb-s31-18",
@@ -5697,7 +6113,7 @@ export const MICRO_CONCEPTS=[
   "page": 31,
   "sourceSkillId": "s31-18",
   "role": "handbook",
-  "order": 410
+  "order": 442
  },
  {
   "id": "hb-s35-1",
@@ -5711,7 +6127,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-1",
   "role": "handbook",
-  "order": 411
+  "order": 443
  },
  {
   "id": "hb-s35-2",
@@ -5725,7 +6141,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-2",
   "role": "handbook",
-  "order": 412
+  "order": 444
  },
  {
   "id": "hb-s35-3",
@@ -5739,7 +6155,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-3",
   "role": "handbook",
-  "order": 413
+  "order": 445
  },
  {
   "id": "hb-s35-4",
@@ -5753,7 +6169,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-4",
   "role": "handbook",
-  "order": 414
+  "order": 446
  },
  {
   "id": "hb-s35-5",
@@ -5767,7 +6183,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-5",
   "role": "handbook",
-  "order": 415
+  "order": 447
  },
  {
   "id": "hb-s35-6",
@@ -5781,7 +6197,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-6",
   "role": "handbook",
-  "order": 416
+  "order": 448
  },
  {
   "id": "hb-s35-7",
@@ -5795,7 +6211,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-7",
   "role": "handbook",
-  "order": 417
+  "order": 449
  },
  {
   "id": "hb-s35-8",
@@ -5809,7 +6225,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-8",
   "role": "handbook",
-  "order": 418
+  "order": 450
  },
  {
   "id": "hb-s35-9",
@@ -5823,7 +6239,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-9",
   "role": "handbook",
-  "order": 419
+  "order": 451
  },
  {
   "id": "hb-s35-10",
@@ -5837,7 +6253,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-10",
   "role": "handbook",
-  "order": 420
+  "order": 452
  },
  {
   "id": "hb-s35-11",
@@ -5851,7 +6267,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-11",
   "role": "handbook",
-  "order": 421
+  "order": 453
  },
  {
   "id": "hb-s35-12",
@@ -5865,7 +6281,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-12",
   "role": "handbook",
-  "order": 422
+  "order": 454
  },
  {
   "id": "hb-s35-13",
@@ -5879,7 +6295,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-13",
   "role": "handbook",
-  "order": 423
+  "order": 455
  },
  {
   "id": "hb-s35-14",
@@ -5893,7 +6309,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-14",
   "role": "handbook",
-  "order": 424
+  "order": 456
  },
  {
   "id": "hb-s35-15",
@@ -5907,7 +6323,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-15",
   "role": "handbook",
-  "order": 425
+  "order": 457
  },
  {
   "id": "hb-s35-16",
@@ -5921,7 +6337,7 @@ export const MICRO_CONCEPTS=[
   "page": 35,
   "sourceSkillId": "s35-16",
   "role": "handbook",
-  "order": 426
+  "order": 458
  },
  {
   "id": "hb-s39-1",
@@ -5935,7 +6351,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-1",
   "role": "handbook",
-  "order": 427
+  "order": 459
  },
  {
   "id": "hb-s39-2",
@@ -5949,7 +6365,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-2",
   "role": "handbook",
-  "order": 428
+  "order": 460
  },
  {
   "id": "hb-s39-3",
@@ -5963,7 +6379,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-3",
   "role": "handbook",
-  "order": 429
+  "order": 461
  },
  {
   "id": "hb-s39-4",
@@ -5977,7 +6393,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-4",
   "role": "handbook",
-  "order": 430
+  "order": 462
  },
  {
   "id": "hb-s39-5",
@@ -5991,7 +6407,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-5",
   "role": "handbook",
-  "order": 431
+  "order": 463
  },
  {
   "id": "hb-s39-6",
@@ -6005,7 +6421,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-6",
   "role": "handbook",
-  "order": 432
+  "order": 464
  },
  {
   "id": "hb-s39-7",
@@ -6019,7 +6435,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-7",
   "role": "handbook",
-  "order": 433
+  "order": 465
  },
  {
   "id": "hb-s39-8",
@@ -6033,7 +6449,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-8",
   "role": "handbook",
-  "order": 434
+  "order": 466
  },
  {
   "id": "hb-s39-9",
@@ -6047,7 +6463,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-9",
   "role": "handbook",
-  "order": 435
+  "order": 467
  },
  {
   "id": "hb-s39-10",
@@ -6061,7 +6477,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-10",
   "role": "handbook",
-  "order": 436
+  "order": 468
  },
  {
   "id": "hb-s39-11",
@@ -6075,7 +6491,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-11",
   "role": "handbook",
-  "order": 437
+  "order": 469
  },
  {
   "id": "hb-s39-12",
@@ -6089,7 +6505,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-12",
   "role": "handbook",
-  "order": 438
+  "order": 470
  },
  {
   "id": "hb-s39-13",
@@ -6103,7 +6519,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-13",
   "role": "handbook",
-  "order": 439
+  "order": 471
  },
  {
   "id": "hb-s39-14",
@@ -6117,7 +6533,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-14",
   "role": "handbook",
-  "order": 440
+  "order": 472
  },
  {
   "id": "hb-s39-15",
@@ -6131,7 +6547,7 @@ export const MICRO_CONCEPTS=[
   "page": 39,
   "sourceSkillId": "s39-15",
   "role": "handbook",
-  "order": 441
+  "order": 473
  },
  {
   "id": "hb-s41-1",
@@ -6145,7 +6561,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-1",
   "role": "handbook",
-  "order": 442
+  "order": 474
  },
  {
   "id": "hb-s41-2",
@@ -6159,7 +6575,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-2",
   "role": "handbook",
-  "order": 443
+  "order": 475
  },
  {
   "id": "hb-s41-3",
@@ -6173,7 +6589,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-3",
   "role": "handbook",
-  "order": 444
+  "order": 476
  },
  {
   "id": "hb-s41-4",
@@ -6187,7 +6603,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-4",
   "role": "handbook",
-  "order": 445
+  "order": 477
  },
  {
   "id": "hb-s41-5",
@@ -6201,7 +6617,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-5",
   "role": "handbook",
-  "order": 446
+  "order": 478
  },
  {
   "id": "hb-s41-6",
@@ -6215,7 +6631,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-6",
   "role": "handbook",
-  "order": 447
+  "order": 479
  },
  {
   "id": "hb-s41-7",
@@ -6229,7 +6645,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-7",
   "role": "handbook",
-  "order": 448
+  "order": 480
  },
  {
   "id": "hb-s41-8",
@@ -6243,7 +6659,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-8",
   "role": "handbook",
-  "order": 449
+  "order": 481
  },
  {
   "id": "hb-s41-9",
@@ -6257,7 +6673,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-9",
   "role": "handbook",
-  "order": 450
+  "order": 482
  },
  {
   "id": "hb-s41-10",
@@ -6271,7 +6687,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-10",
   "role": "handbook",
-  "order": 451
+  "order": 483
  },
  {
   "id": "hb-s41-11",
@@ -6285,7 +6701,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-11",
   "role": "handbook",
-  "order": 452
+  "order": 484
  },
  {
   "id": "hb-s41-12",
@@ -6299,7 +6715,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-12",
   "role": "handbook",
-  "order": 453
+  "order": 485
  },
  {
   "id": "hb-s41-13",
@@ -6313,7 +6729,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-13",
   "role": "handbook",
-  "order": 454
+  "order": 486
  },
  {
   "id": "hb-s41-14",
@@ -6327,7 +6743,7 @@ export const MICRO_CONCEPTS=[
   "page": 41,
   "sourceSkillId": "s41-14",
   "role": "handbook",
-  "order": 455
+  "order": 487
  },
  {
   "id": "hb-s42-1",
@@ -6341,7 +6757,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-1",
   "role": "handbook",
-  "order": 456
+  "order": 488
  },
  {
   "id": "hb-s42-2",
@@ -6355,7 +6771,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-2",
   "role": "handbook",
-  "order": 457
+  "order": 489
  },
  {
   "id": "hb-s42-3",
@@ -6369,7 +6785,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-3",
   "role": "handbook",
-  "order": 458
+  "order": 490
  },
  {
   "id": "hb-s42-4",
@@ -6383,7 +6799,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-4",
   "role": "handbook",
-  "order": 459
+  "order": 491
  },
  {
   "id": "hb-s42-5",
@@ -6397,7 +6813,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-5",
   "role": "handbook",
-  "order": 460
+  "order": 492
  },
  {
   "id": "hb-s42-6",
@@ -6411,7 +6827,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-6",
   "role": "handbook",
-  "order": 461
+  "order": 493
  },
  {
   "id": "hb-s42-7",
@@ -6425,7 +6841,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-7",
   "role": "handbook",
-  "order": 462
+  "order": 494
  },
  {
   "id": "hb-s42-8",
@@ -6439,7 +6855,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-8",
   "role": "handbook",
-  "order": 463
+  "order": 495
  },
  {
   "id": "hb-s42-9",
@@ -6453,7 +6869,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-9",
   "role": "handbook",
-  "order": 464
+  "order": 496
  },
  {
   "id": "hb-s42-10",
@@ -6467,7 +6883,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-10",
   "role": "handbook",
-  "order": 465
+  "order": 497
  },
  {
   "id": "hb-s42-11",
@@ -6481,7 +6897,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-11",
   "role": "handbook",
-  "order": 466
+  "order": 498
  },
  {
   "id": "hb-s42-12",
@@ -6495,7 +6911,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-12",
   "role": "handbook",
-  "order": 467
+  "order": 499
  },
  {
   "id": "hb-s42-13",
@@ -6509,7 +6925,7 @@ export const MICRO_CONCEPTS=[
   "page": 42,
   "sourceSkillId": "s42-13",
   "role": "handbook",
-  "order": 468
+  "order": 500
  }
 ];
 export const MICRO_FAMILIES=[...new Set(MICRO_CONCEPTS.map(x=>x.family))];
