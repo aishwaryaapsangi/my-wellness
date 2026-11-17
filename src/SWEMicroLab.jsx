@@ -5,9 +5,9 @@ import {MICRO_CONCEPTS,MICRO_FAMILIES,microLessonForDate,microDueLessons,microRe
 import './swe-micro-lab.css';
 
 const GRADE_CHOICES=[
- ['red','RED','Couldn’t explain','Try again in 3 days'],
- ['yellow','YELLOW','Needed notes / hint','Try again in 7 days'],
- ['green','GREEN','Independent recall','Try again in 14+ days'],
+ ['red','RED','Couldn’t explain','Try again tomorrow'],
+ ['yellow','YELLOW','Needed notes / hint','Try again in 3 days'],
+ ['green','GREEN','Independent recall','1 → 3 → 7 → 14+ days'],
  ['mock','MOCK','Explained + traced','Move to longer interval']
 ];
 const readable=d=>d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
@@ -79,12 +79,12 @@ export function DailyMicroConcepts({date,today,db,update,onOpenProblem,onOpenSec
  const newLesson=microLessonForDate(date);
  const review=microDueLessons(db,date).find(x=>x.id!==newLesson?.id)||null;
  const dueCount=microDueLessons(db,date).length;
- if(!newLesson&&!review)return <div className="sml-empty"><Flower2 size={23}/> All currently scheduled micro-concepts are complete. Open the concept library to practice more.</div>;
+ if(!newLesson&&!review)return <div className="sml-empty"><Flower2 size={23}/> You have introduced every micro-concept! Keep practicing: your independent recall queue continues for life of your Google SWE journey. You can also review any skill in the library.</div>;
  return <section className="sml-daily" aria-label="Daily micro-concepts and active recall">
   <div className="sml-day-head"><div><span className="sml-eyebrow">YOUR DAILY LEARNING PAIR</span><h3>one new idea. <em>one small recall.</em></h3><p>Each topic gets its own date and spaced review. A completed checkbox alone never means you have mastered it.</p></div><span className="sml-due-count">{dueCount} due in backlog · <strong>1</strong> scheduled today</span></div>
   <div className={'sml-daily-grid'+(light?' is-light':'')}>
    {newLesson&&<MicroConceptCard key={'new-'+date+'-'+newLesson.id} lesson={newLesson} date={date} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={onOpenSection}/>}
-   {review?<MicroConceptCard key={'review-'+date+'-'+review.id} kind="review" lesson={review} date={date} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={onOpenSection}/>:<div className="sml-rest-card"><RefreshCcw size={24}/><h4>{date==='2026-11-16'?'your recall queue starts here':'No concept review assigned yet'}</h4><p>Grade a new concept after studying it. GREEN comes back in 14 days, YELLOW in 7, RED in 3; later GREEN reviews spread out further. Only the oldest due concept is assigned on a given day.</p></div>}
+   {review?<MicroConceptCard key={'review-'+date+'-'+review.id} kind="review" lesson={review} date={date} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={onOpenSection}/>:<div className="sml-rest-card"><RefreshCcw size={24}/><h4>{date==='2026-11-16'?'your recall queue starts here':'No concept review assigned yet'}</h4><p>Grade a new concept after studying it. GREEN progresses through 1, 3, 7, 14, 30, 60 and 90-day recall; YELLOW returns in 3 days, RED tomorrow. Every concept keeps returning, even after you finish the whole syllabus.</p></div>}
   </div>
  </section>;
 }
@@ -105,15 +105,15 @@ export default function SWEMicroLab({db,update,today=dateKey(),onOpenProblem,onO
  });
  const focus=selected?MICRO_CONCEPTS.find(c=>c.id===selected):null;
  return <section className="sml-library">
-  <div className="sml-library-header"><span className="sml-eyebrow">THE PINK CODING LIBRARY · ATOMIC STUDY</span><h3>your concept <em>memory garden.</em></h3><p>One concept each day, not an entire data structure at once. This searchable library contains granular Java APIs, collection methods, DSA patterns and the original handbook micro-skills.</p>
-   <div className="sml-counts"><span><strong>{MICRO_CONCEPTS.length}</strong> concepts in the library</span><span><strong>{records}</strong> graded</span><span><strong>{due.length}</strong> due · one assigned today</span></div>
+  <div className="sml-library-header"><span className="sml-eyebrow">THE PINK CODING LIBRARY · ATOMIC STUDY</span><h3>your concept <em>memory garden.</em></h3><p>One concept each day, not an entire data structure at once. This searchable library has atomic lessons across every DSA family, from Java methods and arrays to trees, graphs, greedy and dynamic programming. All studied concepts return for spaced recall until you land the job.</p>
+   <div className="sml-counts"><span><strong>{MICRO_CONCEPTS.length}</strong> concepts in the library</span><span><strong>{records}</strong> graded</span><span><strong>{due.length}</strong> due · one featured today; open the Due filter for extras</span></div>
   </div>
   <div className="sml-schedule-preview"><h4>Coming up in your study notebook</h4><div>{Array.from({length:7},(_,i)=>{const day=addStudyDays(today,i),item=microLessonForDate(day);return item?<button key={day} onClick={()=>setSelected(item.id)}><small>{readable(day)}</small><strong>{item.title}</strong><span>{item.family}</span></button>:null})}</div></div>
   {review&&<div className="sml-queued"><RefreshCcw size={18}/><span><strong>Today’s single recall:</strong> {review.title} · due since {readable(getMicroRecord(db,review)?.dueDate)}</span><button onClick={()=>setSelected(review.id)}>Open recall <ChevronRight size={13}/></button></div>}
   <div className="sml-library-tools"><label><Search size={16}/><input placeholder="Search methods, Java syntax, data structures or invariants…" value={search} onChange={e=>{setSearch(e.target.value);setLimit(24);setSelected(null)}}/></label><select aria-label="Filter concept family" value={family} onChange={e=>{setFamily(e.target.value);setLimit(24);setSelected(null)}}><option value="all">All concept families</option>{MICRO_FAMILIES.map(x=><option key={x}>{x}</option>)}</select><select aria-label="Filter learning status" value={status} onChange={e=>{setStatus(e.target.value);setLimit(24);setSelected(null)}}><option value="all">All statuses</option><option value="not-started">Not started</option><option value="studied">Graded / studied</option><option value="due">Due for recall</option></select></div>
   <div className="sml-library-grid">
    <aside className="sml-list"><div className="sml-list-count">{list.length} matching micro-concepts</div>{list.slice(0,limit).map(c=>{const r=getMicroRecord(db,c);return <button type="button" key={c.id} className={'sml-list-item'+(c.id===selected?' active':'')} onClick={()=>setSelected(c.id)}><span className="sml-list-number">{String(c.order).padStart(3,'0')}</span><span><strong>{c.title}</strong><small>{c.family} · {r?.grade?r.grade.toUpperCase():'NEW'}</small></span><ChevronRight size={14}/></button>})}{limit<list.length&&<button className="sml-load-more" onClick={()=>setLimit(x=>x+24)}>Show 24 more concepts</button>}{!list.length&&<p className="sml-none">No matching concept. Try another family or search.</p>}</aside>
-   <div className="sml-library-detail">{focus?<MicroConceptCard key={focus.id} kind="library" lesson={focus} date={today} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={onOpenSection}/>:<div className="sml-library-placeholder"><LibraryBig size={33}/><h4>Pick a micro-concept to open its lesson</h4><p>You can read the Java example, answer the memory prompt, save a personal note, and grade it independently without marking the whole topic complete.</p><p>The first seven lessons focus on Arrays and ArrayList; later days gradually rotate through other data structures.</p></div>}</div>
+   <div className="sml-library-detail">{focus?<MicroConceptCard key={focus.id} kind="library" lesson={focus} date={today} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={onOpenSection}/>:<div className="sml-library-placeholder"><LibraryBig size={33}/><h4>Pick a micro-concept to open its lesson</h4><p>You can read the Java example, answer the memory prompt, save a personal note, and grade it independently without marking the whole topic complete.</p><p>The first seven lessons cover arrays and ArrayList basics, then every DSA family rotates in. Every concept has its own recall history and next-due date.</p></div>}</div>
   </div>
  </section>;
 }
