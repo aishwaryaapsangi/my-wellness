@@ -20,7 +20,8 @@ export async function userFromRequest(req:Request){
 }
 export async function plaid(endpoint:string,body:Record<string,unknown>){
  const environment=getEnv("PLAID_ENV");
- const base=environment==="production"?"https://production.plaid.com":environment==="development"?"https://development.plaid.com":"https://sandbox.plaid.com";
+ if(!["production","sandbox"].includes(environment))throw Error("PLAID_ENV must be production or sandbox.");
+ const base=environment==="production"?"https://production.plaid.com":"https://sandbox.plaid.com";
  const response=await fetch(base+"/"+endpoint.replace(/^\//,""),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...body,client_id:getEnv("PLAID_CLIENT_ID"),secret:getEnv("PLAID_SECRET")})});
  const result=await response.json();
  if(!response.ok)throw new Error("Plaid "+endpoint+": "+String(result.error_message||result.error_code||"request failed"));
