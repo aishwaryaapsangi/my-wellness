@@ -26,17 +26,22 @@ test('November covers 15 distinct daily topics and the full DSA structure map',(
  for(const pattern of [/arrays/i,/hash/i,/string/i,/linked/i,/stack/i,/binary/i,/tree/i,/graph/i,/recursion/i,/greedy/i,/dynamic programming/i,/bit/i]){
   assert.match(titles,pattern);
  }
- assert.match(MONTH_FOCUS[0].dsa,/graphs/);
- assert.match(MONTH_FOCUS[0].proof,/not mastery/i);
+ assert.match(MONTH_FOCUS[0].dsa,/ArrayList/);
+ assert.match(MONTH_FOCUS[0].proof,/one-concept/i);
 });
-test('Nov 16 refreshes Java foundations once; following days move quickly to hashing, windows, linked lists and trees',()=>{
- const a=getDailyTasks('2026-11-16'),b=getDailyTasks('2026-11-17'),c=getDailyTasks('2026-11-18');
- assert.match(a[0].detail,/ArrayList/);
- assert.match(b[0].label,/HashMap/);
- assert.match(c[0].label,/Strings/);
- assert.match(getDailyTasks('2026-11-19')[0].label,/Linked lists/);
- assert.match(getDailyTasks('2026-11-21')[0].label,/Trees/);
- assert.match(getDailyTasks('2026-11-25')[0].label,/Dynamic programming/);
+test('Nov 16–22 schedules precisely one new array/list concept each day',()=>{
+ const titles=[];
+ for(let day=16;day<=22;day++){
+  const date='2026-11-'+day,tasks=getDailyTasks(date),concepts=tasks.filter(t=>t.microId);
+  assert.equal(concepts.length,1,date);
+  assert.match(concepts[0].label,/ONE concept/);
+  assert.ok(!tasks.some(t=>t.type==='stretch-leetcode'));
+  titles.push(concepts[0].label);
+ }
+ assert.equal(new Set(titles).size,7);
+ assert.match(titles[0],/Array slots/);
+ assert.match(titles[3],/ArrayList access/);
+ assert.match(titles[5],/remove/);
 });
 test('November mixes DSA, SQL, OOP engineering and a concrete project task in one day',()=>{
  for(const day of ['2026-11-17','2026-11-18','2026-11-21','2026-11-25']){
@@ -49,7 +54,7 @@ test('November mixes DSA, SQL, OOP engineering and a concrete project task in on
  }
  assert.equal(getDailyTasks('2026-11-17').find(t=>t.type==='sql-practice').problemId,584);
  assert.equal(getDailyTasks('2026-11-18').find(t=>t.type==='sql-practice').problemId,175);
- assert.equal(getDailyTasks('2026-11-21').find(t=>t.type==='java-leetcode').problemId,104);
+ assert.equal(getDailyTasks('2026-11-21').find(t=>t.type==='java-leetcode').problemId,27);
 });
 test('November is a first pass, not formal every-day spaced retrieval',()=>{
  const first=getDailyTasks('2026-11-17');
@@ -63,12 +68,12 @@ test('December implements spaced recall and still includes varied engineering + 
  const tasks=getDailyTasks('2026-12-01',{dueProblems,dueSkills});
  assert.equal(tasks[0].category,'review');
  assert.match(tasks[0].detail,/#27/);
- assert.match(tasks[0].detail,/Java references/);
+ assert.match(tasks[0].detail,/oldest due concept/);
  assert.ok(tasks.some(t=>t.category==='leetcode'));
  assert.ok(tasks.some(t=>t.category==='engineering'));
  assert.ok(tasks.some(t=>t.category==='project'));
  assert.ok(getDailyTasks('2026-12-14').some(t=>t.category==='review'));
- assert.match(MONTH_FOCUS[1].dsa,/ALL November/);
+ assert.match(MONTH_FOCUS[1].dsa,/one new DSA\/API micro-concept/);
 });
 test('light mode remains a valid 30-minute backup with same task IDs',()=>{
  const full=getDailyTasks('2026-11-18');
