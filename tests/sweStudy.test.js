@@ -40,3 +40,13 @@ test('invalid review labels cannot silently corrupt history',()=>{
  assert.throws(()=>gradeStudy({},'solved','2026-11-16'),/grade/i);
  assert.equal(REVIEW_GAPS.length,6);
 });
+
+test('reclicking a grade on the same day does not skip repetition intervals',()=>{
+ let r=gradeStudy({},'green','2026-11-16');
+ r=gradeStudy(r,'green','2026-11-16');
+ assert.equal(r.dueDate,'2026-11-17');
+ assert.equal(r.history.length,1);
+ r=gradeStudy(r,'yellow','2026-11-16');
+ assert.equal(r.history.length,1);
+ assert.equal(r.dueDate,'2026-11-19');
+});
