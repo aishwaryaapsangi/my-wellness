@@ -1,4 +1,5 @@
 import {addStudyDays} from './sweStudyLogic.js';
+import {microLessonForDate} from './sweMicroConcepts.js';
 // Accelerated November first-pass: covers the full DSA & algorithm map BEFORE December's
 // heavier spaced retrieval. Meeting a topic is not evidence of mastery.
 export const NOVEMBER_DAILY={
@@ -328,6 +329,16 @@ export function novemberTasks(date,{light=false,sprintOverride={}}={}){
  ];
  if(d.problemIds[1])tasks.splice(2,0,CLEAN(date,'stretch-leetcode','Stretch / second DSA family · #'+d.problemIds[1], 'Problem #'+d.problemIds[1]+' · second pattern of the day. Target independent solution; if blocked, record YELLOW/RED and continue.',weekend?35:23,{category:'leetcode',problemId:d.problemIds[1],optional:!weekend}));
  if(d.sqlIds.length)tasks.splice(4,0,CLEAN(date,'sql-practice','LeetCode SQL · #'+d.sqlIds[0], 'Solve SQL problem #'+d.sqlIds[0]+' in the SQL dojo. Save the query and describe what tables/joins/aggregates it uses.',weekend?32:22,{category:'leetcode',problemId:d.sqlIds[0],optional:date==='2026-11-26'}));
+ const micro=microLessonForDate(date);
+ if(micro){
+  const first=tasks.find(t=>t.type==='fast-foundation');
+  if(first){first.label='ONE concept · '+micro.title;first.detail=micro.goal+' · Recall prompt: '+micro.recall;first.microId=micro.id;first.sectionPage=micro.page;first.minutes=25}
+  const coding=tasks.find(t=>t.type==='java-leetcode');
+  if(coding){coding.label='Apply today’s concept · LeetCode #'+micro.problemId;coding.problemId=micro.problemId;coding.detail='Practice #'+micro.problemId+' using just '+micro.title+'. First write the brute-force idea, then Java, 3 edge cases and Big-O. Log the real attempt.'}
+  const proof=tasks.find(t=>t.type==='proof-log');
+  if(proof){proof.label='Recall your one concept';proof.detail='Without looking: '+micro.recall+' Record RED / YELLOW / GREEN for this concept in the concept memory garden.'}
+  const stretch=tasks.findIndex(t=>t.type==='stretch-leetcode');if(stretch>=0)tasks.splice(stretch,1);
+ }
  if(light){const keep=[tasks[0],tasks.find(t=>t.type==='java-leetcode')].filter(Boolean).map(t=>({...t,minutes:Math.min(15,t.minutes)}));return [...keep,CLEAN(date,'light-note','5-minute sprint marker', 'A lighter day still counts. Note the key idea of '+d.title+'; move unfinished lessons to your backlog.',5,{category:'optional',optional:true})]}
  if(holiday)return tasks.filter(t=>['fast-foundation','java-leetcode','engineering-lab','proof-log'].includes(t.type)).map(t=>({...t,minutes:Math.min(t.minutes,20),optional:t.type!=='fast-foundation'})).concat([CLEAN(date,'holiday-space','Permission to take the holiday off','Try just the 15-minute overview; project and extra problems remain optional.',3,{category:'optional',optional:true})]);
  return tasks;
