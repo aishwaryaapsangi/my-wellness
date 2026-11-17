@@ -5,6 +5,7 @@ import handbook from './sweHandbookData.json';
 import {EARLIER_PRACTICE,ROADMAP,WEEKLY_RHYTHM,PROJECT_PLAN,READINESS,LESSON_LOOP} from './sweRoadmap.js';
 import {dateKey,addStudyDays,gradeStudy,reviewDue,reviewOverdue,daysUntil,dailyStreak,completionStats,GRADES} from './sweStudyLogic.js';
 import './google-swe.css';
+import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
 
 const STORAGE='bloom-google-swe-prep-v1';
 const REVIEWS=['red','yellow','green','mock'];
@@ -37,7 +38,7 @@ function ProblemRow({problem,record,active,onSelect,daysToday}){
   <span className={'swe-status '+tone}>{due?'DUE':tone==='new'?'NEW':tone.toUpperCase()}</span><ChevronRight size={16}/></button>
 }
 export default function GoogleSWE(){
- const [db,setDb]=useState(load),[tab,setTab]=useState('dashboard'),[search,setSearch]=useState(''),[phase,setPhase]=useState('all'),
+ const [db,setDb]=useState(load),[tab,setTab]=useState('plan'),[search,setSearch]=useState(''),[phase,setPhase]=useState('all'),
  [problemFilter,setProblemFilter]=useState('all'),[selectedProblemId,setSelectedProblemId]=useState(null),
  [skillGroup,setSkillGroup]=useState('Java fundamentals'),[sectionId,setSectionId]=useState('section-17'),
  [skillSearch,setSkillSearch]=useState(''),[notice,setNotice]=useState(''),[showImport,setShowImport]=useState(false),
@@ -46,6 +47,7 @@ export default function GoogleSWE(){
  [newTitle,setNewTitle]=useState(''),[newNumber,setNewNumber]=useState(''),[newPattern,setNewPattern]=useState(''),
  [noteDraft,setNoteDraft]=useState(''),[savedNoteId,setSavedNoteId]=useState(''),[showSettings,setShowSettings]=useState(false);
  const fileRef=useRef(null),today=dateKey();
+ const [planDay,setPlanDay]=useState(today);
  useEffect(()=>{try{localStorage.setItem(STORAGE,JSON.stringify(db))}catch{setNotice('Browser storage could not be saved; export your work as a backup.')}},[db]);
  useEffect(()=>{if(!timerOn)return;const id=setInterval(()=>setSeconds(s=>s+1),1000);return()=>clearInterval(id)},[timerOn]);
  const update=(patch)=>setDb(old=>({...old,...(typeof patch==='function'?patch(old):patch)}));
@@ -125,11 +127,12 @@ export default function GoogleSWE(){
  const totalProjects=PROJECT_PLAN.reduce((n,p)=>n+p.deliverables.length,0),projectsDone=Object.values(db.projectDone).filter(Boolean).length;
  const totalRoadmap=ROADMAP.reduce((n,r)=>n+r.themes.length,0),roadmapDone=Object.values(db.roadmapDone).filter(Boolean).length;
  const tabList=[
-  {key:'dashboard',label:'My command center',icon:Flower2},
+  {key:'plan',label:'Day-by-day plan',icon:CalendarClock},
+  {key:'journey',label:'Hawk-eye roadmap',icon:Workflow},
+  {key:'dashboard',label:'Progress snapshot',icon:Flower2},
   {key:'leetcode',label:'LeetCode dojo',icon:Code2},
   {key:'skills',label:'Java + DSA',icon:BrainCircuit},
   {key:'engineering',label:'Tech + engineering',icon:Layers3},
-  {key:'roadmap',label:'My roadmap',icon:Workflow},
   {key:'projects',label:'Projects + portfolio',icon:BookOpen},
   {key:'interviews',label:'Interview lab',icon:Timer}
  ];
@@ -162,6 +165,13 @@ export default function GoogleSWE(){
    <div className="swe-actions"><button className="swe-button" onClick={exportFile}><Download size={15}/> Export study backup</button><label className="swe-button swe-outline"><Upload size={15}/> Restore backup<input ref={fileRef} type="file" accept=".json" onChange={e=>{const f=e.target.files?.[0];if(f)importFile(f);e.target.value=''}}/></label><button className="swe-button swe-danger" onClick={()=>{if(window.confirm('Clear only the SWE prep progress on this browser?')){setDb(INITIAL());setNotice('SWE progress reset. Your wellness and Money Garden data are unchanged.')}}}><Trash2 size={14}/> Reset SWE progress</button></div>
    <p className="swe-muted">This is separate from the wellness checkboxes and Money Garden. No LeetCode account integration or hidden Google hiring score is implied. Do not paste proprietary employer code or interview NDA information into this public website.</p>
   </div>}
+  {(tab==='plan'||tab==='journey')&&<SWEIntegratedPlanner
+    mode={tab==='plan'?'daily':'horizon'}
+    db={db} update={update} allProblems={allProblems} today={today} initialDay={planDay}
+    onGoToDaily={day=>{if(day)setPlanDay(day);setTab('plan')}}
+    onOpenProblem={id=>{setSelectedProblemId(id);setNoteDraft(db.problems?.[id]?.notes||'');setTab('leetcode')}}
+    onOpenSection={id=>{const section=SECTIONS.find(s=>s.id===id);if(!section)return;setSectionId(id);setSkillGroup(section.group);setTab(['Java fundamentals','Algorithms & data structures'].includes(section.group)?'skills':'engineering')}}
+   />}
   {tab==='dashboard'&&<div className="swe-content">
    <div className="swe-intro-row">{title('Your engineer era, at a glance','Learning is counted as independent only when you can explain and solve it without a solution open.')}<span className="swe-asof">Updated {currentDateTime()}</span></div>
    <div className="swe-stat-grid">
@@ -191,7 +201,7 @@ export default function GoogleSWE(){
     <article className="swe-paper">{title('Your North Star','A target date for readiness, not a guarantee of a Google offer.')}
       <div className="swe-northstar"><GraduationCap size={36}/><div><strong>{db.targetDate}</strong><span>{daysToTarget>=0?daysToTarget+' calendar days to your self-review':Math.abs(daysToTarget)+' days past target — revise the plan from evidence'}</span></div></div>
       <div className="swe-readiness-rail"><BarLine value={Object.values(db.readinessDone).filter(Boolean).length} max={READINESS.length}/><span>{Object.values(db.readinessDone).filter(Boolean).length}/{READINESS.length} diagnostic pillars evidenced</span></div>
-      <button className="swe-button swe-outline" onClick={()=>setTab('roadmap')}>Explore the full roadmap <ChevronRight size={15}/></button><p className="swe-muted">Main target: Google SWE II / L3, NYC preferred. A SWE III / L4 role is a stretch only if its posted requirements and your evidence align.</p>
+      <button className="swe-button swe-outline" onClick={()=>setTab('journey')}>Explore the full roadmap <ChevronRight size={15}/></button><p className="swe-muted">Main target: Google SWE II / L3, NYC preferred. A SWE III / L4 role is a stretch only if its posted requirements and your evidence align.</p>
     </article>
    </div>
    <article className="swe-paper">{title('A realistic week','5–7 hours is the handbook’s sustainable base. More is optional after you build consistency.')}<div className="swe-week-grid">{WEEKLY_RHYTHM.map(x=><div key={x.day}><strong>{x.day}</strong><span>{x.focus}</span><small>{x.minutes}</small></div>)}</div></article>
@@ -230,12 +240,6 @@ export default function GoogleSWE(){
     <div className="swe-resource-layout"><aside className="swe-paper swe-section-nav"><div className="swe-nav-title"><Layers3 size={17}/> Explore this technology</div>{SECTIONS.filter(x=>x.group===(ENGINEERING_GROUPS.includes(skillGroup)?skillGroup:'Computer science')).map(s=><button key={s.id} className={chosenSection.id===s.id?'active':''} onClick={()=>{setSectionId(s.id);setSkillSearch('')}}>{skillSection(s)}</button>)}<div className="swe-tech-note"><strong>Engineer proof, not memorization:</strong> Can you draw a real end-to-end request, explain a bug diagnosis, write a test and describe the release path? Use only nonconfidential examples.</div></aside>
       {renderLesson(ENGINEERING_GROUPS.includes(chosenSection.group)?chosenSection:SECTIONS.find(s=>s.group==='Computer science'))}
     </div>
-  </div>}
-  {tab==='roadmap'&&<div className="swe-content">
-   {title('Your roadmap to Google-ready','This is an adaptive plan, not a prediction. May 31, 2027 is a readiness review; serious applications may begin June 2027 if the evidence is there.')}
-   <div className="swe-roadmap-top"><div><strong>{roadmapDone} / {totalRoadmap}</strong><span>roadmap micro-checkpoints completed</span></div><BarLine value={roadmapDone} max={totalRoadmap}/><span>{Math.round(roadmapDone/totalRoadmap*100)}%</span></div>
-   <div className="swe-roadmap-flow">{ROADMAP.map((milestone,i)=>{const n=milestone.themes.filter((_,j)=>db.roadmapDone[milestone.id+'-'+j]).length;return <article className="swe-roadmap-stage" key={milestone.id}><div className="swe-stage-rail"><span>{String(i+1).padStart(2,'0')}</span><i/></div><div className="swe-paper swe-stage-content"><div className="swe-stage-heading"><div><Pill tone={n===milestone.themes.length?'sage':'pink'}>{milestone.phase}</Pill><h3>{milestone.label}</h3><small>{milestone.hours}</small></div><span className="swe-progress-count">{n}/{milestone.themes.length}</span></div><div className="swe-stage-skills">{milestone.themes.map((text,j)=><label key={j}><input type="checkbox" checked={!!db.roadmapDone[milestone.id+'-'+j]} onChange={e=>update(old=>({roadmapDone:{...old.roadmapDone,[milestone.id+'-'+j]:e.target.checked}}))}/><span>{text}</span></label>)}</div><div className="swe-proof"><Trophy size={15}/><span>Evidence milestone: {milestone.proof}</span></div></div></article>})}</div>
-   <div className="swe-paper">{title('Your sustainable weekly rhythm','A repeatable minimum beats 3-hour marathons. Adapt office-heavy and remote weeks.') }<div className="swe-week-cards">{WEEKLY_RHYTHM.map(w=><article key={w.day}><strong>{w.day} <span>{w.minutes}</span></strong><h4>{w.focus}</h4>{w.tasks.map((t,i)=><p key={i}>✦ {t}</p>)}</article>)}</div></div>
   </div>}
   {tab==='projects'&&<div className="swe-content">
     {title('Project studio + portfolio proof','One maintained, tested full-stack app matters more than five unfinished demos. CityCircle is a proposed flagship, not a required product idea.')}
