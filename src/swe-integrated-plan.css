@@ -48,3 +48,18 @@
 @media(max-width:1120px){.sip-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sip-split{grid-template-columns:1fr}.sip-month-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.sip-week-strip{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:760px){.sip-banner{padding:22px 20px}.sip-sticker{display:none}.sip-hero-row h3{font-size:28px}.sip-month-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sip-panel{padding:16px}.sip-date-nav input{max-width:130px}.sip-panel-top{flex-direction:column}.sip-problem-grid{grid-template-columns:1fr}.sip-loop-grid,.sip-rule-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:530px){.sip-summary-grid{gap:9px}.sip-summary{padding:13px;min-height:138px}.sip-summary strong{font-size:24px}.sip-month-grid,.sip-form-grid,.sip-loop-grid,.sip-rule-list{grid-template-columns:1fr}.sip-week-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.sip-app-row,.sip-table-header{grid-template-columns:1fr}.sip-job-top{align-items:start}.sip-date-nav{flex-wrap:wrap}}
+
+/* Accelerated November: the coverage matrix is a map, never an automatic mastery badge. */
+.sip-coverage{
+ background:linear-gradient(120deg,#fff6db,#eff7e7);
+ border:1.5px solid #d1dcae;border-radius:15px;
+ padding:16px;margin:4px 0 16px;
+}
+.sip-coverage>strong{font:650 18px/1.3 'Fraunces',Georgia,serif;color:#537751;display:block}
+.sip-coverage>p{color:#798a72;font-size:10px;line-height:1.7;margin:8px 0 13px}
+.sip-coverage>div{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.sip-coverage>div>span{display:inline-flex;align-items:center;border:1px solid #bdcfa9;border-radius:100px;background:#fffdf2;color:#688365;padding:5px 9px;font-size:9px;font-weight:800}
+.app-shell[data-section="swe"] .sip-coverage{background:linear-gradient(105deg,#fff8dd,#edf5ff);border-color:#d2ddea}
+.app-shell[data-section="swe"] .sip-coverage>strong{color:#2d6bb0}
+.app-shell[data-section="swe"] .sip-coverage>div>span{border-color:#c7d9e9;color:#4d789d}
+@media(max-width:620px){.sip-coverage{padding:13px}.sip-coverage>div>span{font-size:9px}}
