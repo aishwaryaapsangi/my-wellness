@@ -1,7 +1,7 @@
 // Authorized user endpoints: start Plaid Link, exchange a newly authorized
 // public token, and request an immediate bank refresh.
 // Never expose PLAID_SECRET or the encrypted access token to the browser.
-import {admin,cors,json,plaid,protect,syncItem,userFromRequest} from "../_shared/bank.ts";
+import {admin,cors,json,plaid,protect,refreshAccounts,syncItem,userFromRequest} from "../_shared/bank.ts";
 
 Deno.serve(async(req)=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(req)});
@@ -27,8 +27,14 @@ Deno.serve(async(req)=>{
      encrypted_access_token,cursor:null
    },{onConflict:"plaid_item_id"}).select("id,user_id,encrypted_access_token,cursor").single();
    if(error)throw error;
-   const count=await syncItem(item);
-   return json(req,{ok:true,imported_count:count});
+   let count=0,sync_pending=false;
+   try{count=await syncItem(item)}catch(e){
+    if(e instanceof Error&&/PRODUCT_NOT_READY/i.test(e.message)){
+     sync_pending=true;
+     await refreshAccounts(item,exchanged.access_token);
+    }else throw e;
+   }
+   return json(req,{ok:true,imported_count:count,sync_pending});
   }
   if(action==="sync"){
    const db=admin(),{data:items,error}=await db.from("money_bank_items").select("id,user_id,encrypted_access_token,cursor").eq("user_id",user.id).limit(20);
