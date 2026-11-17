@@ -60,7 +60,7 @@ export default function GoogleSWE(){
  const dueProblems=allProblems.filter(p=>reviewDue(db.problems[p.id],today)).sort((a,b)=>reviewOverdue(db.problems[b.id],today)-reviewOverdue(db.problems[a.id],today));
  const dueSkills=SECTIONS.flatMap(s=>s.skills.map(sk=>({...sk,section:s.title,page:s.page,sectionId:s.id}))).filter(sk=>reviewDue(db.skills[sk.id],today));
  const dueCount=dueProblems.length+dueSkills.length;
- const skillStats=completionStats(SECTIONS,db);
+ const skillStats=completionStats(SECTIONS,db.skills);
  const independentCount=allProblems.filter(p=>['green','mock'].includes(db.problems[p.id]?.grade)).length;
  const practicedCount=allProblems.filter(p=>db.problems[p.id]?.history?.length).length;
  const attemptCount=pRecords.reduce((n,r)=>n+(r?.history?.length||0),0);
@@ -210,7 +210,7 @@ export default function GoogleSWE(){
       <div className="swe-practice-rules"><h4>Before opening hints</h4><ol><li>Restate the problem and edge constraints.</li><li>Draw a tiny input and a brute-force approach.</li><li>Find the pattern, explain state/invariant, code Java.</li><li>Dry-run 3 tests and give time / auxiliary space.</li><li>Use a hint after an honest attempt, then grade it YELLOW.</li></ol></div>
       <h4>How did the attempt actually go?</h4><div className="swe-grade-grid">{REVIEWS.map(grade=><button key={grade} className={'swe-grade grade-'+grade+(selectedRecord.grade===grade?' selected':'')} onClick={()=>recordProblem(currentlySelected,grade)}><span>{grade.toUpperCase()}</span><small>{grade==='red'?'Copied / blocked':grade==='yellow'?'Needed hints':grade==='green'?'Independent': 'Timed + clear'}</small></button>)}</div>
       <div className="swe-review-detail"><CalendarClock size={17}/><span>{selectedRecord.dueDate?<>Next active recall <strong>{selectedRecord.dueDate}</strong> · {Math.max(0,selectedRecord.attempts||0)} attempts logged</>:'Grade an attempt to schedule your first recall.'}</span></div>
-      <label className="swe-reflection">My error log / edge case / pattern to remember<textarea rows={4} value={selectedProblemId===savedNoteId||selectedProblemId===currentlySelected.id?noteDraft:db.problems[currentlySelected.id]?.notes||''} onChange={e=>setNoteDraft(e.target.value)} placeholder="What was the invariant? What compile error did I make? What will I do differently?"/></label>
+      <label className="swe-reflection">My error log / edge case / pattern to remember<textarea rows={4} value={noteDraft} onChange={e=>setNoteDraft(e.target.value)} placeholder="What was the invariant? What compile error did I make? What will I do differently?"/></label>
       <button className="swe-button swe-outline" onClick={setProblemNote}><NotebookPen size={15}/> Save reflection</button>
       {!!selectedRecord.history?.length&&<div className="swe-history"><strong>Review history</strong>{selectedRecord.history.slice(-6).reverse().map((h,i)=><span key={i}>{h.date} · {gradeText(h.grade)}</span>)}</div>}
      </>}
