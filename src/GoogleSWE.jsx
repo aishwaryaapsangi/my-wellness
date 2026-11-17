@@ -7,6 +7,7 @@ import {dateKey,addStudyDays,gradeStudy,reviewDue,reviewOverdue,daysUntil,dailyS
 import './google-swe.css';
 import FlowerBouquet from './ThemeDoodles.jsx';
 import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
+import SWELeetCodeDojo from './SWELeetCodeDojo.jsx';
 
 const STORAGE='bloom-google-swe-prep-v1';
 const REVIEWS=['red','yellow','green','mock'];
@@ -53,7 +54,7 @@ export default function GoogleSWE(){
  useEffect(()=>{if(!timerOn)return;const id=setInterval(()=>setSeconds(s=>s+1),1000);return()=>clearInterval(id)},[timerOn]);
  const update=(patch)=>setDb(old=>({...old,...(typeof patch==='function'?patch(old):patch)}));
  const allProblems=useMemo(()=>{
-   const map=new Map(handbook.problems.map(p=>[String(p.id),{...p,prior:!!p.review}]));
+   const map=new Map(handbook.problems.map(p=>[String(p.id),{...p,prior:false,suggestedReview:!!p.review}]));
    for(const p of EARLIER_PRACTICE){if(!map.has(String(p.id)))map.set(String(p.id),{...p,page:0,phase:'PRIOR',prior:true});
     else map.set(String(p.id),{...map.get(String(p.id)),prior:true})}
    for(const p of db.customProblems||[])map.set(String(p.id),{...p,phase:p.phase||'PRIOR',page:0,prior:false});
@@ -207,27 +208,7 @@ export default function GoogleSWE(){
    </div>
    <article className="swe-paper">{title('A realistic week','5–7 hours is the handbook’s sustainable base. More is optional after you build consistency.')}<div className="swe-week-grid">{WEEKLY_RHYTHM.map(x=><div key={x.day}><strong>{x.day}</strong><span>{x.focus}</span><small>{x.minutes}</small></div>)}</div></article>
   </div>}
-  {tab==='leetcode'&&<div className="swe-content">
-   {title('LeetCode dojo','Your entire curated pattern ladder, plus problems you practiced before. A prior attempt is not automatically an independent solve.')}
-   <div className="swe-lc-layout"><div className="swe-paper swe-problem-browser">
-     <div className="swe-browser-controls"><label className="swe-search"><Search size={15}/><input aria-label="Search LeetCode problems" placeholder="Search title, number or pattern…" value={search} onChange={e=>setSearch(e.target.value)}/></label><select aria-label="Learning phase" value={phase} onChange={e=>setPhase(e.target.value)}>{LEETCODE_PHASES.map(([v,t])=><option key={v} value={v}>{t}</option>)}</select></div>
-     <div className="swe-filter-row">{[['all','All'],['due','Due reviews'],['red','Red'],['yellow','Yellow'],['green','Green'],['mock','Mock'],['prior','Prior attempts']].map(([v,label])=><button key={v} className={problemFilter===v?'active':''} onClick={()=>setProblemFilter(v)}>{label}</button>)}</div>
-     <div className="swe-problem-list">{filteredProblems.map(p=><ProblemRow key={p.id} problem={p} record={db.problems[p.id]} daysToday={today} active={String(currentlySelected?.id)===String(p.id)} onSelect={()=>{setSelectedProblemId(p.id);setNoteDraft(db.problems[p.id]?.notes||'')}}/>)}{!filteredProblems.length&&<Empty title="No matches" sub="Try another phase or filter."/>}</div>
-     <div className="swe-add-problem"><h4>✎ Add a problem you found</h4><div><input type="number" aria-label="LeetCode problem number" placeholder="Problem #" min="1" value={newNumber} onChange={e=>setNewNumber(e.target.value)}/><input aria-label="Problem title" placeholder="Title" value={newTitle} onChange={e=>setNewTitle(e.target.value)}/><input aria-label="Pattern" placeholder="Pattern" value={newPattern} onChange={e=>setNewPattern(e.target.value)}/><button className="swe-button" onClick={addCustom}><Plus size={14}/> Add</button></div></div>
-   </div>
-   <div className="swe-paper swe-practice-panel">
-     {currentlySelected&&<><Pill tone="pink">#{currentlySelected.id} · {currentlySelected.phase}</Pill><h3>{currentlySelected.title}</h3><p>{currentlySelected.pattern}</p>
-      <div className="swe-practice-meta"><Pill>{currentlySelected.prior?'Prior attempt · baseline unknown':'Handbook page '+currentlySelected.page}</Pill><Pill tone={selectedRecord.grade||''}>{gradeText(selectedRecord.grade)}</Pill></div>
-      <a className="swe-button" href={lcUrl(currentlySelected)} target="_blank" rel="noopener noreferrer">Open in LeetCode <ExternalLink size={14}/></a>
-      <div className="swe-practice-rules"><h4>Before opening hints</h4><ol><li>Restate the problem and edge constraints.</li><li>Draw a tiny input and a brute-force approach.</li><li>Find the pattern, explain state/invariant, code Java.</li><li>Dry-run 3 tests and give time / auxiliary space.</li><li>Use a hint after an honest attempt, then grade it YELLOW.</li></ol></div>
-      <h4>How did the attempt actually go?</h4><div className="swe-grade-grid">{REVIEWS.map(grade=><button key={grade} className={'swe-grade grade-'+grade+(selectedRecord.grade===grade?' selected':'')} onClick={()=>recordProblem(currentlySelected,grade)}><span>{grade.toUpperCase()}</span><small>{grade==='red'?'Copied / blocked':grade==='yellow'?'Needed hints':grade==='green'?'Independent': 'Timed + clear'}</small></button>)}</div>
-      <div className="swe-review-detail"><CalendarClock size={17}/><span>{selectedRecord.dueDate?<>Next active recall <strong>{selectedRecord.dueDate}</strong> · {Math.max(0,selectedRecord.attempts||0)} attempts logged</>:'Grade an attempt to schedule your first recall.'}</span></div>
-      <label className="swe-reflection">My error log / edge case / pattern to remember<textarea rows={4} value={noteDraft} onChange={e=>setNoteDraft(e.target.value)} placeholder="What was the invariant? What compile error did I make? What will I do differently?"/></label>
-      <button className="swe-button swe-outline" onClick={setProblemNote}><NotebookPen size={15}/> Save reflection</button>
-      {!!selectedRecord.history?.length&&<div className="swe-history"><strong>Review history</strong>{selectedRecord.history.slice(-6).reverse().map((h,i)=><span key={i}>{h.date} · {gradeText(h.grade)}</span>)}</div>}
-     </>}
-   </div></div>
-  </div>}
+  {tab==='leetcode'&&<SWELeetCodeDojo db={db} update={update} allProblems={allProblems} today={today} initialProblemId={selectedProblemId}/>}
   {tab==='skills'&&<div className="swe-content">
    {title('Java + DSA mastery studio','Learn each micro-action, explain it, code a tiny example, test it, and revisit it. “Read once” is not mastered.')}
    <div className="swe-resource-layout">
