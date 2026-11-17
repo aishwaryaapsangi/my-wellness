@@ -6514,7 +6514,7 @@ export const MICRO_CONCEPTS=[
 ];
 export const MICRO_FAMILIES=[...new Set(MICRO_CONCEPTS.map(x=>x.family))];
 export function microLessonForDate(day){
- if(typeof day!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(day)||day<MICRO_START)return null;
+ if(typeof day!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(day)||day<MICRO_START)return null;
  const offset=daysUntil(day,MICRO_START);
  return MICRO_CONCEPTS[offset]||null;
 }
@@ -6526,7 +6526,7 @@ export function microDueLessons(db,date){
 export function microReviewForDate(db,date){return microDueLessons(db,date)[0]||null}
 export function microGrade(previous={},grade,date){
  if(!['red','yellow','green','mock'].includes(grade))throw new Error('Unknown micro-grade');
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date))throw new Error('Use YYYY-MM-DD');
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw new Error('Use YYYY-MM-DD');
  const old=Array.isArray(previous.history)?previous.history:[];
  if(previous.lastReviewed&&date<previous.lastReviewed)throw new Error('Cannot grade before your latest recorded review.');
  const replacing=previous.lastReviewed===date&&old.length>0;
