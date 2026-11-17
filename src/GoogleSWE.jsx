@@ -39,7 +39,7 @@ function ProblemRow({problem,record,active,onSelect,daysToday}){
 export default function GoogleSWE(){
  const [db,setDb]=useState(load),[tab,setTab]=useState('dashboard'),[search,setSearch]=useState(''),[phase,setPhase]=useState('all'),
  [problemFilter,setProblemFilter]=useState('all'),[selectedProblemId,setSelectedProblemId]=useState(null),
- [skillGroup,setSkillGroup]=useState('Java fundamentals'),[sectionId,setSectionId]=useState(SECTIONS[0]?.id),
+ [skillGroup,setSkillGroup]=useState('Java fundamentals'),[sectionId,setSectionId]=useState('section-17'),
  [skillSearch,setSkillSearch]=useState(''),[notice,setNotice]=useState(''),[showImport,setShowImport]=useState(false),
  [timerOn,setTimerOn]=useState(false),[seconds,setSeconds]=useState(0),[sessionTopic,setSessionTopic]=useState(''),
  [sessionKind,setSessionKind]=useState('Coding mock'),[sessionScore,setSessionScore]=useState(3),[sessionNotes,setSessionNotes]=useState(''),
@@ -81,6 +81,7 @@ export default function GoogleSWE(){
  });
  const charts=GROUPS.map(g=>{const relevant=SECTIONS.filter(s=>s.group===g);const total=relevant.reduce((n,s)=>n+s.skills.length,0);const mastered=relevant.reduce((n,s)=>n+s.skills.filter(sk=>(db.skills[sk.id]?.level||0)>=3).length,0);return {group:g==='Algorithms & data structures'?'DSA':g.replace(' fundamentals','').replace(' technologies',''),mastered,total}});
  function recordProblem(problem,grade){
+  setSelectedProblemId(problem.id);
   update(old=>({problems:{...old.problems,[problem.id]:gradeStudy(old.problems[problem.id]||{},grade,today)}}));
   setNotice(grade.toUpperCase()+' saved · next recall automatically scheduled. Accepted code with help is YELLOW, not GREEN.');
  }
