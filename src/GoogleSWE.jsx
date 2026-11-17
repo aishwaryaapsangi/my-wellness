@@ -5,6 +5,7 @@ import handbook from './sweHandbookData.json';
 import {EARLIER_PRACTICE,ROADMAP,WEEKLY_RHYTHM,PROJECT_PLAN,READINESS,LESSON_LOOP} from './sweRoadmap.js';
 import {dateKey,addStudyDays,gradeStudy,reviewDue,reviewOverdue,daysUntil,dailyStreak,completionStats,GRADES} from './sweStudyLogic.js';
 import './google-swe.css';
+import FlowerBouquet from './ThemeDoodles.jsx';
 import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
 
 const STORAGE='bloom-google-swe-prep-v1';
@@ -156,7 +157,7 @@ export default function GoogleSWE(){
    </div>
  };
  return <section className="swe-prep" aria-label="Google SWE preparation studio">
-  <div className="swe-hero"><div className="swe-hero-art" aria-hidden="true">✿ <span>✧</span> ♡</div><div className="swe-hero-copy"><span className="swe-kicker">THE SWE GLOW-UP · YOUR ENGINEERING ERA</span><h2>from learning <em>to leading.</em> <span>✦</span></h2><p>A thoughtful little command center for Java, LeetCode, full-stack engineering and your Google SWE II / L3 journey. Small, independent wins count.</p><div className="swe-hero-bottom"><Pill tone="dark"><Target size={13}/> GOOGLE SWE II / L3</Pill><Pill>Goal: May 31, 2027 readiness gate</Pill><Pill>Java first · no copying</Pill></div></div><div className="swe-hero-sticker" aria-hidden="true"><Flower2 size={65}/><strong>one step<br/>at a time</strong><span>✦</span></div></div>
+  <div className="swe-hero"><div className="swe-hero-art" aria-hidden="true">✿ <span>✧</span> ♡</div><div className="swe-hero-copy"><span className="swe-kicker">THE SWE GLOW-UP · YOUR ENGINEERING ERA</span><h2>from learning <em>to leading.</em> <span>✦</span></h2><p>A thoughtful little command center for Java, LeetCode, full-stack engineering and your Google SWE II / L3 journey. Small, independent wins count.</p><div className="swe-hero-bottom"><Pill tone="dark"><Target size={13}/> GOOGLE SWE II / L3</Pill><Pill>Goal: May 31, 2027 readiness gate</Pill><Pill>Java first · no copying</Pill></div></div><div className="swe-hero-sticker" aria-hidden="true"><FlowerBouquet variant="google"/><strong>learn · build · bloom</strong><span>✦</span></div></div>
   <nav className="swe-tabs" aria-label="Google SWE study sections">{tabList.map(({key,label,icon:Icon})=><button key={key} type="button" className={tab===key?'active':''} onClick={()=>{setTab(key);setNotice('')}}><Icon size={15}/>{label}</button>)}<button className="swe-settings-link" onClick={()=>setShowSettings(v=>!v)} title="Preferences and backup"><Settings2 size={16}/><span>Settings</span></button></nav>
   {notice&&<div className="swe-toast" role="status">{notice}<button onClick={()=>setNotice('')} aria-label="Dismiss message"><X size={14}/></button></div>}
   {showSettings&&<div className="swe-paper swe-settings">
