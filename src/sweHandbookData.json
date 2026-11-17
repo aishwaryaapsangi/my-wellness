@@ -1,0 +1,3750 @@
+{
+  "source": "The SWE Glow-Up handbook, user supplied, research snapshot November 4 2026",
+  "targetRole": "Google SWE II / L3",
+  "sections": [
+    {
+      "id": "section-13",
+      "title": "Types & values",
+      "sourceTitle": "Java micro-skills 01: Types & values",
+      "group": "Java fundamentals",
+      "page": 13,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s13-1",
+          "text": "Name all eight primitive types: byte, short, int, long, float, double, char, boolean."
+        },
+        {
+          "id": "s13-2",
+          "text": "Know integral widths and when to choose int vs long; learn overflow and underflow examples."
+        },
+        {
+          "id": "s13-3",
+          "text": "Distinguish a char (single UTF-16 code unit) from a String (object of text)."
+        },
+        {
+          "id": "s13-4",
+          "text": "Know float vs double literals; 3.14 is double, 3.14f is float."
+        },
+        {
+          "id": "s13-5",
+          "text": "Know numeric promotions: byte/short/char arithmetic generally promotes to int."
+        },
+        {
+          "id": "s13-6",
+          "text": "Explain implicit widening versus explicit narrowing casts; know possible loss of information."
+        },
+        {
+          "id": "s13-7",
+          "text": "Understand integer division: 7/2 = 3, while 7.0/2 = 3.5."
+        },
+        {
+          "id": "s13-8",
+          "text": "Explain modulo, negative remainder behavior, and extracting decimal digits."
+        },
+        {
+          "id": "s13-9",
+          "text": "Know primitive array defaults: numeric 0, char '\\u0000', boolean false."
+        },
+        {
+          "id": "s13-10",
+          "text": "Know null is a reference value, not a legal int/boolean primitive value."
+        },
+        {
+          "id": "s13-11",
+          "text": "Declare, initialize, reassign, and distinguish local variable scope from instance fields."
+        },
+        {
+          "id": "s13-12",
+          "text": "Use +, -, *, /, %, +=, -= and distinguish prefix ++i and postfix i++."
+        },
+        {
+          "id": "s13-13",
+          "text": "Use ==, !=, <=, >=, &&, ||, ! with short-circuit evaluation."
+        },
+        {
+          "id": "s13-14",
+          "text": "Know operator precedence; explicitly add parentheses in tricky conditions."
+        },
+        {
+          "id": "s13-15",
+          "text": "Recognize Math.max, Math.min, Math.abs, Math.pow and when int overflow matters."
+        },
+        {
+          "id": "s13-16",
+          "text": "Explain why String + int concatenates rather than adds; force numeric addition first."
+        },
+        {
+          "id": "s13-17",
+          "text": "Use Integer.MAX_VALUE / MIN_VALUE; know the issue with Math.abs(Integer.MIN_VALUE)."
+        }
+      ]
+    },
+    {
+      "id": "section-15",
+      "title": "Control flow",
+      "sourceTitle": "Java micro-skills 02: Control flow",
+      "group": "Java fundamentals",
+      "page": 15,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s15-1",
+          "text": "Write if/else-if/else including nested conditions and boolean expressions."
+        },
+        {
+          "id": "s15-2",
+          "text": "Use switch expressions/statement cautiously; explain break and fall-through in older switch statements."
+        },
+        {
+          "id": "s15-3",
+          "text": "Declare a method, distinguish return type, parameters, arguments and method calls."
+        },
+        {
+          "id": "s15-4",
+          "text": "Know public/private/static at an introductory level; understand main signature."
+        },
+        {
+          "id": "s15-5",
+          "text": "Understand pass-by-value: Java passes copies of primitive values and reference values."
+        },
+        {
+          "id": "s15-6",
+          "text": "Explain a local variable's lifetime, block scope, and definite assignment."
+        },
+        {
+          "id": "s15-7",
+          "text": "Recognize method overloading vs overriding (preview only)."
+        },
+        {
+          "id": "s15-8",
+          "text": "Write for (init; condition; update), explaining every clause."
+        },
+        {
+          "id": "s15-9",
+          "text": "Use i < a.length rather than i <= a.length; explain valid indices."
+        },
+        {
+          "id": "s15-10",
+          "text": "Understand for-each loops and why modifying loop variable does not replace primitive array elements."
+        },
+        {
+          "id": "s15-11",
+          "text": "Write while loops when number of iterations is unknown; ensure the condition changes."
+        },
+        {
+          "id": "s15-12",
+          "text": "Know do-while executes at least once; recognize when it is useful."
+        },
+        {
+          "id": "s15-13",
+          "text": "Use continue vs break correctly without accidentally skipping required updates."
+        },
+        {
+          "id": "s15-14",
+          "text": "Trace nested loops and identify row and column index separately."
+        },
+        {
+          "id": "s15-15",
+          "text": "Prove termination and find off-by-one errors on tiny inputs."
+        },
+        {
+          "id": "s15-16",
+          "text": "Identify ArrayIndexOutOfBoundsException, NullPointerException, NumberFormatException."
+        },
+        {
+          "id": "s15-17",
+          "text": "Distinguish compile errors from runtime errors from logical bugs."
+        },
+        {
+          "id": "s15-18",
+          "text": "Test zero-length, one-element, duplicates, all negatives, all positives, and maximum input size as relevant."
+        },
+        {
+          "id": "s15-19",
+          "text": "Use assert/println while learning, and remove debugging noise from final solutions."
+        }
+      ]
+    },
+    {
+      "id": "section-17",
+      "title": "1D / 2D arrays",
+      "sourceTitle": "Java micro-skills 03: 1D / 2D arrays",
+      "group": "Java fundamentals",
+      "page": 17,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s17-1",
+          "text": "Declare int[] a; initialize int[] a = {2, 4, 6}; allocate new int[3]."
+        },
+        {
+          "id": "s17-2",
+          "text": "Explain a.length (property) vs String.length() and List.size() (methods)."
+        },
+        {
+          "id": "s17-3",
+          "text": "Read a[0], a[i], a[a.length-1]; write a[i] = newValue."
+        },
+        {
+          "id": "s17-4",
+          "text": "Know array size stays fixed but element values can change."
+        },
+        {
+          "id": "s17-5",
+          "text": "Understand arrays of primitives vs reference slots, including default null."
+        },
+        {
+          "id": "s17-6",
+          "text": "Trace aliases: int[] b = a; b[0] = 7 also modifies a[0]."
+        },
+        {
+          "id": "s17-7",
+          "text": "Explain new output array versus modifying input in place."
+        },
+        {
+          "id": "s17-8",
+          "text": "Know Arrays.toString for display; printing a raw array does not display elements."
+        },
+        {
+          "id": "s17-9",
+          "text": "Understand shallow copy for object arrays and top-level clone of primitive arrays."
+        },
+        {
+          "id": "s17-10",
+          "text": "Use enhanced-for for reading values; indexed loop when writing to positions."
+        },
+        {
+          "id": "s17-11",
+          "text": "Understand int[][] means an outer array whose elements refer to int[] row arrays."
+        },
+        {
+          "id": "s17-12",
+          "text": "Draw 2 rows and 3 columns for int[][] g = {{1,2,3},{4,5,6}}."
+        },
+        {
+          "id": "s17-13",
+          "text": "Know g.length = number of row slots; g[i].length = length of selected row."
+        },
+        {
+          "id": "s17-14",
+          "text": "Access g[i][j] and traverse all cells safely with nested loops."
+        },
+        {
+          "id": "s17-15",
+          "text": "Distinguish 2D rectangular from jagged: {{1},{2,3,4}}."
+        },
+        {
+          "id": "s17-16",
+          "text": "Explain new int[3][] leaves all row references null until rows allocated."
+        },
+        {
+          "id": "s17-17",
+          "text": "Learn row-major traversal and when column-major traversal needs rectangularity checks."
+        },
+        {
+          "id": "s17-18",
+          "text": "Know 2D new int[m][n] initializes integer cells to zero."
+        },
+        {
+          "id": "s17-19",
+          "text": "Know Arrays.deepToString for displaying nested arrays."
+        },
+        {
+          "id": "s17-20",
+          "text": "Distinguish clone() on int[][] from copying each int[] row separately."
+        },
+        {
+          "id": "s17-21",
+          "text": "Compute running sum and maximum/minimum; seed max with a[0] on nonempty input."
+        },
+        {
+          "id": "s17-22",
+          "text": "Count values matching a predicate without overwriting count accidentally."
+        }
+      ]
+    },
+    {
+      "id": "section-19",
+      "title": "Arrays utility API",
+      "sourceTitle": "Java micro-skills 04: Arrays utility API",
+      "group": "Java fundamentals",
+      "page": 19,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s19-1",
+          "text": "Use Arrays.toString(a) for 1D display; Arrays.deepToString(matrix) for nested."
+        },
+        {
+          "id": "s19-2",
+          "text": "Explain Arrays.fill(a,value) overwrites every slot; overload for a range."
+        },
+        {
+          "id": "s19-3",
+          "text": "Know Arrays.copyOf(a,newLength): new top-level array; truncation/padding behavior."
+        },
+        {
+          "id": "s19-4",
+          "text": "Know Arrays.copyOfRange(a,from,to): from inclusive, to exclusive; padding when allowed."
+        },
+        {
+          "id": "s19-5",
+          "text": "Use System.arraycopy(src,srcPos,dst,dstPos,count) safely; destination already exists."
+        },
+        {
+          "id": "s19-6",
+          "text": "Understand a.clone() produces a new top-level array and copies element values."
+        },
+        {
+          "id": "s19-7",
+          "text": "For int[][], shallow clone shares inner row arrays; demonstrate with one changed element."
+        },
+        {
+          "id": "s19-8",
+          "text": "Know object array clones share referenced objects, not deep-copy the objects."
+        },
+        {
+          "id": "s19-9",
+          "text": "Reimplement Arrays.copyOf using a loop to understand semantics."
+        },
+        {
+          "id": "s19-10",
+          "text": "Use Arrays.sort(a) and know it mutates input in place."
+        },
+        {
+          "id": "s19-11",
+          "text": "Know Arrays.parallelSort as a parallel alternative, not always faster for small data."
+        },
+        {
+          "id": "s19-12",
+          "text": "Use Arrays.binarySearch only when the searched region is sorted appropriately."
+        },
+        {
+          "id": "s19-13",
+          "text": "Know binarySearch missing index is encoded as -(insertionPoint)-1, not always -1."
+        },
+        {
+          "id": "s19-14",
+          "text": "Use Arrays.equals for same-type 1D element comparison and deepEquals for nested."
+        },
+        {
+          "id": "s19-15",
+          "text": "Use Arrays.mismatch to locate first differing index; returns -1 when contents match."
+        },
+        {
+          "id": "s19-16",
+          "text": "Know Arrays.compare lexicographically compares two arrays and Java version availability."
+        },
+        {
+          "id": "s19-17",
+          "text": "Know Arrays.setAll / parallelSetAll to compute index-based new element values."
+        },
+        {
+          "id": "s19-18",
+          "text": "Check API overloads for primitive arrays vs object arrays."
+        },
+        {
+          "id": "s19-19",
+          "text": "Understand Arrays.asList(new String[]{\"a\",\"b\"}) yields a fixed-size list backed by the object array."
+        },
+        {
+          "id": "s19-20",
+          "text": "Understand changing list.set changes backing array but list.add/remove is unsupported."
+        },
+        {
+          "id": "s19-21",
+          "text": "Know Arrays.asList(int[]) makes List<int[]> with one array element, not List<Integer>."
+        },
+        {
+          "id": "s19-22",
+          "text": "Use Arrays.stream(int[]).boxed().collect(Collectors.toList()) for mutable primitive-to-wrapper lists."
+        }
+      ]
+    },
+    {
+      "id": "section-21",
+      "title": "Strings & characters",
+      "sourceTitle": "Java micro-skills 05: Strings & characters",
+      "group": "Java fundamentals",
+      "page": 21,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s21-1",
+          "text": "Distinguish char, String and char[]; know a String is immutable."
+        },
+        {
+          "id": "s21-2",
+          "text": "Use s.length(), s.charAt(i), s.substring(from,to), s.indexOf(substr)."
+        },
+        {
+          "id": "s21-3",
+          "text": "Use s.equals(other) for text equality rather than ==; know null-safety."
+        },
+        {
+          "id": "s21-4",
+          "text": "Use Objects.equals(a,b) when either reference may be null."
+        },
+        {
+          "id": "s21-5",
+          "text": "Know s.toCharArray(), new String(chars), String.valueOf(number)."
+        },
+        {
+          "id": "s21-6",
+          "text": "Use Character.isLetterOrDigit, isDigit, toLowerCase for filtered comparisons."
+        },
+        {
+          "id": "s21-7",
+          "text": "Know s.split(regex) is regex-based; regex metacharacters matter."
+        },
+        {
+          "id": "s21-8",
+          "text": "Use trim versus strip at a high level; avoid rebuilding string in loops accidentally."
+        },
+        {
+          "id": "s21-9",
+          "text": "Understand Unicode/UTF-16 caveat: charAt uses UTF-16 code units, not always whole characters."
+        },
+        {
+          "id": "s21-10",
+          "text": "Use StringBuilder append, setCharAt, reverse, toString and capacity basics."
+        },
+        {
+          "id": "s21-11",
+          "text": "Know + concatenation in a repeated loop may cause extra work."
+        },
+        {
+          "id": "s21-12",
+          "text": "Compare two strings character-by-character and handle different lengths."
+        },
+        {
+          "id": "s21-13",
+          "text": "Explain palindrome via two pointers and case/punctuation normalization."
+        },
+        {
+          "id": "s21-14",
+          "text": "Know substring vs subsequence vs prefix vs suffix."
+        },
+        {
+          "id": "s21-15",
+          "text": "Implement frequency array for lowercase ASCII-style constraints; guard input alphabet assumptions."
+        },
+        {
+          "id": "s21-16",
+          "text": "Know String.compareTo lexicographical comparison (not equivalent to equals)."
+        }
+      ]
+    },
+    {
+      "id": "section-23",
+      "title": "List & ArrayList",
+      "sourceTitle": "Java micro-skills 06: List & ArrayList",
+      "group": "Java fundamentals",
+      "page": 23,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s23-1",
+          "text": "Know array is fixed-size; ArrayList is a dynamically resizable list built around an array internally."
+        },
+        {
+          "id": "s23-2",
+          "text": "Distinguish List<Integer> (interface type) from ArrayList<Integer> (concrete implementation)."
+        },
+        {
+          "id": "s23-3",
+          "text": "Understand primitive int vs wrapper Integer and boolean vs Boolean."
+        },
+        {
+          "id": "s23-4",
+          "text": "Read List<Boolean> result = new ArrayList<>(); left is interface, right constructs implementation."
+        },
+        {
+          "id": "s23-5",
+          "text": "Use add(value), get(index), set(index,value), remove(index), size(), isEmpty(), contains()."
+        },
+        {
+          "id": "s23-6",
+          "text": "Know get(index) is O(1) and end add is amortized O(1); inserting near front is O(n)."
+        },
+        {
+          "id": "s23-7",
+          "text": "Use result.add(candies[i] + extra >= max) because comparison evaluates to a boolean first."
+        },
+        {
+          "id": "s23-8",
+          "text": "Know auto-boxing converts primitive boolean to Boolean object for List<Boolean>."
+        },
+        {
+          "id": "s23-9",
+          "text": "Distinguish result[i] = x (array) from result.add(x) (list)."
+        },
+        {
+          "id": "s23-10",
+          "text": "Avoid using List<List<Integer>> until a single List makes sense."
+        },
+        {
+          "id": "s23-11",
+          "text": "Know ArrayList cannot take primitive generics e.g. ArrayList<int> is invalid."
+        },
+        {
+          "id": "s23-12",
+          "text": "Know array of List objects has null default slots until initialized."
+        },
+        {
+          "id": "s23-13",
+          "text": "Integer[] boxed = {1,2}; new ArrayList<>(Arrays.asList(boxed)) produces growable list."
+        },
+        {
+          "id": "s23-14",
+          "text": "Convert List<Integer> to int[] using stream().mapToInt(Integer::intValue).toArray()."
+        },
+        {
+          "id": "s23-15",
+          "text": "Convert int[] to List<Integer> using Arrays.stream(a).boxed().collect(Collectors.toList())."
+        },
+        {
+          "id": "s23-16",
+          "text": "Know list.toArray(new Integer[0]) gives object array; not int[]."
+        },
+        {
+          "id": "s23-17",
+          "text": "Avoid conflating List.of(...) with mutable ArrayList; know Java versions may differ."
+        },
+        {
+          "id": "s23-18",
+          "text": "Understand nested List<List<Integer>> row.get(col), row lists can vary in size."
+        }
+      ]
+    },
+    {
+      "id": "section-25",
+      "title": "Hash structures",
+      "sourceTitle": "Java micro-skills 07: Hash structures",
+      "group": "Java fundamentals",
+      "page": 25,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s25-1",
+          "text": "Distinguish set (unique values) from list (ordered positions) and map (key to value)."
+        },
+        {
+          "id": "s25-2",
+          "text": "Instantiate Set<Integer> seen = new HashSet<>(); know import java.util.*."
+        },
+        {
+          "id": "s25-3",
+          "text": "Use add, contains, remove, size; understand add returns boolean."
+        },
+        {
+          "id": "s25-4",
+          "text": "Explain expected O(1) membership vs scanning array O(n); worst-case caveat."
+        },
+        {
+          "id": "s25-5",
+          "text": "Explain iteration order is not guaranteed by HashSet."
+        },
+        {
+          "id": "s25-6",
+          "text": "Understand duplicate detection pattern as you traverse elements."
+        },
+        {
+          "id": "s25-7",
+          "text": "Know custom object keys rely on compatible equals and hashCode."
+        },
+        {
+          "id": "s25-8",
+          "text": "Instantiate Map<Integer,Integer> freq = new HashMap<>();."
+        },
+        {
+          "id": "s25-9",
+          "text": "Use get, put, containsKey, getOrDefault, remove, keySet, values, entrySet."
+        },
+        {
+          "id": "s25-10",
+          "text": "Compute freq.put(x, freq.getOrDefault(x,0)+1)."
+        },
+        {
+          "id": "s25-11",
+          "text": "Explain map key versus associated value and overwrite semantics for duplicate keys."
+        },
+        {
+          "id": "s25-12",
+          "text": "Implement Two Sum using complement target - x, checking before insertion where appropriate."
+        },
+        {
+          "id": "s25-13",
+          "text": "Build map of character frequencies for strings; compare counts."
+        },
+        {
+          "id": "s25-14",
+          "text": "Explain hash collisions, load factor and resize only at a conceptual level."
+        },
+        {
+          "id": "s25-15",
+          "text": "Know HashMap permits one null key (unlike several concurrent variants)."
+        },
+        {
+          "id": "s25-16",
+          "text": "Distinguish HashMap from TreeMap (sorted keys) and LinkedHashMap (iteration behavior)."
+        }
+      ]
+    },
+    {
+      "id": "section-27",
+      "title": "Other collections",
+      "sourceTitle": "Java micro-skills 08: Other collections",
+      "group": "Java fundamentals",
+      "page": 27,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s27-1",
+          "text": "Understand Collection, List, Set, Queue, Deque and Map at a practical level."
+        },
+        {
+          "id": "s27-2",
+          "text": "ArrayDeque for stack: push, pop, peek; for queue: offer, poll, peek."
+        },
+        {
+          "id": "s27-3",
+          "text": "Explain why Stack class is usually less preferred than ArrayDeque for new code."
+        },
+        {
+          "id": "s27-4",
+          "text": "PriorityQueue<Integer> is min-heap by default; peek/poll behavior."
+        },
+        {
+          "id": "s27-5",
+          "text": "Use Comparator.reverseOrder to create max-heap PriorityQueue where valid."
+        },
+        {
+          "id": "s27-6",
+          "text": "Understand PriorityQueue offers O(log n) insertion and polling, O(1) peek."
+        },
+        {
+          "id": "s27-7",
+          "text": "Know ArrayList random access O(1), linked list random access O(n)."
+        },
+        {
+          "id": "s27-8",
+          "text": "Distinguish HashSet, TreeSet and LinkedHashSet on ordering and complexity."
+        },
+        {
+          "id": "s27-9",
+          "text": "Know Collections.sort(list), reverse(list), min/max(list) and Arrays.sort(array)."
+        },
+        {
+          "id": "s27-10",
+          "text": "Use Comparator.comparingInt and custom comparators for pairs/objects."
+        },
+        {
+          "id": "s27-11",
+          "text": "Explain why modifying a collection while iterating may cause ConcurrentModificationException."
+        },
+        {
+          "id": "s27-12",
+          "text": "Know mutable vs immutable vs fixed-size collection families."
+        },
+        {
+          "id": "s27-13",
+          "text": "Use stack for nested parentheses and monotonic neighbors."
+        },
+        {
+          "id": "s27-14",
+          "text": "Use queue for BFS; know visit once with a visited set."
+        },
+        {
+          "id": "s27-15",
+          "text": "Use heap for top K and streaming tasks."
+        },
+        {
+          "id": "s27-16",
+          "text": "Use list for ordered growing output and map for key-based lookup."
+        },
+        {
+          "id": "s27-17",
+          "text": "Use HashMap with ArrayDeque for graph adjacency and BFS."
+        },
+        {
+          "id": "s27-18",
+          "text": "Know when sorted collections justify O(log n) operations."
+        }
+      ]
+    },
+    {
+      "id": "section-29",
+      "title": "Streams & conversions",
+      "sourceTitle": "Java micro-skills 09: Streams & conversions",
+      "group": "Java fundamentals",
+      "page": 29,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s29-1",
+          "text": "Explain stream as a pipeline over values, not a replacement collection."
+        },
+        {
+          "id": "s29-2",
+          "text": "Know Arrays.stream(int[]) returns IntStream; Arrays.stream(Integer[]) returns Stream<Integer>."
+        },
+        {
+          "id": "s29-3",
+          "text": "Know IntStream.sum, max, min, average; max/min return OptionalInt, average OptionalDouble."
+        },
+        {
+          "id": "s29-4",
+          "text": "Understand OptionalInt.getAsInt can throw if empty; use orElse or guard based on constraints."
+        },
+        {
+          "id": "s29-5",
+          "text": "Know map, filter, sorted, distinct, boxed, toArray, count, collect."
+        },
+        {
+          "id": "s29-6",
+          "text": "Identify intermediate vs terminal operations and pipeline lazy evaluation."
+        },
+        {
+          "id": "s29-7",
+          "text": "Learn Stream.of, list.stream and IntStream.range(0,n)."
+        },
+        {
+          "id": "s29-8",
+          "text": "Avoid streams where an explicit loop is clearer for a coding interview."
+        },
+        {
+          "id": "s29-9",
+          "text": "Know side effects in parallel streams can create race conditions."
+        },
+        {
+          "id": "s29-10",
+          "text": "Know stream() cannot be reused after a terminal operation."
+        },
+        {
+          "id": "s29-11",
+          "text": "Arrays.stream(intArray).boxed().toList() yields List<Integer> where supported; toList may be unmodifiable."
+        },
+        {
+          "id": "s29-12",
+          "text": "Collectors.toList does not guarantee a particular mutability contract; new ArrayList<>(...) for a mutable result."
+        },
+        {
+          "id": "s29-13",
+          "text": "list.stream().mapToInt(Integer::intValue).toArray() yields int[]."
+        },
+        {
+          "id": "s29-14",
+          "text": "Use Arrays.asList(String[]) for backed fixed-size list; not with primitive arrays as element expansion."
+        },
+        {
+          "id": "s29-15",
+          "text": "Use String.join, String.valueOf, StringBuilder.toString at the right step."
+        },
+        {
+          "id": "s29-16",
+          "text": "Distinguish map transformations from filter tests and reduce accumulation."
+        },
+        {
+          "id": "s29-17",
+          "text": "Learn method references Integer::intValue, but be able to rewrite as x -> x.intValue()."
+        }
+      ]
+    },
+    {
+      "id": "section-31",
+      "title": "References, equality, OOP",
+      "sourceTitle": "Java micro-skills 10: References, equality, OOP",
+      "group": "Java fundamentals",
+      "page": 31,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s31-1",
+          "text": "Arrays of objects contain reference slots; new String[3] initially holds nulls."
+        },
+        {
+          "id": "s31-2",
+          "text": "Assignment Person b = a copies a reference; mutating through b changes shared object state."
+        },
+        {
+          "id": "s31-3",
+          "text": "Understand final reference prevents reassignment, not necessarily mutation of object."
+        },
+        {
+          "id": "s31-4",
+          "text": "Use == for primitive values; == on objects checks reference identity."
+        },
+        {
+          "id": "s31-5",
+          "text": "String.equals compares content; Objects.equals(a,b) handles nulls."
+        },
+        {
+          "id": "s31-6",
+          "text": "Arrays.equals compares one level of array contents; deepEquals handles nested arrays recursively."
+        },
+        {
+          "id": "s31-7",
+          "text": "Know Arrays.equals(new int[]{1},new int[]{1}) true but (a == b) false for separate arrays."
+        },
+        {
+          "id": "s31-8",
+          "text": "Recognize array covariance: Object[] x = new String[2]; storing Integer triggers ArrayStoreException."
+        },
+        {
+          "id": "s31-9",
+          "text": "Explain shallow vs deep copy and when immutable String makes sharing safe."
+        },
+        {
+          "id": "s31-10",
+          "text": "Define class, field, constructor, object and method; distinguish instance vs static."
+        },
+        {
+          "id": "s31-11",
+          "text": "Explain encapsulation, abstraction, inheritance, polymorphism with small real examples."
+        },
+        {
+          "id": "s31-12",
+          "text": "Prefer composition when inheritance is not a real is-a relationship."
+        },
+        {
+          "id": "s31-13",
+          "text": "Differentiate interface from abstract class at basic level."
+        },
+        {
+          "id": "s31-14",
+          "text": "Know equals/hashCode contract when classes act as HashMap keys."
+        },
+        {
+          "id": "s31-15",
+          "text": "Know access modifiers public, protected, package-private, private."
+        },
+        {
+          "id": "s31-16",
+          "text": "Explain immutability and defensive copies in APIs."
+        },
+        {
+          "id": "s31-17",
+          "text": "Understand simple SOLID ideas: single responsibility, dependency inversion, interface segregation."
+        },
+        {
+          "id": "s31-18",
+          "text": "Know checked vs unchecked exceptions, try/catch/finally and meaningful error messages."
+        }
+      ]
+    },
+    {
+      "id": "section-33",
+      "title": "Algorithmic thinking: Big-O and correctness",
+      "sourceTitle": "Algorithmic thinking: Big-O and correctness",
+      "group": "Algorithms & data structures",
+      "page": 33,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s33-1",
+          "text": "Define input size n (or m and n for matrices); make explicit which variable scales."
+        },
+        {
+          "id": "s33-2",
+          "text": "Rank O(1), O(log n), O(n), O(n log n), O(n^2), O(2^n), O(n!)."
+        },
+        {
+          "id": "s33-3",
+          "text": "Count the work of one loop, nested loops, triangular loops, binary loops and separate loops."
+        },
+        {
+          "id": "s33-4",
+          "text": "Explain O(n+m) vs O(n*m); don't always collapse independent inputs."
+        },
+        {
+          "id": "s33-5",
+          "text": "Derive binary search O(log n) from repeated halving."
+        },
+        {
+          "id": "s33-6",
+          "text": "Know sorting complexity O(n log n) for comparison-based efficient sorts."
+        },
+        {
+          "id": "s33-7",
+          "text": "Recognize worst-case vs average-case hash lookups."
+        },
+        {
+          "id": "s33-8",
+          "text": "Understand amortized cost: append to dynamically resized arrays."
+        },
+        {
+          "id": "s33-9",
+          "text": "Distinguish total space, auxiliary space and recursion stack usage."
+        },
+        {
+          "id": "s33-10",
+          "text": "Know that result array of length n requires O(n) output storage even if extra working variables are O(1)."
+        },
+        {
+          "id": "s33-11",
+          "text": "Analyze nested recursion, branching factor, depth and memoization states."
+        },
+        {
+          "id": "s33-12",
+          "text": "Recognize that slicing/copying inside recursion can increase complexity."
+        },
+        {
+          "id": "s33-13",
+          "text": "Explain brute force first, then demonstrate why a faster approach works."
+        },
+        {
+          "id": "s33-14",
+          "text": "Use loop invariant: what remains true before and after every iteration?"
+        },
+        {
+          "id": "s33-15",
+          "text": "Distinguish preconditions, postconditions and termination arguments."
+        },
+        {
+          "id": "s33-16",
+          "text": "Write counterexamples for greedy ideas and invalid binary-search predicates."
+        },
+        {
+          "id": "s33-17",
+          "text": "Know when sortedness is essential for two-pointer or binary-search algorithms."
+        },
+        {
+          "id": "s33-18",
+          "text": "Explain trade-offs: speed vs memory, simplicity vs optimization, precompute vs query."
+        },
+        {
+          "id": "s33-19",
+          "text": "Recognize input constraints that require better than quadratic algorithms."
+        }
+      ]
+    },
+    {
+      "id": "section-35",
+      "title": "Arrays / strings",
+      "sourceTitle": "Pattern lab 01: Arrays / strings",
+      "group": "Algorithms & data structures",
+      "page": 35,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s35-1",
+          "text": "Linear traversal: visit each element once, track a running answer."
+        },
+        {
+          "id": "s35-2",
+          "text": "Accumulation: sum, product, prefix max, count matches."
+        },
+        {
+          "id": "s35-3",
+          "text": "Running best: update min/max correctly, especially for negative-only input."
+        },
+        {
+          "id": "s35-4",
+          "text": "Two-pass processing: compute a reference value first, then evaluate each item."
+        },
+        {
+          "id": "s35-5",
+          "text": "Output-index construction: write to new array indexes i, i+n and arithmetic mappings."
+        },
+        {
+          "id": "s35-6",
+          "text": "In-place compaction: write pointer tracks retained prefix."
+        },
+        {
+          "id": "s35-7",
+          "text": "Reversal/rotation: swap or reverse segments, handle n=0 where applicable."
+        },
+        {
+          "id": "s35-8",
+          "text": "Counting consecutive runs: reset state on interruptions, take maximum."
+        },
+        {
+          "id": "s35-9",
+          "text": "Build output from mapping or transformed values."
+        },
+        {
+          "id": "s35-10",
+          "text": "Strings: match chars, prefixes, suffixes, case folding, substring boundaries."
+        },
+        {
+          "id": "s35-11",
+          "text": "Matrix: row/column traversal, diagonals, transpose, boundary checks."
+        },
+        {
+          "id": "s35-12",
+          "text": "Sort-and-scan: distinguish sorted vs unsorted before selecting algorithm."
+        },
+        {
+          "id": "s35-13",
+          "text": "Test empty and length one if allowed; duplicate and all-same arrays."
+        },
+        {
+          "id": "s35-14",
+          "text": "Test all negative values when max/min initialization matters."
+        },
+        {
+          "id": "s35-15",
+          "text": "Check in-place required versus allowed new output array."
+        },
+        {
+          "id": "s35-16",
+          "text": "Explain O(n) loop plus O(n) output, and whether input mutation is acceptable."
+        }
+      ]
+    },
+    {
+      "id": "section-37",
+      "title": "Hashing",
+      "sourceTitle": "Pattern lab 02: Hashing",
+      "group": "Algorithms & data structures",
+      "page": 37,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s37-1",
+          "text": "Set membership for duplicates and visited items."
+        },
+        {
+          "id": "s37-2",
+          "text": "Complement HashMap for target sum; check previous values and retain index."
+        },
+        {
+          "id": "s37-3",
+          "text": "Map value frequency for each int or character."
+        },
+        {
+          "id": "s37-4",
+          "text": "Compare count maps for anagrams or multiset equality."
+        },
+        {
+          "id": "s37-5",
+          "text": "Group by canonical key: sorted string or character-count encoding."
+        },
+        {
+          "id": "s37-6",
+          "text": "Find first unique element with count + second pass."
+        },
+        {
+          "id": "s37-7",
+          "text": "Prefix sum to frequency map for subarray sums."
+        },
+        {
+          "id": "s37-8",
+          "text": "Track earliest/latest index with map for distance conditions."
+        },
+        {
+          "id": "s37-9",
+          "text": "Recognize hashing only supports expected O(1), not always guaranteed."
+        },
+        {
+          "id": "s37-10",
+          "text": "Use different data structures for bounded alphabet vs arbitrary strings."
+        },
+        {
+          "id": "s37-11",
+          "text": "Explain HashMap values changing on duplicate keys."
+        },
+        {
+          "id": "s37-12",
+          "text": "Distinguish counting duplicates from returning distinct results."
+        },
+        {
+          "id": "s37-13",
+          "text": "If order/rank is needed, consider sorting or TreeMap."
+        },
+        {
+          "id": "s37-14",
+          "text": "If keys are small integers, a counting array may be simpler and lower overhead."
+        },
+        {
+          "id": "s37-15",
+          "text": "Watch memory when input keys are very large or all unique."
+        }
+      ]
+    },
+    {
+      "id": "section-39",
+      "title": "Two pointers",
+      "sourceTitle": "Pattern lab 03: Two pointers",
+      "group": "Algorithms & data structures",
+      "page": 39,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s39-1",
+          "text": "Opposite-end pointers on sorted input; move the side that can improve target."
+        },
+        {
+          "id": "s39-2",
+          "text": "Palindrome validation while ignoring case or non-alphanumerics."
+        },
+        {
+          "id": "s39-3",
+          "text": "Read/write pointers for removing or compacting values in place."
+        },
+        {
+          "id": "s39-4",
+          "text": "Slow/fast runners to find linked-list midpoint and cycles."
+        },
+        {
+          "id": "s39-5",
+          "text": "Two-array merge with pointer into each sequence."
+        },
+        {
+          "id": "s39-6",
+          "text": "Sort then two-pointer for 3Sum, skip duplicate candidate values."
+        },
+        {
+          "id": "s39-7",
+          "text": "Squares of sorted array: compare absolute ends and fill from back."
+        },
+        {
+          "id": "s39-8",
+          "text": "Container With Most Water: why shorter wall pointer moves."
+        },
+        {
+          "id": "s39-9",
+          "text": "Sliding window is related but has distinct validity-maintenance invariant."
+        },
+        {
+          "id": "s39-10",
+          "text": "Subsequence scan: move pointer in short string only on match."
+        },
+        {
+          "id": "s39-11",
+          "text": "Deduplicate sorted array while preserving a valid prefix."
+        },
+        {
+          "id": "s39-12",
+          "text": "Partitioning: know when original order need not be maintained."
+        },
+        {
+          "id": "s39-13",
+          "text": "Explain why advancing this pointer cannot skip a better candidate."
+        },
+        {
+          "id": "s39-14",
+          "text": "Test duplicate values, no solution, equal ends, one-element inputs as allowed."
+        },
+        {
+          "id": "s39-15",
+          "text": "Distinguish in-place O(1) auxiliary space vs sorted preparation cost."
+        }
+      ]
+    },
+    {
+      "id": "section-41",
+      "title": "Sliding windows",
+      "sourceTitle": "Pattern lab 04: Sliding windows",
+      "group": "Algorithms & data structures",
+      "page": 41,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s41-1",
+          "text": "Recognize exact-length subarray/substring requirement."
+        },
+        {
+          "id": "s41-2",
+          "text": "Maintain sum by adding entering and subtracting leaving value."
+        },
+        {
+          "id": "s41-3",
+          "text": "Compute window length as right-left+1 for inclusive endpoints."
+        },
+        {
+          "id": "s41-4",
+          "text": "Use array count or HashMap for fixed-window character counts."
+        },
+        {
+          "id": "s41-5",
+          "text": "Know monotonic deque for sliding window maximum as a later extension."
+        },
+        {
+          "id": "s41-6",
+          "text": "Identify feasibility predicate that allows left to move while right grows."
+        },
+        {
+          "id": "s41-7",
+          "text": "Maintain count of distinct chars, duplicates, or budget remaining."
+        },
+        {
+          "id": "s41-8",
+          "text": "Grow right; while invalid, shrink left and update state."
+        },
+        {
+          "id": "s41-9",
+          "text": "Update best length at the correct point, after validity established."
+        },
+        {
+          "id": "s41-10",
+          "text": "Understand at-most-K distinct and exact-K via subtraction of two at-most counts."
+        },
+        {
+          "id": "s41-11",
+          "text": "Minimum-size window vs maximum-size window logic; don't mix them."
+        },
+        {
+          "id": "s41-12",
+          "text": "Recognize when negative numbers invalidate simple sum-based shrink logic."
+        },
+        {
+          "id": "s41-13",
+          "text": "Use mutable maps without leaving zero counts as phantom distinct keys."
+        },
+        {
+          "id": "s41-14",
+          "text": "Test repeated chars, full window, empty answers and single-char cases."
+        }
+      ]
+    },
+    {
+      "id": "section-42",
+      "title": "Prefix / suffix / difference",
+      "sourceTitle": "Pattern lab 05: Prefix / suffix / difference",
+      "group": "Algorithms & data structures",
+      "page": 42,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s42-1",
+          "text": "Create prefix[0]=0 and prefix[i+1]=prefix[i]+a[i]."
+        },
+        {
+          "id": "s42-2",
+          "text": "Query sum for interval [l,r] as prefix[r+1]-prefix[l]."
+        },
+        {
+          "id": "s42-3",
+          "text": "Know alternative n-length prefix convention and off-by-one risk."
+        },
+        {
+          "id": "s42-4",
+          "text": "Maintain cumulative frequency or parity states instead of raw sum."
+        },
+        {
+          "id": "s42-5",
+          "text": "Pivot index via running left and total-right-left."
+        },
+        {
+          "id": "s42-6",
+          "text": "Prefix products and suffix products for division-free product except self."
+        },
+        {
+          "id": "s42-7",
+          "text": "Prefix HashMap: sum(curr)-sum(prev)=target, count prior occurrences."
+        },
+        {
+          "id": "s42-8",
+          "text": "2D prefix sum using inclusion-exclusion formula; draw the four rectangles."
+        },
+        {
+          "id": "s42-9",
+          "text": "Difference array for efficient range increment updates; reconstruct by prefix summing."
+        },
+        {
+          "id": "s42-10",
+          "text": "Know when preprocessing wins for many repeated queries."
+        },
+        {
+          "id": "s42-11",
+          "text": "Handling negative numbers, zeros, long sums; choose long if sum might overflow."
+        },
+        {
+          "id": "s42-12",
+          "text": "Define inclusive/exclusive bounds before writing queries."
+        },
+        {
+          "id": "s42-13",
+          "text": "Know output storage complexity versus O(1) working state."
+        }
+      ]
+    },
+    {
+      "id": "section-43",
+      "title": "Binary search",
+      "sourceTitle": "Pattern lab 06: Binary search",
+      "group": "Algorithms & data structures",
+      "page": 43,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s43-1",
+          "text": "Understand sortedness precondition for finding exact match."
+        },
+        {
+          "id": "s43-2",
+          "text": "Use left, right, mid; avoid overflow with left+(right-left)/2."
+        },
+        {
+          "id": "s43-3",
+          "text": "Understand inclusive [left,right] and half-open [left,right) variants."
+        },
+        {
+          "id": "s43-4",
+          "text": "Shrink bounds every iteration and avoid infinite loops."
+        },
+        {
+          "id": "s43-5",
+          "text": "Return found index or -1; search insert position variant."
+        },
+        {
+          "id": "s43-6",
+          "text": "Find first occurrence/last occurrence with boundary templates."
+        },
+        {
+          "id": "s43-7",
+          "text": "Distinguish lower bound and upper bound semantics."
+        },
+        {
+          "id": "s43-8",
+          "text": "Handle empty arrays, duplicates, all values smaller/larger than target."
+        },
+        {
+          "id": "s43-9",
+          "text": "Define a monotonic feasible(predicate) function."
+        },
+        {
+          "id": "s43-10",
+          "text": "Find minimum feasible or maximum feasible parameter."
+        },
+        {
+          "id": "s43-11",
+          "text": "Explain why every feasible value on one side makes binary search legal."
+        },
+        {
+          "id": "s43-12",
+          "text": "Compute count with ceiling division carefully."
+        },
+        {
+          "id": "s43-13",
+          "text": "Analyze O(log range × cost(feasible)) runtime."
+        },
+        {
+          "id": "s43-14",
+          "text": "Avoid relying blindly on Arrays.binarySearch if answer is not exact membership."
+        }
+      ]
+    },
+    {
+      "id": "section-44",
+      "title": "Sorting / order statistics",
+      "sourceTitle": "Pattern lab 07: Sorting / order statistics",
+      "group": "Algorithms & data structures",
+      "page": 44,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s44-1",
+          "text": "Know comparison vs noncomparison sorts and stability."
+        },
+        {
+          "id": "s44-2",
+          "text": "Trace insertion sort and selection sort; show why quadratic."
+        },
+        {
+          "id": "s44-3",
+          "text": "Implement merge sort divide/merge and analyze O(n log n) time O(n) extra space."
+        },
+        {
+          "id": "s44-4",
+          "text": "Trace quicksort partition and average vs worst case."
+        },
+        {
+          "id": "s44-5",
+          "text": "Know heap sort at conceptual level and heaps as priority queues."
+        },
+        {
+          "id": "s44-6",
+          "text": "Know Java Arrays.sort for primitive arrays vs custom object comparators."
+        },
+        {
+          "id": "s44-7",
+          "text": "Design comparators correctly; don't subtract ints when overflow possible."
+        },
+        {
+          "id": "s44-8",
+          "text": "Sort interval arrays by start or end as required by greedy proof."
+        },
+        {
+          "id": "s44-9",
+          "text": "Use sorting to expose duplicates, close values, or opposing pointer opportunities."
+        },
+        {
+          "id": "s44-10",
+          "text": "Know quickselect for kth-smallest, average O(n), worst O(n^2)."
+        },
+        {
+          "id": "s44-11",
+          "text": "Distinguish sorting entire array from heap top-K when K much smaller than n."
+        },
+        {
+          "id": "s44-12",
+          "text": "State whether sort mutates input and changes original order."
+        },
+        {
+          "id": "s44-13",
+          "text": "Explain when adding O(n log n) sort still beats O(n^2) brute force."
+        },
+        {
+          "id": "s44-14",
+          "text": "Recognize stable sort requirement only when the prompt needs it."
+        }
+      ]
+    },
+    {
+      "id": "section-45",
+      "title": "Stacks / queues / monotonic structures",
+      "sourceTitle": "Pattern lab 08: Stacks / queues / monotonic structures",
+      "group": "Algorithms & data structures",
+      "page": 45,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s45-1",
+          "text": "Implement stack with ArrayDeque; know push/pop/peek and empty guard."
+        },
+        {
+          "id": "s45-2",
+          "text": "Match opening/closing delimiters while scanning string."
+        },
+        {
+          "id": "s45-3",
+          "text": "Use stack for expression parsing, reverse-polish notation and decoding strings."
+        },
+        {
+          "id": "s45-4",
+          "text": "Use queue for BFS with offer/poll and maintain visited state."
+        },
+        {
+          "id": "s45-5",
+          "text": "Understand why queue order gives shortest path in unweighted graphs."
+        },
+        {
+          "id": "s45-6",
+          "text": "Understand monotonic increasing vs decreasing stacks; distinguish stored values vs indexes."
+        },
+        {
+          "id": "s45-7",
+          "text": "Find next greater element / stock span / daily temperature using monotonic stack."
+        },
+        {
+          "id": "s45-8",
+          "text": "Analyze each index pushed/popped once -> O(n) for many monotonic stack algorithms."
+        },
+        {
+          "id": "s45-9",
+          "text": "Use deque for monotonic sliding-window max as stretch."
+        },
+        {
+          "id": "s45-10",
+          "text": "Design Min Stack with additional minimum history."
+        },
+        {
+          "id": "s45-11",
+          "text": "Check stack empty before pop/peek, nested brackets, unmatched closing, zero-length input."
+        },
+        {
+          "id": "s45-12",
+          "text": "Explain direction of scan and when answer is known."
+        }
+      ]
+    },
+    {
+      "id": "section-46",
+      "title": "Linked lists",
+      "sourceTitle": "Pattern lab 09: Linked lists",
+      "group": "Algorithms & data structures",
+      "page": 46,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s46-1",
+          "text": "Draw a singly linked node value + next reference."
+        },
+        {
+          "id": "s46-2",
+          "text": "Explain head, tail, null terminator, and why random access is O(n)."
+        },
+        {
+          "id": "s46-3",
+          "text": "Create a ListNode in Java and manually connect 3 nodes."
+        },
+        {
+          "id": "s46-4",
+          "text": "Reverse list with prev/current/next pointers; trace one mutation at a time."
+        },
+        {
+          "id": "s46-5",
+          "text": "Use dummy head to avoid special first-element insertion/deletion logic."
+        },
+        {
+          "id": "s46-6",
+          "text": "Merge two sorted lists with tail pointer."
+        },
+        {
+          "id": "s46-7",
+          "text": "Remove nth node from end via fast/slow separation."
+        },
+        {
+          "id": "s46-8",
+          "text": "Find middle with slow/fast; detect cycle with Floyd pointers."
+        },
+        {
+          "id": "s46-9",
+          "text": "Know length counts versus two-pointer alternatives."
+        },
+        {
+          "id": "s46-10",
+          "text": "Recognize reversing in groups and palindrome list as later variations."
+        },
+        {
+          "id": "s46-11",
+          "text": "Understand immutable next? no: node.next is mutable unless design prevents it."
+        },
+        {
+          "id": "s46-12",
+          "text": "Know basic doubly linked list prev/next for LRU cache design."
+        },
+        {
+          "id": "s46-13",
+          "text": "Avoid losing remaining list by changing next before saving it."
+        },
+        {
+          "id": "s46-14",
+          "text": "Test one node, two nodes, null head and repeated values."
+        },
+        {
+          "id": "s46-15",
+          "text": "Explain O(1) extra space for iterative reverse and O(n) recursion stack for recursive reverse."
+        }
+      ]
+    },
+    {
+      "id": "section-48",
+      "title": "Trees, BSTs & traversals",
+      "sourceTitle": "Pattern lab 10: Trees, BSTs & traversals",
+      "group": "Algorithms & data structures",
+      "page": 48,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s48-1",
+          "text": "Distinguish root, parent, child, leaf, depth, height and subtree."
+        },
+        {
+          "id": "s48-2",
+          "text": "Binary tree vs binary search tree vs complete tree vs balanced tree."
+        },
+        {
+          "id": "s48-3",
+          "text": "Draw DFS preorder, inorder, postorder and explain visit order."
+        },
+        {
+          "id": "s48-4",
+          "text": "Implement recursive traversal returning data or computing an aggregate."
+        },
+        {
+          "id": "s48-5",
+          "text": "Write correct base case for null node."
+        },
+        {
+          "id": "s48-6",
+          "text": "Track recursion call stack space proportional to tree height."
+        },
+        {
+          "id": "s48-7",
+          "text": "Implement BFS level-order traversal with queue and levels."
+        },
+        {
+          "id": "s48-8",
+          "text": "Max depth, min depth and symmetry patterns."
+        },
+        {
+          "id": "s48-9",
+          "text": "BST ordering invariant and search/insert behavior; skewed worst case O(n)."
+        },
+        {
+          "id": "s48-10",
+          "text": "Validate BST using allowable ranges, not just parent comparisons."
+        },
+        {
+          "id": "s48-11",
+          "text": "Lowest common ancestor in arbitrary binary tree vs BST."
+        },
+        {
+          "id": "s48-12",
+          "text": "Construct tree from traversal information under relevant uniqueness assumptions."
+        },
+        {
+          "id": "s48-13",
+          "text": "Serialize/deserialize with null markers to preserve structure."
+        },
+        {
+          "id": "s48-14",
+          "text": "Tree diameter and path sums with postorder return values."
+        },
+        {
+          "id": "s48-15",
+          "text": "Balanced tree idea: height and update invariants; no need to memorize full AVL rotation code at first."
+        },
+        {
+          "id": "s48-16",
+          "text": "N-ary traversal and trie are related tree variants."
+        }
+      ]
+    },
+    {
+      "id": "section-50",
+      "title": "Heaps / tries",
+      "sourceTitle": "Pattern lab 11: Heaps / tries",
+      "group": "Algorithms & data structures",
+      "page": 50,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s50-1",
+          "text": "Explain min heap complete-tree shape and parent/child array index mapping."
+        },
+        {
+          "id": "s50-2",
+          "text": "Know insert, peek, extract operations and O(log n) vs O(1) complexity."
+        },
+        {
+          "id": "s50-3",
+          "text": "Use Java PriorityQueue and comparator for max heap."
+        },
+        {
+          "id": "s50-4",
+          "text": "Solve top-K with min heap of size K; compare sorting O(n log n)."
+        },
+        {
+          "id": "s50-5",
+          "text": "Understand k-way merge using heap entries from each sorted list."
+        },
+        {
+          "id": "s50-6",
+          "text": "Median streaming using two heaps (max-heap lower half, min-heap upper half)."
+        },
+        {
+          "id": "s50-7",
+          "text": "Understand heapify O(n) vs repeated insert O(n log n)."
+        },
+        {
+          "id": "s50-8",
+          "text": "Know that a heap is not a globally sorted array."
+        },
+        {
+          "id": "s50-9",
+          "text": "Draw nodes as characters and edges, marking end-of-word separately."
+        },
+        {
+          "id": "s50-10",
+          "text": "Implement insert, exact search and startsWith."
+        },
+        {
+          "id": "s50-11",
+          "text": "Explain alphabet array children vs HashMap children tradeoffs."
+        },
+        {
+          "id": "s50-12",
+          "text": "Know time O(length of key) for lookup rather than full dictionary scan."
+        },
+        {
+          "id": "s50-13",
+          "text": "Recognize word search and autocomplete prefixes as uses."
+        }
+      ]
+    },
+    {
+      "id": "section-51",
+      "title": "Graphs & grids",
+      "sourceTitle": "Pattern lab 12: Graphs & grids",
+      "group": "Algorithms & data structures",
+      "page": 51,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s51-1",
+          "text": "Distinguish vertices, edges, directed/undirected, cyclic/acyclic, weighted/unweighted."
+        },
+        {
+          "id": "s51-2",
+          "text": "Build adjacency list (Map<Integer,List<Integer>> or List<List<Integer>>)."
+        },
+        {
+          "id": "s51-3",
+          "text": "Understand adjacency matrix space O(V^2) and lookup tradeoff."
+        },
+        {
+          "id": "s51-4",
+          "text": "Recognize grid as implicit graph; four-direction coordinates, bounds checks."
+        },
+        {
+          "id": "s51-5",
+          "text": "Use a visited boolean array/set, including when to mark visited in BFS."
+        },
+        {
+          "id": "s51-6",
+          "text": "Trace BFS level by level and DFS recursion/iterative stack."
+        },
+        {
+          "id": "s51-7",
+          "text": "Analyze O(V+E) traversal for adjacency lists, O(m*n) grid scan/traversal."
+        },
+        {
+          "id": "s51-8",
+          "text": "Find connected components and number of islands."
+        },
+        {
+          "id": "s51-9",
+          "text": "Cycle detection in undirected graph via parent; directed via three-color state."
+        },
+        {
+          "id": "s51-10",
+          "text": "Bipartite graph checking using two-color BFS/DFS."
+        },
+        {
+          "id": "s51-11",
+          "text": "Multi-source BFS for nearest exit/rotting oranges."
+        },
+        {
+          "id": "s51-12",
+          "text": "Shortest unweighted path via BFS and parent reconstruction."
+        },
+        {
+          "id": "s51-13",
+          "text": "Topological sorting via Kahn indegrees or DFS ordering."
+        },
+        {
+          "id": "s51-14",
+          "text": "Distinguish trees as connected acyclic graphs."
+        },
+        {
+          "id": "s51-15",
+          "text": "Know state can include position + extra dimensions (keys, visited mask, remaining resources)."
+        },
+        {
+          "id": "s51-16",
+          "text": "Avoid stack overflow on very deep recursion by using iterative stack/queue if needed."
+        },
+        {
+          "id": "s51-17",
+          "text": "Check start/end obstacles, disconnected graphs, isolated nodes."
+        }
+      ]
+    },
+    {
+      "id": "section-53",
+      "title": "Weighted/advanced graphs",
+      "sourceTitle": "Pattern lab 13: Weighted/advanced graphs",
+      "group": "Algorithms & data structures",
+      "page": 53,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s53-1",
+          "text": "Represent each node with parent and rank/size arrays."
+        },
+        {
+          "id": "s53-2",
+          "text": "Understand find with path compression and union by size/rank."
+        },
+        {
+          "id": "s53-3",
+          "text": "Recognize connectivity queries, grouping and cycle checks."
+        },
+        {
+          "id": "s53-4",
+          "text": "Know near-constant amortized DSU operation and inverse Ackermann idea."
+        },
+        {
+          "id": "s53-5",
+          "text": "Dijkstra for nonnegative edge weights with min heap."
+        },
+        {
+          "id": "s53-6",
+          "text": "Differentiate BFS shortest unweighted from weighted shortest-path search."
+        },
+        {
+          "id": "s53-7",
+          "text": "Understand visited/finalized distances and stale heap entries."
+        },
+        {
+          "id": "s53-8",
+          "text": "Recognize Bellman-Ford for negative edges and negative-cycle detection conceptually."
+        },
+        {
+          "id": "s53-9",
+          "text": "Know Floyd-Warshall all-pairs and O(V^3) when needed."
+        },
+        {
+          "id": "s53-10",
+          "text": "Minimum spanning tree purpose; compare Kruskal sorting edges + DSU with Prim heap growth."
+        },
+        {
+          "id": "s53-11",
+          "text": "A* as an optional informed search; admissible heuristic intuition."
+        },
+        {
+          "id": "s53-12",
+          "text": "State when a shortest-path tree is not the same as MST."
+        },
+        {
+          "id": "s53-13",
+          "text": "Convert strange narrative into nodes, edges, state and transitions."
+        },
+        {
+          "id": "s53-14",
+          "text": "Identify time/memory costs based on generated state count."
+        },
+        {
+          "id": "s53-15",
+          "text": "Explain dependency edges for course schedule or build order."
+        }
+      ]
+    },
+    {
+      "id": "section-55",
+      "title": "Recursion & backtracking",
+      "sourceTitle": "Pattern lab 14: Recursion & backtracking",
+      "group": "Algorithms & data structures",
+      "page": 55,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s55-1",
+          "text": "Identify base case, recursive case, parameters and progress toward termination."
+        },
+        {
+          "id": "s55-2",
+          "text": "Explain stack frames, call order, and return-value contracts."
+        },
+        {
+          "id": "s55-3",
+          "text": "Compare recursion vs explicit stack and tail-call limitations in Java."
+        },
+        {
+          "id": "s55-4",
+          "text": "Use choose → explore → undo for mutable shared path/backtracking."
+        },
+        {
+          "id": "s55-5",
+          "text": "Generate subsets with include/exclude branching."
+        },
+        {
+          "id": "s55-6",
+          "text": "Generate permutations using used flags or swaps."
+        },
+        {
+          "id": "s55-7",
+          "text": "Generate combinations with increasing start index to avoid duplicates."
+        },
+        {
+          "id": "s55-8",
+          "text": "Generate balanced parentheses with open/close constraints."
+        },
+        {
+          "id": "s55-9",
+          "text": "Word Search: visited cell, boundary, restore on backtrack."
+        },
+        {
+          "id": "s55-10",
+          "text": "N-Queens: row-by-row placement and invalid diagonals."
+        },
+        {
+          "id": "s55-11",
+          "text": "Prune impossible partial states early; document why pruning is sound."
+        },
+        {
+          "id": "s55-12",
+          "text": "Estimate search tree size and complexity beyond simple O(n)."
+        },
+        {
+          "id": "s55-13",
+          "text": "Know copying path into results (new ArrayList<>(path)) avoids later aliasing."
+        },
+        {
+          "id": "s55-14",
+          "text": "Forgetting to undo mutation or to copy result path."
+        },
+        {
+          "id": "s55-15",
+          "text": "Reusing one visited array incorrectly across independent search branches."
+        },
+        {
+          "id": "s55-16",
+          "text": "Starting branching from wrong index in combinations vs permutations."
+        }
+      ]
+    },
+    {
+      "id": "section-57",
+      "title": "Greedy & intervals",
+      "sourceTitle": "Pattern lab 15: Greedy & intervals",
+      "group": "Algorithms & data structures",
+      "page": 57,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s57-1",
+          "text": "Define objective and candidate local greedy decision."
+        },
+        {
+          "id": "s57-2",
+          "text": "Give counterexample when a plausible greedy fails."
+        },
+        {
+          "id": "s57-3",
+          "text": "Use exchange argument or stay-ahead proof when possible."
+        },
+        {
+          "id": "s57-4",
+          "text": "Sort intervals by start for merging, by end for maximizing compatible selections."
+        },
+        {
+          "id": "s57-5",
+          "text": "Merge overlapping intervals correctly including boundaries touching."
+        },
+        {
+          "id": "s57-6",
+          "text": "Meeting Rooms capacity / sweep line event counting."
+        },
+        {
+          "id": "s57-7",
+          "text": "Jump Game reachability via farthest reachable index."
+        },
+        {
+          "id": "s57-8",
+          "text": "Gas Station concept: maintain total balance and reset start on deficit."
+        },
+        {
+          "id": "s57-9",
+          "text": "Task scheduling using frequency or heap; recognize when greediness works."
+        },
+        {
+          "id": "s57-10",
+          "text": "Greedy vs dynamic programming: local independent choice vs interdependent states."
+        },
+        {
+          "id": "s57-11",
+          "text": "Test equal endpoints, contained intervals, negative values, disconnected ranges."
+        },
+        {
+          "id": "s57-12",
+          "text": "Sort cost dominates O(n log n), then linear scan."
+        },
+        {
+          "id": "s57-13",
+          "text": "Know when to keep original indices before sorting."
+        }
+      ]
+    },
+    {
+      "id": "section-58",
+      "title": "Dynamic programming",
+      "sourceTitle": "Pattern lab 16: Dynamic programming",
+      "group": "Algorithms & data structures",
+      "page": 58,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s58-1",
+          "text": "Identify repeated overlapping subproblems and optimal substructure."
+        },
+        {
+          "id": "s58-2",
+          "text": "Define state as a precise question; e.g., dp[i] = best answer for prefix ending at i."
+        },
+        {
+          "id": "s58-3",
+          "text": "Define transition from smaller solved states and explain why exhaustive over choices."
+        },
+        {
+          "id": "s58-4",
+          "text": "Pick base cases correctly before coding."
+        },
+        {
+          "id": "s58-5",
+          "text": "Implement top-down memoization with sentinel/cached state."
+        },
+        {
+          "id": "s58-6",
+          "text": "Implement bottom-up tabulation in dependency order."
+        },
+        {
+          "id": "s58-7",
+          "text": "Space optimization with rolling variables when only nearby states needed."
+        },
+        {
+          "id": "s58-8",
+          "text": "House Robber: choose take vs skip; handle small n."
+        },
+        {
+          "id": "s58-9",
+          "text": "Coin Change: impossible sentinel and unbounded coin repetitions."
+        },
+        {
+          "id": "s58-10",
+          "text": "Climbing Stairs: linear recurrence with O(1) optimization."
+        },
+        {
+          "id": "s58-11",
+          "text": "Grid paths DP and obstacle handling."
+        },
+        {
+          "id": "s58-12",
+          "text": "Longest increasing subsequence O(n^2) then patience sorting O(n log n) idea."
+        },
+        {
+          "id": "s58-13",
+          "text": "Longest common subsequence and edit distance 2D state."
+        },
+        {
+          "id": "s58-14",
+          "text": "0/1 knapsack vs unbounded knapsack; loop direction matters in 1D space."
+        },
+        {
+          "id": "s58-15",
+          "text": "Partition equal subset sum and target sum transformations."
+        },
+        {
+          "id": "s58-16",
+          "text": "Decode Ways and string-position DP."
+        },
+        {
+          "id": "s58-17",
+          "text": "Stock buy/sell state machine as advanced extension."
+        },
+        {
+          "id": "s58-18",
+          "text": "Interval DP and bitmask DP are optional later-specialized study."
+        },
+        {
+          "id": "s58-19",
+          "text": "Count number of states times work per state."
+        },
+        {
+          "id": "s58-20",
+          "text": "Explain recursion memoization stack and table space."
+        },
+        {
+          "id": "s58-21",
+          "text": "Use small hand-drawn state table before code; test first/last row and empty prefix."
+        }
+      ]
+    },
+    {
+      "id": "section-60",
+      "title": "Math, bits & optional specialties",
+      "sourceTitle": "Pattern lab 17: Math, bits & optional specialties",
+      "group": "Algorithms & data structures",
+      "page": 60,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s60-1",
+          "text": "GCD Euclidean algorithm, LCM via division to minimize overflow."
+        },
+        {
+          "id": "s60-2",
+          "text": "Modulo arithmetic, frequency remainders and safe normalization."
+        },
+        {
+          "id": "s60-3",
+          "text": "Prime testing up to sqrt(n), Sieve of Eratosthenes as needed."
+        },
+        {
+          "id": "s60-4",
+          "text": "Basic permutations/combinations, n choose k, elementary probability."
+        },
+        {
+          "id": "s60-5",
+          "text": "Arithmetic series formula and counting invariant; know overflow."
+        },
+        {
+          "id": "s60-6",
+          "text": "Binary representations and bit indexing."
+        },
+        {
+          "id": "s60-7",
+          "text": "Bitwise AND, OR, XOR, NOT and shifts; differentiate signed >>> from >>."
+        },
+        {
+          "id": "s60-8",
+          "text": "Odd/even bit check, set/clear/test bit, XOR to find unique value."
+        },
+        {
+          "id": "s60-9",
+          "text": "Bitmask subsets for small n; state compression concept."
+        },
+        {
+          "id": "s60-10",
+          "text": "Know integer overflow when computing mid or products."
+        },
+        {
+          "id": "s60-11",
+          "text": "Segment tree range queries and updates; lazy propagation."
+        },
+        {
+          "id": "s60-12",
+          "text": "Fenwick/Binary Indexed Tree prefix sums."
+        },
+        {
+          "id": "s60-13",
+          "text": "Tries with failure links / KMP and rolling hash string matching."
+        },
+        {
+          "id": "s60-14",
+          "text": "Strongly connected components (Tarjan/Kosaraju), bridges/articulation points."
+        },
+        {
+          "id": "s60-15",
+          "text": "Computational geometry orientation/cross products, sweeping."
+        },
+        {
+          "id": "s60-16",
+          "text": "Network flow and min-cut; advanced DP optimizations."
+        },
+        {
+          "id": "s60-17",
+          "text": "Bloom filters, probabilistic structures and distributed primitives as specialty knowledge."
+        }
+      ]
+    },
+    {
+      "id": "section-62",
+      "title": "CS fundamentals 01: Operating systems",
+      "sourceTitle": "CS fundamentals 01: Operating systems",
+      "group": "Computer science",
+      "page": 62,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s62-1",
+          "text": "Explain program vs process vs thread; separate process memory and shared thread memory."
+        },
+        {
+          "id": "s62-2",
+          "text": "Know context switching, CPU scheduling, blocking versus nonblocking I/O."
+        },
+        {
+          "id": "s62-3",
+          "text": "Understand heap vs stack memory, object allocation and garbage collection at a high level."
+        },
+        {
+          "id": "s62-4",
+          "text": "Explain virtual memory, pages, address spaces and page faults at introductory depth."
+        },
+        {
+          "id": "s62-5",
+          "text": "Know synchronization: mutex, monitor, semaphore, volatile, atomic operations."
+        },
+        {
+          "id": "s62-6",
+          "text": "Recognize race condition using read-modify-write example."
+        },
+        {
+          "id": "s62-7",
+          "text": "Explain deadlock's four necessary conditions; prevention via ordering/timeouts."
+        },
+        {
+          "id": "s62-8",
+          "text": "Understand thread pools, bounded queues and backpressure."
+        },
+        {
+          "id": "s62-9",
+          "text": "Recognize cache locality and why array traversal tends to be efficient."
+        },
+        {
+          "id": "s62-10",
+          "text": "Explain file descriptors, processes listening on a port and basic resource cleanup."
+        },
+        {
+          "id": "s62-11",
+          "text": "Know synchronized method/block, intrinsic locks, visibility vs atomicity."
+        },
+        {
+          "id": "s62-12",
+          "text": "Use ExecutorService conceptually; avoid unbounded thread creation."
+        },
+        {
+          "id": "s62-13",
+          "text": "Understand CompletableFuture at high level and exception propagation."
+        },
+        {
+          "id": "s62-14",
+          "text": "Know ConcurrentHashMap versus HashMap for shared concurrent access."
+        },
+        {
+          "id": "s62-15",
+          "text": "Know thread-safe does not automatically imply a multi-step sequence is atomic."
+        },
+        {
+          "id": "s62-16",
+          "text": "Explain immutable objects and thread confinement as strategies."
+        },
+        {
+          "id": "s62-17",
+          "text": "Understand JVM memory model happens-before at conceptual level."
+        }
+      ]
+    },
+    {
+      "id": "section-63",
+      "title": "CS fundamentals 02: SQL & databases",
+      "sourceTitle": "CS fundamentals 02: SQL & databases",
+      "group": "Computer science",
+      "page": 63,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s63-1",
+          "text": "Define table, row, primary key, foreign key, unique constraint, nullability."
+        },
+        {
+          "id": "s63-2",
+          "text": "Choose one-to-many vs many-to-many with join table."
+        },
+        {
+          "id": "s63-3",
+          "text": "Write SELECT, WHERE, ORDER BY, LIMIT/OFFSET and aggregate functions."
+        },
+        {
+          "id": "s63-4",
+          "text": "Use GROUP BY and HAVING correctly; know SQL evaluation order."
+        },
+        {
+          "id": "s63-5",
+          "text": "Write INNER JOIN, LEFT JOIN and explain unmatched rows."
+        },
+        {
+          "id": "s63-6",
+          "text": "Understand SQL injection and prepared/parameterized queries."
+        },
+        {
+          "id": "s63-7",
+          "text": "Know transactions, BEGIN/COMMIT/ROLLBACK and ACID."
+        },
+        {
+          "id": "s63-8",
+          "text": "Explain isolation levels, nonrepeatable reads, phantom reads and lost updates at introductory level."
+        },
+        {
+          "id": "s63-9",
+          "text": "Define indexes (B-tree), their benefits and write/storage costs."
+        },
+        {
+          "id": "s63-10",
+          "text": "Understand composite index leftmost prefix intuition."
+        },
+        {
+          "id": "s63-11",
+          "text": "Use EXPLAIN / query plans and identify slow queries."
+        },
+        {
+          "id": "s63-12",
+          "text": "Know normalization (1NF/2NF/3NF) and when denormalization helps."
+        },
+        {
+          "id": "s63-13",
+          "text": "Understand SQL vs document/key-value data model tradeoffs."
+        },
+        {
+          "id": "s63-14",
+          "text": "Implement migration schema changes safely with backward compatibility."
+        },
+        {
+          "id": "s63-15",
+          "text": "Choose ids, pagination, sort order, filtering and uniqueness constraints for real APIs."
+        },
+        {
+          "id": "s63-16",
+          "text": "Reason about n+1 queries and batching."
+        },
+        {
+          "id": "s63-17",
+          "text": "Understand connection pooling, transactions and timeouts."
+        },
+        {
+          "id": "s63-18",
+          "text": "Explain optimistic locking and idempotent updates conceptually."
+        },
+        {
+          "id": "s63-19",
+          "text": "Know replication vs sharding as separate scaling methods."
+        }
+      ]
+    },
+    {
+      "id": "section-64",
+      "title": "CS fundamentals 03: Networking & web",
+      "sourceTitle": "CS fundamentals 03: Networking & web",
+      "group": "Computer science",
+      "page": 64,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s64-1",
+          "text": "Explain IP address, DNS lookup, TCP connection and TLS handshake at a high level."
+        },
+        {
+          "id": "s64-2",
+          "text": "Compare TCP reliability/ordering with UDP low overhead; know typical use cases."
+        },
+        {
+          "id": "s64-3",
+          "text": "Understand HTTP request: URL, method, headers, body; response status/body."
+        },
+        {
+          "id": "s64-4",
+          "text": "Know GET, POST, PUT, PATCH, DELETE and idempotency expectations."
+        },
+        {
+          "id": "s64-5",
+          "text": "Explain 200/201/204, 301/302, 400/401/403/404/409/429, 500/502/503."
+        },
+        {
+          "id": "s64-6",
+          "text": "Understand HTTPS purpose, certificate identity, confidentiality/integrity."
+        },
+        {
+          "id": "s64-7",
+          "text": "Know REST semantics and JSON serialization/deserialization."
+        },
+        {
+          "id": "s64-8",
+          "text": "Explain cookies, sessions, JWT and OAuth2 at a practical level."
+        },
+        {
+          "id": "s64-9",
+          "text": "Understand CORS as browser-enforced origin policy, not an authentication system."
+        },
+        {
+          "id": "s64-10",
+          "text": "Know latency, throughput, bandwidth, p50/p95/p99, timeouts, retries and exponential backoff."
+        },
+        {
+          "id": "s64-11",
+          "text": "Distinguish polling, long polling, server-sent events and WebSockets."
+        },
+        {
+          "id": "s64-12",
+          "text": "Explain CDN, DNS caching and browser caching at a conceptual level."
+        },
+        {
+          "id": "s64-13",
+          "text": "Inspect browser network panel: URL, headers, payload, response and timing."
+        },
+        {
+          "id": "s64-14",
+          "text": "Distinguish auth failure, CORS failure, backend validation error and gateway failure."
+        },
+        {
+          "id": "s64-15",
+          "text": "Explain 429 rate limiting, retry-after header and client backoff."
+        },
+        {
+          "id": "s64-16",
+          "text": "Recognize partial failures and timeout propagation across services."
+        },
+        {
+          "id": "s64-17",
+          "text": "Design idempotent POST operations or idempotency keys when needed."
+        }
+      ]
+    },
+    {
+      "id": "section-65",
+      "title": "System design: early-career expectations",
+      "sourceTitle": "System design: early-career expectations",
+      "group": "System design",
+      "page": 65,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s65-1",
+          "text": "Clarify users, scope, scale, read/write ratio and nonfunctional requirements."
+        },
+        {
+          "id": "s65-2",
+          "text": "Write explicit functional requirements and out-of-scope decisions."
+        },
+        {
+          "id": "s65-3",
+          "text": "Define REST APIs and success/error responses with examples."
+        },
+        {
+          "id": "s65-4",
+          "text": "Define tables/entities, data relationships, constraints and indexes."
+        },
+        {
+          "id": "s65-5",
+          "text": "Sketch client, API, database, cache, queue, object storage and external services."
+        },
+        {
+          "id": "s65-6",
+          "text": "Explain the simplest single-server design before introducing scale tools."
+        },
+        {
+          "id": "s65-7",
+          "text": "Estimate traffic/storage using rough numbers with units and assumptions."
+        },
+        {
+          "id": "s65-8",
+          "text": "Separate functional correctness from reliability, latency and availability."
+        },
+        {
+          "id": "s65-9",
+          "text": "Choose pagination, search, caching and invalidation strategy as justified."
+        },
+        {
+          "id": "s65-10",
+          "text": "Know load balancers and horizontal vs vertical scaling."
+        },
+        {
+          "id": "s65-11",
+          "text": "Understand asynchronous job queue, retry, idempotency and dead-letter queue."
+        },
+        {
+          "id": "s65-12",
+          "text": "Understand database replication, read replicas, sharding and consistency tradeoffs."
+        },
+        {
+          "id": "s65-13",
+          "text": "Explain failure modes: database down, duplicate event, slow API, client retry."
+        },
+        {
+          "id": "s65-14",
+          "text": "Add metrics, logs, tracing and alerts, and plan rollback."
+        },
+        {
+          "id": "s65-15",
+          "text": "Talk through key tradeoffs and potential bottlenecks."
+        },
+        {
+          "id": "s65-16",
+          "text": "URL shortener: unique short code, redirect, collisions, read-heavy scaling."
+        },
+        {
+          "id": "s65-17",
+          "text": "Chat messaging: API/WebSocket, message persistence, delivery and ordering."
+        },
+        {
+          "id": "s65-18",
+          "text": "Photo feed: upload, object storage, metadata, timeline and caching."
+        },
+        {
+          "id": "s65-19",
+          "text": "Rate limiter: key + interval + distributed state as basic concept."
+        },
+        {
+          "id": "s65-20",
+          "text": "Event planner: availability, RSVP updates, concurrent changes and notifications."
+        },
+        {
+          "id": "s65-21",
+          "text": "Avoid pretending advanced system design is a compulsory L3 loop: confirm with recruiter."
+        }
+      ]
+    },
+    {
+      "id": "section-67",
+      "title": "Full-stack engineering 01: Angular + TypeScript",
+      "sourceTitle": "Full-stack engineering 01: Angular + TypeScript",
+      "group": "Full-stack technologies",
+      "page": 67,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s67-1",
+          "text": "Types, interfaces, union, intersection, generics, type narrowing and strict mode."
+        },
+        {
+          "id": "s67-2",
+          "text": "Value vs reference, immutability, readonly and shallow spreads."
+        },
+        {
+          "id": "s67-3",
+          "text": "Promises, async/await, event loop, microtask queue and error handling."
+        },
+        {
+          "id": "s67-4",
+          "text": "DOM, events, browser storage and accessibility basics."
+        },
+        {
+          "id": "s67-5",
+          "text": "HTTP interceptors, errors, auth and API typing."
+        },
+        {
+          "id": "s67-6",
+          "text": "Debug with DevTools, source maps, network panel and performance profiler."
+        },
+        {
+          "id": "s67-7",
+          "text": "Understand component lifecycle, templates, input/output, view encapsulation."
+        },
+        {
+          "id": "s67-8",
+          "text": "Understand dependency injection, providers, services and scopes."
+        },
+        {
+          "id": "s67-9",
+          "text": "Use Signals and computed state appropriately where supported by version."
+        },
+        {
+          "id": "s67-10",
+          "text": "Use RxJS Observable, Subject, BehaviorSubject; map, switchMap, mergeMap, concatMap, debounceTime, catchError."
+        },
+        {
+          "id": "s67-11",
+          "text": "Know subscription cleanup patterns including takeUntilDestroyed where supported."
+        },
+        {
+          "id": "s67-12",
+          "text": "Use reactive forms, validation, async validation and error messaging."
+        },
+        {
+          "id": "s67-13",
+          "text": "Implement route guards, lazy loading, navigation and route params."
+        },
+        {
+          "id": "s67-14",
+          "text": "Understand change detection and performance of list rendering/trackBy or tracking syntax."
+        },
+        {
+          "id": "s67-15",
+          "text": "Build accessible UI: keyboard focus, labels, semantics, contrast and responsive layout."
+        },
+        {
+          "id": "s67-16",
+          "text": "Write isolated component tests and service tests."
+        },
+        {
+          "id": "s67-17",
+          "text": "Explain why a framework update can involve breaking API, package and build changes."
+        },
+        {
+          "id": "s67-18",
+          "text": "Know build output, environment configuration and deployment verification."
+        }
+      ]
+    },
+    {
+      "id": "section-68",
+      "title": "Full-stack engineering 02: Java + Spring Boot",
+      "sourceTitle": "Full-stack engineering 02: Java + Spring Boot",
+      "group": "Full-stack technologies",
+      "page": 68,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s68-1",
+          "text": "Define controller, service, repository, DTO, entity and responsibility boundaries."
+        },
+        {
+          "id": "s68-2",
+          "text": "Understand dependency injection and constructor injection, Spring beans and configuration."
+        },
+        {
+          "id": "s68-3",
+          "text": "Write REST routes with path/query params, request bodies, validation annotations."
+        },
+        {
+          "id": "s68-4",
+          "text": "Define API error shape, global exception handling and status codes."
+        },
+        {
+          "id": "s68-5",
+          "text": "Serialize/deserialize JSON and validate input types/limits."
+        },
+        {
+          "id": "s68-6",
+          "text": "Use JPA/Hibernate basics: entities, repositories, lazy/eager loading and n+1 query trap."
+        },
+        {
+          "id": "s68-7",
+          "text": "Configure database migrations with Flyway/Liquibase idea."
+        },
+        {
+          "id": "s68-8",
+          "text": "Implement pagination, filtering and sorting in API calls."
+        },
+        {
+          "id": "s68-9",
+          "text": "Know transaction boundaries and concurrency/update conflicts."
+        },
+        {
+          "id": "s68-10",
+          "text": "Manage config/secrets per environment; never hard-code credentials."
+        },
+        {
+          "id": "s68-11",
+          "text": "Know authentication / authorization filters and least privilege."
+        },
+        {
+          "id": "s68-12",
+          "text": "Use caching when justified and understand invalidation complexity."
+        },
+        {
+          "id": "s68-13",
+          "text": "Understand thread pool and blocking IO behavior at a high level."
+        },
+        {
+          "id": "s68-14",
+          "text": "Write unit tests and API integration tests with a test database."
+        },
+        {
+          "id": "s68-15",
+          "text": "Implement log correlation ID, metrics, and health checks."
+        },
+        {
+          "id": "s68-16",
+          "text": "Use layered architecture rather than a giant controller."
+        },
+        {
+          "id": "s68-17",
+          "text": "Add consistent validation, status codes, idempotency and request tracing."
+        },
+        {
+          "id": "s68-18",
+          "text": "Know common security risks: injection, broken auth, sensitive data leakage."
+        },
+        {
+          "id": "s68-19",
+          "text": "Explain the relationship between HTTP requests and transactional DB work."
+        },
+        {
+          "id": "s68-20",
+          "text": "Write README with API example, local setup, environment variables and test steps."
+        }
+      ]
+    },
+    {
+      "id": "section-70",
+      "title": "Engineering practice 03: Debugging, testing, CI/CD",
+      "sourceTitle": "Engineering practice 03: Debugging, testing, CI/CD",
+      "group": "Engineering practice",
+      "page": 70,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s70-1",
+          "text": "Reproduce bug deterministically and capture expected vs observed behavior."
+        },
+        {
+          "id": "s70-2",
+          "text": "Read stack trace top to bottom and identify first relevant application frame."
+        },
+        {
+          "id": "s70-3",
+          "text": "Form hypothesis, add minimal observation, falsify it, narrow cause."
+        },
+        {
+          "id": "s70-4",
+          "text": "Use breakpoints, logs, structured correlation IDs and tracing."
+        },
+        {
+          "id": "s70-5",
+          "text": "Distinguish frontend, gateway, backend, DB and external service failures."
+        },
+        {
+          "id": "s70-6",
+          "text": "Check state changes and request payloads; never assume 200 means correct semantics."
+        },
+        {
+          "id": "s70-7",
+          "text": "Write regression test once root cause is fixed."
+        },
+        {
+          "id": "s70-8",
+          "text": "Practice reading unfamiliar code: call graph, interfaces, data flow, invariants and tests."
+        },
+        {
+          "id": "s70-9",
+          "text": "Know unit vs integration vs end-to-end vs contract tests."
+        },
+        {
+          "id": "s70-10",
+          "text": "Use JUnit assertions, test naming, parameterized tests and fixtures."
+        },
+        {
+          "id": "s70-11",
+          "text": "Know when to mock vs use a real integration dependency."
+        },
+        {
+          "id": "s70-12",
+          "text": "Test null, boundaries, duplicates, error paths and concurrency cases."
+        },
+        {
+          "id": "s70-13",
+          "text": "Use code coverage as signal not proof; test behavior not implementation details."
+        },
+        {
+          "id": "s70-14",
+          "text": "Understand property-based tests and mutation testing conceptually."
+        },
+        {
+          "id": "s70-15",
+          "text": "Run tests locally and in CI; investigate flaky tests without deleting them."
+        },
+        {
+          "id": "s70-16",
+          "text": "Use Git branch, commit, rebase, merge, cherry-pick, revert and resolve conflicts safely."
+        },
+        {
+          "id": "s70-17",
+          "text": "Write reviewable pull requests with scope, tests, tradeoffs and screenshots where relevant."
+        },
+        {
+          "id": "s70-18",
+          "text": "Understand semantic versioning, dependency upgrades and lockfiles."
+        },
+        {
+          "id": "s70-19",
+          "text": "Trace build -> test -> container/image -> deploy -> verify -> rollback."
+        },
+        {
+          "id": "s70-20",
+          "text": "Explain environment variables, secret stores, least-privilege permissions and pipeline gates."
+        },
+        {
+          "id": "s70-21",
+          "text": "Know basic Docker build/run and container networking."
+        },
+        {
+          "id": "s70-22",
+          "text": "Explain cloud environment (compute, DB, object storage, monitoring) at practical level."
+        }
+      ]
+    },
+    {
+      "id": "section-72",
+      "title": "AI-assisted engineering & code comprehension",
+      "sourceTitle": "AI-assisted engineering & code comprehension",
+      "group": "Engineering practice",
+      "page": 72,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s72-1",
+          "text": "Read generated code before running: understand each function and state change."
+        },
+        {
+          "id": "s72-2",
+          "text": "Write tests independent from AI-proposed logic; check requirements against behavior."
+        },
+        {
+          "id": "s72-3",
+          "text": "Check generated code for secrets, insecure input handling and dependency vulnerabilities."
+        },
+        {
+          "id": "s72-4",
+          "text": "Understand limitations of autocomplete and hallucinated Java APIs."
+        },
+        {
+          "id": "s72-5",
+          "text": "Use AI for explanation, exploration and small examples, not blind answer copying."
+        },
+        {
+          "id": "s72-6",
+          "text": "Request a minimal hint in LeetCode before requesting complete solutions."
+        },
+        {
+          "id": "s72-7",
+          "text": "Recreate a solution from blank file after a guided explanation."
+        },
+        {
+          "id": "s72-8",
+          "text": "Debug existing code by tracing inputs, outputs, side effects and invariants."
+        },
+        {
+          "id": "s72-9",
+          "text": "Understand unfamiliar codebase via top-down call graph and tests."
+        },
+        {
+          "id": "s72-10",
+          "text": "Practice refactoring long functions without changing behavior."
+        },
+        {
+          "id": "s72-11",
+          "text": "Explain what you personally implemented vs what tools assisted with."
+        },
+        {
+          "id": "s72-12",
+          "text": "Be prepared to discuss AI tools used in real job workflows truthfully."
+        }
+      ]
+    },
+    {
+      "id": "section-73",
+      "title": "Behavioral interviews: Googleyness & leadership",
+      "sourceTitle": "Behavioral interviews: Googleyness & leadership",
+      "group": "Behavioral",
+      "page": 73,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s73-1",
+          "text": "Prepare ownership story: problem, your contribution and measurable outcome."
+        },
+        {
+          "id": "s73-2",
+          "text": "Prepare technical conflict story showing respectful disagreement."
+        },
+        {
+          "id": "s73-3",
+          "text": "Prepare ambiguous requirements story and your clarifying process."
+        },
+        {
+          "id": "s73-4",
+          "text": "Prepare production bug or failure story and lessons learned."
+        },
+        {
+          "id": "s73-5",
+          "text": "Prepare feedback story where your behavior changed."
+        },
+        {
+          "id": "s73-6",
+          "text": "Prepare collaboration/cross-team story and influence without authority."
+        },
+        {
+          "id": "s73-7",
+          "text": "Prepare tough technical learning story with concrete steps."
+        },
+        {
+          "id": "s73-8",
+          "text": "Prepare quality-versus-speed tradeoff and decision rationale."
+        },
+        {
+          "id": "s73-9",
+          "text": "Prepare initiative story and impact for users/team."
+        },
+        {
+          "id": "s73-10",
+          "text": "Prepare mentoring/helping others story (if truthful), even without formal title."
+        },
+        {
+          "id": "s73-11",
+          "text": "Prepare change in direction or deadlines story."
+        },
+        {
+          "id": "s73-12",
+          "text": "Prepare values/teamwork story and motivation for a particular product/team."
+        },
+        {
+          "id": "s73-13",
+          "text": "Structure each story: Situation (concise), Task, your Actions, Result, Reflection."
+        },
+        {
+          "id": "s73-14",
+          "text": "Distinguish team achievement from what YOU personally did."
+        },
+        {
+          "id": "s73-15",
+          "text": "Use authentic metrics only; approximate and label estimate when necessary."
+        },
+        {
+          "id": "s73-16",
+          "text": "Describe tradeoffs, alternatives and what you would do differently."
+        },
+        {
+          "id": "s73-17",
+          "text": "Practice 60-second and 2-minute versions."
+        },
+        {
+          "id": "s73-18",
+          "text": "Answer hypothetical scenario with principles, options, decision and reasoning."
+        },
+        {
+          "id": "s73-19",
+          "text": "Do not name confidential clients, proprietary details or restricted systems."
+        },
+        {
+          "id": "s73-20",
+          "text": "Prepare thoughtful interviewer questions about team scope and engineering practices."
+        }
+      ]
+    },
+    {
+      "id": "section-75",
+      "title": "Resume + LinkedIn positioning",
+      "sourceTitle": "Resume + LinkedIn positioning",
+      "group": "Career & networking",
+      "page": 75,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s75-1",
+          "text": "One readable, ATS-friendly PDF; consistent dates, titles and locations."
+        },
+        {
+          "id": "s75-2",
+          "text": "Clear headline with actual role and truthful Java/Angular/full-stack specialties."
+        },
+        {
+          "id": "s75-3",
+          "text": "Experience bullets start with engineering action, system, method and user/business result."
+        },
+        {
+          "id": "s75-4",
+          "text": "Quantify impact only if verified (latency, errors, tests, time saved, deployments)."
+        },
+        {
+          "id": "s75-5",
+          "text": "Avoid saying led/owned if you only assisted; precisely describe personal contribution."
+        },
+        {
+          "id": "s75-6",
+          "text": "Explain migrations/upgrades: reason, before/after, breaking issues, testing, delivery."
+        },
+        {
+          "id": "s75-7",
+          "text": "Show debugging, code quality and collaboration, not only technologies."
+        },
+        {
+          "id": "s75-8",
+          "text": "Prioritize relevant professional work above low-signal college assignments."
+        },
+        {
+          "id": "s75-9",
+          "text": "Use relevant keywords from each posting naturally, never keyword stuffing."
+        },
+        {
+          "id": "s75-10",
+          "text": "No unexplained skill claims; be ready to answer every technology listed."
+        },
+        {
+          "id": "s75-11",
+          "text": "Remove sensitive internal project details, links and configuration."
+        },
+        {
+          "id": "s75-12",
+          "text": "Proofread grammar and formatting; ensure links work and contact email correct."
+        },
+        {
+          "id": "s75-13",
+          "text": "LinkedIn headline aligns with resume; Experience lists scope and selected outcome."
+        },
+        {
+          "id": "s75-14",
+          "text": "Feature 1-2 credible GitHub repositories or project links."
+        },
+        {
+          "id": "s75-15",
+          "text": "GitHub profile README summarizes who you are and what you build."
+        },
+        {
+          "id": "s75-16",
+          "text": "Repos have README, setup, screenshots/demos, tests, architecture diagram and commits."
+        },
+        {
+          "id": "s75-17",
+          "text": "Portfolio loads quickly on mobile; contact links work; avoid unnecessary animation."
+        },
+        {
+          "id": "s75-18",
+          "text": "Show product thinking and decisions, not only decorative UI."
+        },
+        {
+          "id": "s75-19",
+          "text": "Consistent narrative: full-stack SWE aiming at product and platform quality."
+        },
+        {
+          "id": "s75-20",
+          "text": "Prepare concise tell-me-about-yourself tailored to role and company."
+        }
+      ]
+    },
+    {
+      "id": "section-77",
+      "title": "Personal portfolio & standout project plan",
+      "sourceTitle": "Personal portfolio & standout project plan",
+      "group": "Projects & portfolio",
+      "page": 77,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s77-1",
+          "text": "Short landing section with actual SWE role and engineering focus."
+        },
+        {
+          "id": "s77-2",
+          "text": "2-3 curated projects with problem, user, architecture, role and evidence."
+        },
+        {
+          "id": "s77-3",
+          "text": "Live demo and repo links; tell what features are deployed."
+        },
+        {
+          "id": "s77-4",
+          "text": "Mobile layout, keyboard navigation, accessibility semantics."
+        },
+        {
+          "id": "s77-5",
+          "text": "Clean source structure, license where appropriate, README and setup."
+        },
+        {
+          "id": "s77-6",
+          "text": "Contact section and resume link; no fake achievements."
+        },
+        {
+          "id": "s77-7",
+          "text": "Document tradeoffs, failure modes, lessons and future roadmap."
+        },
+        {
+          "id": "s77-8",
+          "text": "Define a clear persona: nearby activities and friend events; meaningful user need."
+        },
+        {
+          "id": "s77-9",
+          "text": "Choose minimal MVP: register/login, create events, search/filter, RSVP, profile."
+        },
+        {
+          "id": "s77-10",
+          "text": "Define scope boundaries; no complex recommendation ML at first."
+        },
+        {
+          "id": "s77-11",
+          "text": "Design Angular+TypeScript UI with accessible responsive components."
+        },
+        {
+          "id": "s77-12",
+          "text": "Design Spring Boot REST API with validation/error model."
+        },
+        {
+          "id": "s77-13",
+          "text": "Design Postgres users, events, RSVPs and unique constraints."
+        },
+        {
+          "id": "s77-14",
+          "text": "Add pagination/filter/sort and useful database indexes."
+        },
+        {
+          "id": "s77-15",
+          "text": "Add tests: unit, API integration, one end-to-end happy path."
+        },
+        {
+          "id": "s77-16",
+          "text": "Add auth and role-based edit permissions; no exposed secrets."
+        },
+        {
+          "id": "s77-17",
+          "text": "Set up GitHub Actions CI lint/test/build and dependency checks."
+        },
+        {
+          "id": "s77-18",
+          "text": "Deploy frontend/backend/database to a sensible hosting environment."
+        },
+        {
+          "id": "s77-19",
+          "text": "Add structured logs, basic metrics and error monitoring."
+        },
+        {
+          "id": "s77-20",
+          "text": "Document local/dev/prod environment setup and migration process."
+        },
+        {
+          "id": "s77-21",
+          "text": "Implement one thoughtful performance optimization and benchmark before/after."
+        },
+        {
+          "id": "s77-22",
+          "text": "Draw architecture diagram, sequence for RSVP, and failure/retry cases."
+        },
+        {
+          "id": "s77-23",
+          "text": "Create sample seed data and demo video/GIF; include 2-min walkthrough."
+        },
+        {
+          "id": "s77-24",
+          "text": "Write honest retrospective: constraints, hardest bug, tradeoffs, next improvement."
+        }
+      ]
+    },
+    {
+      "id": "section-79",
+      "title": "Networking & relationship-building",
+      "sourceTitle": "Networking & relationship-building",
+      "group": "Career & networking",
+      "page": 79,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s79-1",
+          "text": "Track current Google and Pinterest engineers, recruiters and alum connections."
+        },
+        {
+          "id": "s79-2",
+          "text": "Search by relevant work: Java backend, Angular, full-stack, reliability, Google Cloud."
+        },
+        {
+          "id": "s79-3",
+          "text": "Read public posts/projects before contact; avoid asking strangers for an immediate referral."
+        },
+        {
+          "id": "s79-4",
+          "text": "Use Bentley alumni network and former colleagues as authentic starting points."
+        },
+        {
+          "id": "s79-5",
+          "text": "Find engineers doing work you are genuinely curious about, not just brand names."
+        },
+        {
+          "id": "s79-6",
+          "text": "Identify public employer-approved contact channels (LinkedIn, personal websites, public GitHub)."
+        },
+        {
+          "id": "s79-7",
+          "text": "Respect privacy: no scraping private contacts or repeatedly messaging nonresponders."
+        },
+        {
+          "id": "s79-8",
+          "text": "Log date, public profile link, topic, outreach, response and follow-up in a personal tracker."
+        },
+        {
+          "id": "s79-9",
+          "text": "Send concise personalized 3-5 sentence request referencing one real project or talk."
+        },
+        {
+          "id": "s79-10",
+          "text": "Ask one reasonable question or 15-minute informational chat, offering easy out."
+        },
+        {
+          "id": "s79-11",
+          "text": "Avoid mass-copying identical messages and pretending familiarity."
+        },
+        {
+          "id": "s79-12",
+          "text": "Have five meaningful questions about work, tools, team design and career path."
+        },
+        {
+          "id": "s79-13",
+          "text": "Follow up once after about 7-14 days if no reply; no more pressure."
+        },
+        {
+          "id": "s79-14",
+          "text": "Send a brief thank-you that mentions one useful lesson."
+        },
+        {
+          "id": "s79-15",
+          "text": "Share a useful update after taking action; build long-term relationship naturally."
+        },
+        {
+          "id": "s79-16",
+          "text": "Request a referral only when a real role fits and relationship warrants it."
+        },
+        {
+          "id": "s79-17",
+          "text": "Record referrals and role IDs; never assume referral guarantees an interview."
+        },
+        {
+          "id": "s79-18",
+          "text": "Post thoughtful project build notes or small demos if comfortable."
+        },
+        {
+          "id": "s79-19",
+          "text": "Make GitHub repositories easy to review with stable links."
+        },
+        {
+          "id": "s79-20",
+          "text": "Attend local/online engineering meetups when schedule permits."
+        },
+        {
+          "id": "s79-21",
+          "text": "Engage with technical posts substantively rather than generic praise."
+        },
+        {
+          "id": "s79-22",
+          "text": "Track which conversations lead to learning, not only job leads."
+        }
+      ]
+    },
+    {
+      "id": "section-81",
+      "title": "Applications, recruiter calls and offers",
+      "sourceTitle": "Applications, recruiter calls and offers",
+      "group": "Career & networking",
+      "page": 81,
+      "priority": "P1",
+      "skills": [
+        {
+          "id": "s81-1",
+          "text": "Match title to Google level: L3 / SWE II primary, L4 / SWE III stretch."
+        },
+        {
+          "id": "s81-2",
+          "text": "Read exact minimum qualifications for each requisition, not just title."
+        },
+        {
+          "id": "s81-3",
+          "text": "Check location, in-person expectations, start date, work authorization as applicable."
+        },
+        {
+          "id": "s81-4",
+          "text": "Check if posting is new-grad/campus restricted to certain graduation windows."
+        },
+        {
+          "id": "s81-5",
+          "text": "Track role ID, posted date, closing window, source and exact required skills."
+        },
+        {
+          "id": "s81-6",
+          "text": "Tailor resume summary and bullet order to role's engineering needs."
+        },
+        {
+          "id": "s81-7",
+          "text": "Follow Google Careers limit: max three applications per rolling 30 days (verify policy)."
+        },
+        {
+          "id": "s81-8",
+          "text": "Same-job reapplication requires 90-day wait (verify policy)."
+        },
+        {
+          "id": "s81-9",
+          "text": "Do not assume a referral bypasses the screening stages."
+        },
+        {
+          "id": "s81-10",
+          "text": "Keep a pipeline: saved, eligible, applied, assessment, screen, loop, match, offer/rejected."
+        },
+        {
+          "id": "s81-11",
+          "text": "Write post-interview notes immediately while memory is fresh."
+        },
+        {
+          "id": "s81-12",
+          "text": "Know team matching may follow positive interviews and can take time."
+        },
+        {
+          "id": "s81-13",
+          "text": "Ask recruiter for exact assessment/round count, location and code editor policies."
+        },
+        {
+          "id": "s81-14",
+          "text": "Ask how interviews will cover algorithms, behavior, system design or code comprehension."
+        },
+        {
+          "id": "s81-15",
+          "text": "Ask whether it is appropriate to use any AI tools during the interview; never assume."
+        },
+        {
+          "id": "s81-16",
+          "text": "Prepare concise background, project summaries, availability and location preferences."
+        },
+        {
+          "id": "s81-17",
+          "text": "Understand compensation components: salary, bonus, equity, vesting and benefits."
+        },
+        {
+          "id": "s81-18",
+          "text": "Compare offers on scope, mentorship, learning, commute, culture and total compensation."
+        },
+        {
+          "id": "s81-19",
+          "text": "Negotiate professionally with documented competing offers or market evidence when available."
+        }
+      ]
+    }
+  ],
+  "problems": [
+    {
+      "id": 1480,
+      "title": "Running Sum of 1d Array",
+      "phase": "F1",
+      "pattern": "cumulative totals",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 1672,
+      "title": "Richest Customer Wealth",
+      "phase": "F1",
+      "pattern": "2D nested loops",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 1431,
+      "title": "Kids With the Greatest Number of Candies",
+      "phase": "F1",
+      "pattern": "max and Boolean list",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 1295,
+      "title": "Find Numbers with Even Number of Digits",
+      "phase": "F1",
+      "pattern": "digit count",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 27,
+      "title": "Remove Element",
+      "phase": "F1",
+      "pattern": "read/write indices",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 1920,
+      "title": "Build Array from Permutation",
+      "phase": "F1",
+      "pattern": "index mapping",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 1929,
+      "title": "Concatenation of Array",
+      "phase": "F1",
+      "pattern": "construct new array",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 283,
+      "title": "Move Zeroes",
+      "phase": "F1",
+      "pattern": "write pointer",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 1572,
+      "title": "Matrix Diagonal Sum",
+      "phase": "F1",
+      "pattern": "matrix indexing",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 747,
+      "title": "Largest Number At Least Twice of Others",
+      "phase": "F1",
+      "pattern": "max condition",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 1365,
+      "title": "How Many Numbers Are Smaller Than Current",
+      "phase": "F1",
+      "pattern": "nested compare",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 2114,
+      "title": "Maximum Number of Words Found",
+      "phase": "F1",
+      "pattern": "String[] and max",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 1768,
+      "title": "Merge Strings Alternately",
+      "phase": "F2",
+      "pattern": "StringBuilder",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 125,
+      "title": "Valid Palindrome",
+      "phase": "F2",
+      "pattern": "two pointers",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 14,
+      "title": "Longest Common Prefix",
+      "phase": "F2",
+      "pattern": "string comparison",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 217,
+      "title": "Contains Duplicate",
+      "phase": "F2",
+      "pattern": "HashSet",
+      "review": true,
+      "page": 82
+    },
+    {
+      "id": 1,
+      "title": "Two Sum",
+      "phase": "F2",
+      "pattern": "HashMap complement",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 242,
+      "title": "Valid Anagram",
+      "phase": "F2",
+      "pattern": "frequency table",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 49,
+      "title": "Group Anagrams",
+      "phase": "F2",
+      "pattern": "canonical groups",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 724,
+      "title": "Find Pivot Index",
+      "phase": "F2",
+      "pattern": "prefix idea",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 560,
+      "title": "Subarray Sum Equals K",
+      "phase": "F2",
+      "pattern": "prefix HashMap",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 121,
+      "title": "Best Time to Buy and Sell Stock",
+      "phase": "F2",
+      "pattern": "running minimum",
+      "review": false,
+      "page": 82
+    },
+    {
+      "id": 643,
+      "title": "Maximum Average Subarray I",
+      "phase": "F2",
+      "pattern": "fixed window",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 3,
+      "title": "Longest Substring Without Repeating Characters",
+      "phase": "F2",
+      "pattern": "variable window",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 209,
+      "title": "Minimum Size Subarray Sum",
+      "phase": "F2",
+      "pattern": "shrinking window",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 977,
+      "title": "Squares of a Sorted Array",
+      "phase": "F3",
+      "pattern": "two pointers",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 167,
+      "title": "Two Sum II",
+      "phase": "F3",
+      "pattern": "sorted pair",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 15,
+      "title": "3Sum",
+      "phase": "F3",
+      "pattern": "sort + deduplicate",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 56,
+      "title": "Merge Intervals",
+      "phase": "F3",
+      "pattern": "sort + scan",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 704,
+      "title": "Binary Search",
+      "phase": "F3",
+      "pattern": "binary search bounds",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 35,
+      "title": "Search Insert Position",
+      "phase": "F3",
+      "pattern": "lower bound",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 875,
+      "title": "Koko Eating Bananas",
+      "phase": "F3",
+      "pattern": "answer binary search",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 20,
+      "title": "Valid Parentheses",
+      "phase": "F3",
+      "pattern": "stack",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 739,
+      "title": "Daily Temperatures",
+      "phase": "F3",
+      "pattern": "monotonic stack",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 394,
+      "title": "Decode String",
+      "phase": "F3",
+      "pattern": "nested stack",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 206,
+      "title": "Reverse Linked List",
+      "phase": "F3",
+      "pattern": "pointer reversal",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 21,
+      "title": "Merge Two Sorted Lists",
+      "phase": "F3",
+      "pattern": "dummy node",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 141,
+      "title": "Linked List Cycle",
+      "phase": "F3",
+      "pattern": "fast/slow",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 104,
+      "title": "Maximum Depth of Binary Tree",
+      "phase": "F4",
+      "pattern": "recursive tree DFS",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 102,
+      "title": "Binary Tree Level Order Traversal",
+      "phase": "F4",
+      "pattern": "queue BFS",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 98,
+      "title": "Validate Binary Search Tree",
+      "phase": "F4",
+      "pattern": "BST bounds",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 235,
+      "title": "Lowest Common Ancestor of a BST",
+      "phase": "F4",
+      "pattern": "BST reasoning",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 215,
+      "title": "Kth Largest Element",
+      "phase": "F4",
+      "pattern": "heap",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 347,
+      "title": "Top K Frequent Elements",
+      "phase": "F4",
+      "pattern": "heap + hash",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 208,
+      "title": "Implement Trie",
+      "phase": "F4",
+      "pattern": "prefix nodes",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 200,
+      "title": "Number of Islands",
+      "phase": "F4",
+      "pattern": "grid DFS/BFS",
+      "review": false,
+      "page": 83
+    },
+    {
+      "id": 994,
+      "title": "Rotting Oranges",
+      "phase": "F4",
+      "pattern": "multi-source BFS",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 207,
+      "title": "Course Schedule",
+      "phase": "F4",
+      "pattern": "topological sort",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 684,
+      "title": "Redundant Connection",
+      "phase": "F4",
+      "pattern": "union-find",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 743,
+      "title": "Network Delay Time",
+      "phase": "F4",
+      "pattern": "weighted shortest path",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 78,
+      "title": "Subsets",
+      "phase": "F5",
+      "pattern": "recursion",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 46,
+      "title": "Permutations",
+      "phase": "F5",
+      "pattern": "undo state",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 79,
+      "title": "Word Search",
+      "phase": "F5",
+      "pattern": "grid backtracking",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 51,
+      "title": "N-Queens",
+      "phase": "F5",
+      "pattern": "backtracking",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 435,
+      "title": "Non-overlapping Intervals",
+      "phase": "F5",
+      "pattern": "greedy end time",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 55,
+      "title": "Jump Game",
+      "phase": "F5",
+      "pattern": "greedy reachability",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 198,
+      "title": "House Robber",
+      "phase": "F5",
+      "pattern": "1D DP",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 322,
+      "title": "Coin Change",
+      "phase": "F5",
+      "pattern": "unbounded DP",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 1143,
+      "title": "Longest Common Subsequence",
+      "phase": "F5",
+      "pattern": "2D DP",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 300,
+      "title": "Longest Increasing Subsequence",
+      "phase": "F5",
+      "pattern": "DP + binary search",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 72,
+      "title": "Edit Distance",
+      "phase": "F5",
+      "pattern": "string DP",
+      "review": false,
+      "page": 84
+    },
+    {
+      "id": 136,
+      "title": "Single Number",
+      "phase": "F5",
+      "pattern": "XOR",
+      "review": false,
+      "page": 84
+    }
+  ]
+}
