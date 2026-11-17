@@ -1,5 +1,5 @@
 import React,{useEffect,useMemo,useState} from 'react';
-import {ArrowLeft,ArrowRight,BookOpen,CalendarDays,Check,CheckCircle2,ChevronRight,Clock3,Code2,Compass,ExternalLink,Flower2,GitBranch,GraduationCap,Layers3,Lightbulb,ListTodo,Map,NotebookPen,Plus,RefreshCcw,Search,Settings2,Target,Trash2,Workflow} from 'lucide-react';
+import {ArrowLeft,ArrowRight,BookOpen,CalendarDays,Check,CheckCircle2,ChevronRight,Clock3,Code2,Compass,ExternalLink,Flower2,GitBranch,GraduationCap,Layers3,Lightbulb,ListTodo,NotebookPen,Plus,RefreshCcw,Search,Settings2,Target,Trash2,Workflow} from 'lucide-react';
 import handbook from './sweHandbookData.json';
 import {addStudyDays,daysUntil,reviewDue} from './sweStudyLogic.js';
 import {APPLICATION_RULES,DAY_NAMES,DAY_ROLE,MONTH_FOCUS,OFFICIAL_SWE_II,PLAN_START,WEEKLY_SPRINTS,getDailyTasks,monthForDate,planProgress,sprintDates,sprintForDate,weekIndexFor} from './sweIntegratedPlan.js';
