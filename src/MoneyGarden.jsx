@@ -104,16 +104,23 @@ export default function MoneyGarden(){
  const [extraLoan,setExtraLoan]=useState(0);
  useEffect(()=>{try{localStorage.setItem(STORAGE,JSON.stringify(data))}catch(e){setNotice('Your browser could not save this data. Export a backup.')}},[data]);
  const update=(key,val)=>setData(s=>({...s,[key]:val}));
+ const setBankCategory=(tx,category)=>setData(s=>{
+   const isGeneric=/^(venmo|zelle|zelle payment)$/i.test(tx.name.trim());
+   const matchingAmount=isGeneric?asNumber(tx.amount):null;
+   const rules=(s.rules||[]).filter(r=>!(r.name?.toLowerCase()===tx.name.toLowerCase()&&r.amount===matchingAmount));
+   return {...s,categoryOverrides:{...(s.categoryOverrides||{}),[tx.id]:category},rules:[{name:tx.name,amount:matchingAmount,category},...rules]};
+ });
  const patchItem=(key,id,patch)=>setData(s=>({...s,[key]:(s[key]||[]).map(item=>item.id===id?{...item,...patch}:item)}));
  const removeItem=(key,id)=>{if(window.confirm('Remove this item?'))update(key,(data[key]||[]).filter(x=>x.id!==id))};
- const bankTransactions=useMemo(()=>bankFeed.transactions.map(raw=>{
+ const bankTransactions=useMemo(()=>bankFeed.transactions.filter(raw=>!raw.pending).map(raw=>{
   const signed=Number(raw.amount)||0,name=raw.merchant||raw.description||'Unlabeled';
-  const category=signed<0&&raw.category_primary==='income'?'Income':inferCategory(name,raw.category_primary,-signed);
+  const category=applyRules({name,amount:signed,category:signed<0&&raw.category_primary==='income'?'Income':inferCategory(name,raw.category_primary,-signed)},data.rules);
   const type=signed>=0?'expense':category==='Income'?'income':'refund';
   const id='bank:'+raw.id;
   return {id,date:raw.date,name,account:bankFeed.accounts.find(a=>a.id===raw.account_id)?.name||'Bank',amount:Math.abs(signed),category:(data.categoryOverrides||{})[id]||category,type,source:'linked',pending:!!raw.pending};
- }),[bankFeed.transactions,bankFeed.accounts,data.categoryOverrides]);
+ }),[bankFeed.transactions,bankFeed.accounts,data.categoryOverrides,data.rules]);
  const activityTransactions=bankFeed.connected?bankTransactions:data.transactions;
+ const hasFinancialData=bankFeed.connected||data.transactions.length>0||data.bills.length>0||asNumber(data.income.paycheck)>0;
  const bankPaychecks=bankTransactions.filter(t=>t.type==='income'&&/fidelity|payroll|salary/i.test(t.name)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
  const detectedPaycheck=bankPaychecks.length?bankPaychecks.reduce((sum,t)=>sum+t.amount,0)/bankPaychecks.length:0;
  const averageMonthlyIncome=toMonthly(data.income.paycheck||detectedPaycheck,data.income.cadence)+asNumber(data.income.otherMonthly);
@@ -168,7 +175,11 @@ export default function MoneyGarden(){
   {data.starterNotes?.coverage&&<div className="mg-data-snapshot"><strong>✿ Imported starting snapshot:</strong> {data.starterNotes.coverage} The data does not update automatically; import a newer CSV when you want current spending.</div>}
   <div className="mg-controls"><nav className="mg-tabs" aria-label="Money Garden sections">{[['overview','Overview'],['activity','Spending diary'],['bills','Bill calendar'],['goals','Dream planner'],['settings','Setup & privacy']].map(([id,label])=><button key={id} type="button" className={pane===id?'mg-active':''} onClick={()=>setPane(id)}>{label}</button>)}</nav><label className="mg-month">Viewing <input type="month" value={month} onChange={e=>setMonth(e.target.value)} /></label></div>
   {notice&&<div className="mg-notice" role="status">{notice}<button aria-label="Dismiss notice" onClick={()=>setNotice('')}>×</button></div>}
-  {pane==='overview'&&<div className="mg-stack">
+  {pane==='overview'&&(!hasFinancialData?<div className="mg-empty-live">
+    <div className="mg-empty-icon">✿</div><h3>Your money, automatically—once your private bank is connected.</h3>
+    <p>This dashboard no longer treats missing transactions as $0 spent. Complete the private bank connection above to populate your paychecks, purchases, and weekly spending. The existing ChatGPT Finances connection cannot be shared directly with this site.</p>
+    <a href="https://chatgpt.com/finances" target="_blank" rel="noreferrer">See your currently connected accounts in ChatGPT Finances ↗</a>
+  </div>:<div className="mg-stack">
     {title('Your money at a glance','Amounts are estimates from the setup you provide. Spending is measured only from imported or manually added transactions.')}
     <div className="mg-data-date">{newestTransaction?'Latest recorded transaction: '+newestTransaction+' · ':'No transactions imported · '}Your actual checking-account cash and remaining unpaid commitments still need confirmation for safe-to-spend advice.</div>
     <div className="mg-metrics">
@@ -191,13 +202,13 @@ export default function MoneyGarden(){
     </div>
     <div className="mg-two"><article className="mg-paper">{title('Bills coming up','Unverified dates are estimates until you confirm them.')}<div className="mg-list">{billsByDue.slice(0,5).map(b=><div key={b.id} className="mg-list-row"><span><b>{b.name}</b><small>{b.next}{b.verified?'':' · confirm date'}{b.autopay?' · autopay':''}</small></span><strong>{dollars(b.amount)}</strong></div>)}{!billsByDue.length&&<p>Add your bills in the bill calendar.</p>}</div><button className="mg-link-button" onClick={()=>setPane('bills')}>See all bills →</button></article>
       <article className="mg-paper">{title('Your dream funds','Little contributions become visible progress.')}<div className="mg-list">{data.goals.slice(0,5).map(g=><div key={g.id}><div className="mg-list-row"><span><b>{g.name}</b><small>{asNumber(g.target)>0?Math.min(100,Math.round(100*asNumber(g.saved)/g.target))+'% saved':'Add a savings target'}</small></span><strong>{dollars(g.saved)}</strong></div><div className="mg-track"><span style={{width:(g.target?Math.min(100,100*asNumber(g.saved)/asNumber(g.target)):0)+'%'}}/></div></div>)}</div><button className="mg-link-button" onClick={()=>setPane('goals')}>Plan your dreams →</button></article></div>
-  </div>}
+  </div>)}
   {pane==='activity'&&<div className="mg-stack">
-    {title('Spending diary','Every payment can have a real purpose. Imports stay in this browser; you can fix merchant categories yourself.')}
+    {title('Spending diary','Real transactions from your privately connected bank. Changing a merchant category teaches this browser how to categorize future matching purchases.')}
     <div className="mg-paper"><div className="mg-toolbar"><label className="mg-upload" style={bankFeed.connected?{display:'none'}:undefined}>Import a CSV statement <input type="file" accept=".csv,text/csv" onChange={e=>{if(e.target.files?.[0])importCSV(e.target.files[0]);e.target.value=''}}/></label><span>{bankFeed.connected?activityTransactions.length+' linked bank transactions (read only)':data.transactions.length+' locally stored transactions'}</span></div><p className="mg-fine">{bankFeed.connected?'Transactions refresh from your private banking backend; bank data is never committed to GitHub. Corrections here are local to this browser.':'Until automatic banking is configured, only locally imported or manually logged transactions can appear here.'} Accepts transaction CSV files with Date and Amount columns, including the Finances export format. Pending charges are skipped when identified. Own-account transfers and credit-card payments should be marked “Transfer / exclude.” Review categories after each import.</p>
      {!bankFeed.connected&&<div className="mg-add-grid"><input aria-label="Merchant" placeholder="Merchant / what was it?" value={newTx.name} onChange={e=>setNewTx(s=>({...s,name:e.target.value}))}/><input aria-label="Amount" type="number" min="0" step=".01" placeholder="Amount" value={newTx.amount} onChange={e=>setNewTx(s=>({...s,amount:e.target.value}))}/><input aria-label="Date" type="date" value={newTx.date} onChange={e=>setNewTx(s=>({...s,date:e.target.value}))}/><select aria-label="Transaction category" value={newTx.category} onChange={e=>setNewTx(s=>({...s,category:e.target.value}))}>{CATEGORIES.map(x=><option key={x}>{x}</option>)}</select><select aria-label="Money direction" value={newTx.type} onChange={e=>setNewTx(s=>({...s,type:e.target.value}))}><option value="expense">Expense</option><option value="income">Income</option></select><button className="mg-btn" onClick={addTx}>+ Add transaction</button></div>}
     </div>
-    <div className="mg-paper">{title(monthLabel(month)+' ledger','Only posted transactions you have imported or logged are included.')}<div className="mg-table-scroll"><table className="mg-table"><thead><tr><th>Date</th><th>Merchant</th><th>Category · editable</th><th>Amount</th><th></th></tr></thead><tbody>{[...monthTx].sort((a,b)=>b.date.localeCompare(a.date)).map(t=><tr key={t.id}><td>{t.date.slice(5)}</td><td><strong>{t.name}</strong><small>{t.account||t.source||''}</small></td><td><select aria-label={'Category for '+t.name} value={t.category} onChange={e=>bankFeed.connected?update('categoryOverrides',{...(data.categoryOverrides||{}),[t.id]:e.target.value}):patchItem('transactions',t.id,{category:e.target.value})}>{[...CATEGORIES,'Income'].map(x=><option key={x}>{x}</option>)}</select></td><td className={t.type==='income'?'mg-positive':''}>{t.type==='income'||t.type==='refund'?'+':'-'}{dollars(t.amount)}</td><td>{!bankFeed.connected&&<button className="mg-x" onClick={()=>removeItem('transactions',t.id)} aria-label={'Remove '+t.name}>×</button>}</td></tr>)}{!monthTx.length&&<tr><td colSpan="5">No transactions for this month yet. Connect a bank above to start automatic syncing.</td></tr>}</tbody></table></div></div>
+    <div className="mg-paper">{title(monthLabel(month)+' ledger','Only posted transactions you have imported or logged are included.')}<div className="mg-table-scroll"><table className="mg-table"><thead><tr><th>Date</th><th>Merchant</th><th>Category · editable</th><th>Amount</th><th></th></tr></thead><tbody>{[...monthTx].sort((a,b)=>b.date.localeCompare(a.date)).map(t=><tr key={t.id}><td>{t.date.slice(5)}</td><td><strong>{t.name}</strong><small>{t.account||t.source||''}</small></td><td><select aria-label={'Category for '+t.name} value={t.category} onChange={e=>bankFeed.connected?setBankCategory(t,e.target.value):patchItem('transactions',t.id,{category:e.target.value})}>{[...CATEGORIES,'Income'].map(x=><option key={x}>{x}</option>)}</select></td><td className={t.type==='income'?'mg-positive':''}>{t.type==='income'||t.type==='refund'?'+':'-'}{dollars(t.amount)}</td><td>{!bankFeed.connected&&<button className="mg-x" onClick={()=>removeItem('transactions',t.id)} aria-label={'Remove '+t.name}>×</button>}</td></tr>)}{!monthTx.length&&<tr><td colSpan="5">No transactions for this month yet. Connect a bank above to start automatic syncing.</td></tr>}</tbody></table></div></div>
   </div>}
   {pane==='bills'&&<div className="mg-stack">
     {title('Your bill calendar','Autopay is not the same as confirmed paid. Check due dates and payments with each provider.')}
