@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import './money-garden.css';
+import LiveBankPanel from './LiveBankPanel.jsx';
 
 const STORAGE = 'bloom-money-garden-v1';
 const CATEGORIES = ['Groceries','Gas & transport','Coffee & dining','Shopping','Health & beauty','Subscriptions','Housing','Utilities','Student loans','Travel & fun','Other','Transfer / exclude'];
@@ -8,7 +9,7 @@ const DEFAULT = {
   version:1, income:{paycheck:0,cadence:'biweekly',otherMonthly:0},
   budgets:VARIABLE.map(name=>({name,limit:0})), bills:[], debts:[],
   goals:[{id:'emergency',name:'Emergency cushion',target:0,saved:0,monthly:0},{id:'home',name:'Dream home',target:0,saved:0,monthly:0},{id:'car',name:'Future car',target:0,saved:0,monthly:0},{id:'travel',name:'Travel adventures',target:0,saved:0,monthly:0}],
-  transactions:[], rules:[], paid:{}, savingsReserve:0
+  transactions:[], rules:[], categoryOverrides:{}, paid:{}, savingsReserve:0
 };
 const dollars=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(Number(n)||0);
 const asNumber=v=>Math.max(0,Number(v)||0);
@@ -91,6 +92,7 @@ function initialize(){
 }
 export default function MoneyGarden(){
  const [data,setData]=useState(initialize);
+ const [bankFeed,setBankFeed]=useState({connected:false,transactions:[],accounts:[],syncedAt:null});
  const [pane,setPane]=useState('overview');
  const [month,setMonth]=useState(()=>ymd(new Date()).slice(0,7));
  const [notice,setNotice]=useState('');
@@ -104,30 +106,41 @@ export default function MoneyGarden(){
  const update=(key,val)=>setData(s=>({...s,[key]:val}));
  const patchItem=(key,id,patch)=>setData(s=>({...s,[key]:(s[key]||[]).map(item=>item.id===id?{...item,...patch}:item)}));
  const removeItem=(key,id)=>{if(window.confirm('Remove this item?'))update(key,(data[key]||[]).filter(x=>x.id!==id))};
- const averageMonthlyIncome=toMonthly(data.income.paycheck,data.income.cadence)+asNumber(data.income.otherMonthly);
- const paycheck=asNumber(data.income.paycheck);
+ const bankTransactions=useMemo(()=>bankFeed.transactions.map(raw=>{
+  const signed=Number(raw.amount)||0,name=raw.merchant||raw.description||'Unlabeled';
+  const category=signed<0&&raw.category_primary==='income'?'Income':inferCategory(name,raw.category_primary,-signed);
+  const type=signed>=0?'expense':category==='Income'?'income':'refund';
+  const id='bank:'+raw.id;
+  return {id,date:raw.date,name,account:bankFeed.accounts.find(a=>a.id===raw.account_id)?.name||'Bank',amount:Math.abs(signed),category:(data.categoryOverrides||{})[id]||category,type,source:'linked',pending:!!raw.pending};
+ }),[bankFeed.transactions,bankFeed.accounts,data.categoryOverrides]);
+ const activityTransactions=bankFeed.connected?bankTransactions:data.transactions;
+ const bankPaychecks=bankTransactions.filter(t=>t.type==='income'&&/fidelity|payroll|salary/i.test(t.name)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+ const detectedPaycheck=bankPaychecks.length?bankPaychecks.reduce((sum,t)=>sum+t.amount,0)/bankPaychecks.length:0;
+ const averageMonthlyIncome=toMonthly(data.income.paycheck||detectedPaycheck,data.income.cadence)+asNumber(data.income.otherMonthly);
+ const paycheck=asNumber(data.income.paycheck||detectedPaycheck);
  const pay=(data.income.cadence==='biweekly'?paycheck*2:data.income.cadence==='weekly'?paycheck*4:toMonthly(paycheck,data.income.cadence))+asNumber(data.income.otherMonthly);
  const hypothetical=pay*(1+raise/100);
  const billTotal=data.bills.reduce((sum,b)=>sum+asMonthlyBill(b),0);
  const goalsMonthly=data.goals.reduce((sum,g)=>sum+asNumber(g.monthly),0);
  const budgetTotal=data.budgets.reduce((sum,b)=>sum+asNumber(b.limit),0);
  const afterPlan=hypothetical-billTotal-goalsMonthly-budgetTotal-asNumber(data.savingsReserve);
- const monthTx=data.transactions.filter(t=>t.date.slice(0,7)===month);
+ const monthTx=activityTransactions.filter(t=>t.date.slice(0,7)===month);
  const weekStart=startOfWeek(ymd(new Date()));
  const weekEnd=ymd(new Date(new Date(weekStart+'T12:00:00').getTime()+6*86400000));
- const spends=t=>t.type==='expense'&&t.category!=='Transfer / exclude'&&t.category!=='Income';
- const spendMonth=monthTx.filter(spends).reduce((s,t)=>s+asNumber(t.amount),0);
- const newestTransaction=data.transactions.reduce((latest,t)=>t.date>latest?t.date:latest,'');
+ const spends=t=>(t.type==='expense'||t.type==='refund')&&t.category!=='Transfer / exclude'&&t.category!=='Income';
+ const net=t=>t.type==='refund'?-asNumber(t.amount):asNumber(t.amount);
+ const spendMonth=monthTx.filter(spends).reduce((s,t)=>s+net(t),0);
+ const newestTransaction=activityTransactions.reduce((latest,t)=>t.date>latest?t.date:latest,'');
  const currentWeekHasData=!!newestTransaction&&newestTransaction>=weekStart;
- const spendingWeek=data.transactions.filter(t=>t.date>=weekStart&&t.date<=weekEnd&&spends(t)).reduce((s,t)=>s+asNumber(t.amount),0);
- const variableSpent=monthTx.filter(t=>spends(t)&&VARIABLE.includes(t.category)).reduce((s,t)=>s+asNumber(t.amount),0);
+ const spendingWeek=activityTransactions.filter(t=>t.date>=weekStart&&t.date<=weekEnd&&spends(t)).reduce((s,t)=>s+net(t),0);
+ const variableSpent=monthTx.filter(t=>spends(t)&&VARIABLE.includes(t.category)).reduce((s,t)=>s+net(t),0);
  const weeklyTarget=budgetTotal*12/52;
  const currentDay=Number(ymd(new Date()).slice(-2));
  const daysLeft=Math.max(1,numDays(month)-currentDay+1);
  const remainingVariable=Math.max(0,budgetTotal-variableSpent);
  const dailyRemaining=month===ymd(new Date()).slice(0,7)?remainingVariable/daysLeft:budgetTotal/numDays(month);
  const alerts=[];
- if(data.transactions.length&&variableSpent>budgetTotal&&budgetTotal>0)alerts.push('Variable spending is over the monthly plan by '+dollars(variableSpent-budgetTotal)+'.');
+ if(activityTransactions.length&&variableSpent>budgetTotal&&budgetTotal>0)alerts.push('Variable spending is over the monthly plan by '+dollars(variableSpent-budgetTotal)+'.');
  if(currentWeekHasData&&spendingWeek>weeklyTarget&&weeklyTarget>0)alerts.push('This week is '+dollars(spendingWeek-weeklyTarget)+' above the average weekly envelope.');
  if(pay>0&&afterPlan<0)alerts.push('Your planned bills, budgets and goals exceed your modeled income by '+dollars(-afterPlan)+'.');
  if(data.bills.some(b=>!b.verified))alerts.push('Some bill due dates are estimates. Confirm them with the provider before relying on alerts.');
@@ -150,7 +163,8 @@ export default function MoneyGarden(){
  const title=(head,sub)=><div className="mg-section-title"><h3>{head}</h3><p>{sub}</p></div>;
  return <section className="money-garden" aria-label="Money Garden personal budget">
   <div className="mg-hero"><div><span className="mg-kicker">✦ A KINDER KIND OF MONEY MANAGEMENT</span><h2>money <em>garden.</em> <span>✿</span></h2><p>Give every dollar a little purpose. Track the bills, nurture the dreams, and learn what your money is doing—without shame.</p></div><div className="mg-hero-flower" aria-hidden="true">✿<small>grow at your own pace</small></div></div>
-  <div className="mg-privacy"><strong>🔒 Private on this device.</strong> This tab does not connect directly to your bank. Import a private starter file or transaction CSV to update it. Never enter bank passwords or access tokens here. Browser storage is not encrypted; avoid using a shared device.</div>
+  <div className="mg-privacy"><strong>🔒 Your spending deserves privacy.</strong> When configured, live banking data is read from your authenticated account and not stored in this public GitHub repository. Manual entries and category corrections are saved locally in this browser. Bank credentials never belong in website source code.</div>
+  <LiveBankPanel onChange={setBankFeed}/>
   {data.starterNotes?.coverage&&<div className="mg-data-snapshot"><strong>✿ Imported starting snapshot:</strong> {data.starterNotes.coverage} The data does not update automatically; import a newer CSV when you want current spending.</div>}
   <div className="mg-controls"><nav className="mg-tabs" aria-label="Money Garden sections">{[['overview','Overview'],['activity','Spending diary'],['bills','Bill calendar'],['goals','Dream planner'],['settings','Setup & privacy']].map(([id,label])=><button key={id} type="button" className={pane===id?'mg-active':''} onClick={()=>setPane(id)}>{label}</button>)}</nav><label className="mg-month">Viewing <input type="month" value={month} onChange={e=>setMonth(e.target.value)} /></label></div>
   {notice&&<div className="mg-notice" role="status">{notice}<button aria-label="Dismiss notice" onClick={()=>setNotice('')}>×</button></div>}
@@ -161,12 +175,12 @@ export default function MoneyGarden(){
      <article className="mg-metric"><span>Typical-month income for budgeting</span><strong>{dollars(pay)}</strong><small>{data.income.cadence==='biweekly'?'Two-paycheck month; third paychecks are extra':'Conservative regular-paycheck assumption'}</small></article>
      <article className="mg-metric"><span>Scheduled bills (monthly equivalent)</span><strong>{dollars(billTotal)}</strong><small>Includes your tracked loan autopay obligations</small></article>
      <article className="mg-metric"><span>Weekly variable allowance</span><strong>{dollars(weeklyTarget)}</strong><small>{currentWeekHasData?dollars(spendingWeek)+' recorded this week':'No current-week transactions imported'}</small></article>
-     <article className="mg-metric"><span>{monthLabel(month)} recorded spending</span><strong>{data.transactions.length?dollars(spendMonth):'No data yet'}</strong><small>Excludes transfers and incoming money; includes loan payments</small></article>
+     <article className="mg-metric"><span>{monthLabel(month)} recorded spending</span><strong>{activityTransactions.length?dollars(spendMonth):'No live data yet'}</strong><small>Excludes transfers and incoming money; includes loan payments</small></article>
     </div>
     {alerts.length>0&&<div className="mg-alerts"><strong>Little money nudges</strong>{alerts.map((a,i)=><p key={i}>✦ {a}</p>)}</div>}
     <div className="mg-two">
       <article className="mg-paper">{title('Your weekly envelopes','Track one category at a time. Weekly limits are monthly goals × 12 ÷ 52.')}
-       <div className="mg-envelope-list">{data.budgets.map(b=>{const spent=monthTx.filter(t=>spends(t)&&t.category===b.name).reduce((s,t)=>s+asNumber(t.amount),0),lim=asNumber(b.limit);return <div className="mg-envelope" key={b.name}><div><span>{b.name}</span><b>{dollars(spent)} / {dollars(lim)}</b></div><div className="mg-track"><span className={spent>lim&&lim>0?'mg-over':''} style={{width:(lim?Math.min(100,100*spent/lim):0)+'%'}}/></div><small>{lim?dollars(lim*12/52)+' / week target':'Set a limit to begin'} {spent>lim&&lim>0?' · over by '+dollars(spent-lim):''}</small></div>})}</div>
+       <div className="mg-envelope-list">{data.budgets.map(b=>{const spent=monthTx.filter(t=>spends(t)&&t.category===b.name).reduce((s,t)=>s+net(t),0),lim=asNumber(b.limit);return <div className="mg-envelope" key={b.name}><div><span>{b.name}</span><b>{dollars(spent)} / {dollars(lim)}</b></div><div className="mg-track"><span className={spent>lim&&lim>0?'mg-over':''} style={{width:(lim?Math.min(100,100*spent/lim):0)+'%'}}/></div><small>{lim?dollars(lim*12/52)+' / week target':'Set a limit to begin'} {spent>lim&&lim>0?' · over by '+dollars(spent-lim):''}</small></div>})}</div>
       </article>
       <article className="mg-paper">{title('The bigger picture','These are planning buckets, not your spendable bank balance.')}
        <div className="mg-equation"><div><span>Modeled take-home income</span><b>{dollars(pay)}</b></div><div><span>Scheduled monthly bills</span><b>-{dollars(billTotal)}</b></div><div><span>Category spending plan</span><b>-{dollars(budgetTotal)}</b></div><div><span>Goals and savings contributions</span><b>-{dollars(goalsMonthly+asNumber(data.savingsReserve))}</b></div><div className="mg-result"><span>Unallocated in this plan</span><b>{formatDelta(afterPlan)}</b></div></div>
@@ -180,10 +194,10 @@ export default function MoneyGarden(){
   </div>}
   {pane==='activity'&&<div className="mg-stack">
     {title('Spending diary','Every payment can have a real purpose. Imports stay in this browser; you can fix merchant categories yourself.')}
-    <div className="mg-paper"><div className="mg-toolbar"><label className="mg-upload">Import a CSV statement <input type="file" accept=".csv,text/csv" onChange={e=>{if(e.target.files?.[0])importCSV(e.target.files[0]);e.target.value=''}}/></label><span>{data.transactions.length} transactions stored locally</span></div><p className="mg-fine">Accepts transaction CSV files with Date and Amount columns, including the Finances export format. Pending charges are skipped when identified. Own-account transfers and credit-card payments should be marked “Transfer / exclude.” Review categories after each import.</p>
-     <div className="mg-add-grid"><input aria-label="Merchant" placeholder="Merchant / what was it?" value={newTx.name} onChange={e=>setNewTx(s=>({...s,name:e.target.value}))}/><input aria-label="Amount" type="number" min="0" step=".01" placeholder="Amount" value={newTx.amount} onChange={e=>setNewTx(s=>({...s,amount:e.target.value}))}/><input aria-label="Date" type="date" value={newTx.date} onChange={e=>setNewTx(s=>({...s,date:e.target.value}))}/><select aria-label="Transaction category" value={newTx.category} onChange={e=>setNewTx(s=>({...s,category:e.target.value}))}>{CATEGORIES.map(x=><option key={x}>{x}</option>)}</select><select aria-label="Money direction" value={newTx.type} onChange={e=>setNewTx(s=>({...s,type:e.target.value}))}><option value="expense">Expense</option><option value="income">Income</option></select><button className="mg-btn" onClick={addTx}>+ Add transaction</button></div>
+    <div className="mg-paper"><div className="mg-toolbar"><label className="mg-upload" style={bankFeed.connected?{display:'none'}:undefined}>Import a CSV statement <input type="file" accept=".csv,text/csv" onChange={e=>{if(e.target.files?.[0])importCSV(e.target.files[0]);e.target.value=''}}/></label><span>{bankFeed.connected?activityTransactions.length+' linked bank transactions (read only)':data.transactions.length+' locally stored transactions'}</span></div><p className="mg-fine">{bankFeed.connected?'Transactions refresh from your private banking backend; bank data is never committed to GitHub. Corrections here are local to this browser.':'Until automatic banking is configured, only locally imported or manually logged transactions can appear here.'} Accepts transaction CSV files with Date and Amount columns, including the Finances export format. Pending charges are skipped when identified. Own-account transfers and credit-card payments should be marked “Transfer / exclude.” Review categories after each import.</p>
+     {!bankFeed.connected&&<div className="mg-add-grid"><input aria-label="Merchant" placeholder="Merchant / what was it?" value={newTx.name} onChange={e=>setNewTx(s=>({...s,name:e.target.value}))}/><input aria-label="Amount" type="number" min="0" step=".01" placeholder="Amount" value={newTx.amount} onChange={e=>setNewTx(s=>({...s,amount:e.target.value}))}/><input aria-label="Date" type="date" value={newTx.date} onChange={e=>setNewTx(s=>({...s,date:e.target.value}))}/><select aria-label="Transaction category" value={newTx.category} onChange={e=>setNewTx(s=>({...s,category:e.target.value}))}>{CATEGORIES.map(x=><option key={x}>{x}</option>)}</select><select aria-label="Money direction" value={newTx.type} onChange={e=>setNewTx(s=>({...s,type:e.target.value}))}><option value="expense">Expense</option><option value="income">Income</option></select><button className="mg-btn" onClick={addTx}>+ Add transaction</button></div>}
     </div>
-    <div className="mg-paper">{title(monthLabel(month)+' ledger','Only posted transactions you have imported or logged are included.')}<div className="mg-table-scroll"><table className="mg-table"><thead><tr><th>Date</th><th>Merchant</th><th>Category · editable</th><th>Amount</th><th></th></tr></thead><tbody>{[...monthTx].sort((a,b)=>b.date.localeCompare(a.date)).map(t=><tr key={t.id}><td>{t.date.slice(5)}</td><td><strong>{t.name}</strong><small>{t.account||t.source||''}</small></td><td><select aria-label={'Category for '+t.name} value={t.category} onChange={e=>patchItem('transactions',t.id,{category:e.target.value})}>{[...CATEGORIES,'Income'].map(x=><option key={x}>{x}</option>)}</select></td><td className={t.type==='income'?'mg-positive':''}>{t.type==='income'?'+':'-'}{dollars(t.amount)}</td><td><button className="mg-x" onClick={()=>removeItem('transactions',t.id)} aria-label={'Remove '+t.name}>×</button></td></tr>)}{!monthTx.length&&<tr><td colSpan="5">No transactions for this month yet. Import the private starter file or a CSV.</td></tr>}</tbody></table></div></div>
+    <div className="mg-paper">{title(monthLabel(month)+' ledger','Only posted transactions you have imported or logged are included.')}<div className="mg-table-scroll"><table className="mg-table"><thead><tr><th>Date</th><th>Merchant</th><th>Category · editable</th><th>Amount</th><th></th></tr></thead><tbody>{[...monthTx].sort((a,b)=>b.date.localeCompare(a.date)).map(t=><tr key={t.id}><td>{t.date.slice(5)}</td><td><strong>{t.name}</strong><small>{t.account||t.source||''}</small></td><td><select aria-label={'Category for '+t.name} value={t.category} onChange={e=>bankFeed.connected?update('categoryOverrides',{...(data.categoryOverrides||{}),[t.id]:e.target.value}):patchItem('transactions',t.id,{category:e.target.value})}>{[...CATEGORIES,'Income'].map(x=><option key={x}>{x}</option>)}</select></td><td className={t.type==='income'?'mg-positive':''}>{t.type==='income'||t.type==='refund'?'+':'-'}{dollars(t.amount)}</td><td>{!bankFeed.connected&&<button className="mg-x" onClick={()=>removeItem('transactions',t.id)} aria-label={'Remove '+t.name}>×</button>}</td></tr>)}{!monthTx.length&&<tr><td colSpan="5">No transactions for this month yet. Connect a bank above to start automatic syncing.</td></tr>}</tbody></table></div></div>
   </div>}
   {pane==='bills'&&<div className="mg-stack">
     {title('Your bill calendar','Autopay is not the same as confirmed paid. Check due dates and payments with each provider.')}
