@@ -80,7 +80,7 @@ export function recalcProblem(record={}){
  return {...record,history:sorted,grade,stage,lastReviewed:review,dueDate:due,attempts:sorted.length};
 }
 export function logProblemAttempt(record={},grade,date,code='',notes='',id){
- if(!validGrade(grade))throw new Error('Choose RED, YELLOW, GREEN or MOCK');
+ if(!validGrade(grade))throw new Error('Choose an attempt grade: RED, YELLOW, GREEN or MOCK');
  if(!validStudyDate(date))throw new Error('Select a valid attempt date on or before today');
  const history=normalizedHistory(record.history);
  // A double-click on the same grade/date/code is not two distinct attempts.
