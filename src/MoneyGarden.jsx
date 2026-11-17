@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import './money-garden.css';
+import FlowerBouquet from './ThemeDoodles.jsx';
 import LiveBankPanel from './LiveBankPanel.jsx';
 
 const STORAGE = 'bloom-money-garden-v1';
@@ -169,7 +170,7 @@ export default function MoneyGarden(){
  function addDebt(){if(!newDebt.name.trim()){setNotice('Name the loan first.');return}update('debts',[...data.debts,{id:uid(),name:newDebt.name,balance:asNumber(newDebt.balance),payment:asNumber(newDebt.payment),apr:newDebt.apr===''?null:Number(newDebt.apr)}]);setNewDebt({name:'',balance:'',apr:'',payment:''})}
  const title=(head,sub)=><div className="mg-section-title"><h3>{head}</h3><p>{sub}</p></div>;
  return <section className="money-garden" aria-label="Money Garden personal budget">
-  <div className="mg-hero"><div><span className="mg-kicker">✦ A KINDER KIND OF MONEY MANAGEMENT</span><h2>money <em>garden.</em> <span>✿</span></h2><p>Give every dollar a little purpose. Track the bills, nurture the dreams, and learn what your money is doing—without shame.</p></div><div className="mg-hero-flower" aria-hidden="true">✿<small>grow at your own pace</small></div></div>
+  <div className="mg-hero"><div><span className="mg-kicker">✦ A KINDER KIND OF MONEY MANAGEMENT</span><h2>money <em>garden.</em> <span>✿</span></h2><p>Give every dollar a little purpose. Track the bills, nurture the dreams, and learn what your money is doing—without shame.</p></div><div className="mg-hero-flower" aria-hidden="true"><FlowerBouquet variant="money"/><small>little savings, big blooms ✿</small></div></div>
   <div className="mg-privacy"><strong>🔒 Your spending deserves privacy.</strong> When configured, live banking data is read from your authenticated account and not stored in this public GitHub repository. Manual entries and category corrections are saved locally in this browser. Bank credentials never belong in website source code.</div>
   <LiveBankPanel onChange={setBankFeed}/>
   {data.starterNotes?.coverage&&<div className="mg-data-snapshot"><strong>✿ Imported starting snapshot:</strong> {data.starterNotes.coverage} The data does not update automatically; import a newer CSV when you want current spending.</div>}
