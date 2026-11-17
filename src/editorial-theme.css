@@ -5,7 +5,7 @@
    blue/red/yellow/green on a ruled-paper coding notebook.
    Visual-only overrides: do not change data, auth, or tracker state.
 ──────────────────────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..800,0..100,0..1&family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fraunces:wght@400;500;600;700;800&family=Patrick+Hand&display=swap');
 
 :root {
   --ink:#54353b;
@@ -534,4 +534,12 @@ body {
   .app-shell[data-section="swe"] .sip-month-tile,
   .app-shell[data-section="swe"] .sip-week-day,
   .app-shell[data-section="money"] .mg-metric{transition:none!important;transform:none!important}
+}
+
+/* The site header stays uncluttered on the dedicated tool pages. */
+.app-shell[data-section="money"] .date-chip,
+.app-shell[data-section="swe"] .date-chip{display:none}
+@media(max-width:520px){
+  .app-shell[data-section="money"] .mg-hero-flower{display:none}
+  .app-shell[data-section="money"] .mg-hero>div:first-child{max-width:100%}
 }
