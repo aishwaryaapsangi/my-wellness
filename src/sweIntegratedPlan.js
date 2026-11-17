@@ -101,7 +101,7 @@ export const DAY_ROLE=[
  ['Review + plan','50–85 min · long-term retention']
 ];
 export function getDailyTasks(date,options={}){
- const sprint=sprintForDate(date),weekday=Math.round((Date.parse(date+'T12:00:00Z')-Date.parse(sprint.monday+'T12:00:00Z'))/86400000);
+ const sprint={...sprintForDate(date),...(options.sprintOverride||{})},weekday=Math.round((Date.parse(date+'T12:00:00Z')-Date.parse(sprint.monday+'T12:00:00Z'))/86400000);
  const ids=sprint.problemIds,primary=ids[Math.min(ids.length-1,weekday===3?1:weekday===5?2:0)],second=ids[1]||ids[0];
  const clean=(type,label,detail,minutes,extra={})=>({id:date+':'+type,type,label,detail,minutes,...extra});
  const dueLeet=(options.dueProblems||[]).slice(0,2),dueSkills=(options.dueSkills||[]).slice(0,2);
