@@ -6929,10 +6929,26 @@ export const MICRO_CONCEPTS=[
  }
 ];
 export const MICRO_FAMILIES=[...new Set(MICRO_CONCEPTS.map(x=>x.family))];
+// Keep the first seven foundation days fixed, then interleave every DSA family.
+// Every record keeps its original stable ID: changing the calendar never deletes grades.
+export const MICRO_DAILY_SEQUENCE=(()=>{
+ const opening=MICRO_CONCEPTS.slice(0,7);
+ const groups=new Map(MICRO_FAMILIES.map(f=>[f,[]]));
+ MICRO_CONCEPTS.slice(7).forEach(c=>groups.get(c.family).push(c));
+ const result=[...opening];
+ while(result.length<MICRO_CONCEPTS.length){
+  for(const family of MICRO_FAMILIES){
+   const next=groups.get(family).shift();
+   if(next)result.push(next);
+  }
+ }
+ return result;
+})();
 export function microLessonForDate(day){
  if(typeof day!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(day)||day<MICRO_START)return null;
  const offset=daysUntil(day,MICRO_START);
- return MICRO_CONCEPTS[offset]||null;
+ // Once all new skills are introduced, the practice continues via per-skill due dates.
+ return MICRO_DAILY_SEQUENCE[offset]||null;
 }
 export function getMicroRecord(db,lesson){return db?.microRecords?.[lesson.id]||(lesson.sourceSkillId?db?.skills?.[lesson.sourceSkillId]:null)||null}
 export function microDueLessons(db,date){
@@ -6948,7 +6964,9 @@ export function microGrade(previous={},grade,date){
  const replacing=previous.lastReviewed===date&&old.length>0;
  const history=replacing?old.slice(0,-1):old;
  const previousStage=replacing?(old.at(-1)?.previousStage??Math.max(0,(previous.stage||0)-1)):(previous.stage??-1);
- const stage=grade==='red'?0:grade==='yellow'?Math.max(0,previousStage):Math.min(5,previousStage+1);
- const days=grade==='red'?3:grade==='yellow'?7:[14,30,60,90,120,180][stage];
+ const stage=grade==='red'?0:grade==='yellow'?Math.max(0,previousStage):Math.min(7,previousStage+1);
+ // Each atomic concept gets its own recurring recall, including after all 500 are learned.
+ // Maintenance never ends on a fixed calendar date; RED/YELLOW shorten the next interval.
+ const days=grade==='red'?1:grade==='yellow'?3:[1,3,7,14,30,60,90,90][stage];
  return {...previous,grade,stage,lastReviewed:date,dueDate:addStudyDays(date,days),history:[...history,{date,grade,previousStage}],attempts:history.length+1};
 }
