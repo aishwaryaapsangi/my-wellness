@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {addStudyDays} from '../src/sweStudyLogic.js';
-import {MICRO_START,MICRO_CONCEPTS,MICRO_FAMILIES,microLessonForDate,microDueLessons,microReviewForDate,microGrade,getMicroRecord} from '../src/sweMicroConcepts.js';
+import {MICRO_START,MICRO_CONCEPTS,MICRO_FAMILIES,MICRO_DAILY_SEQUENCE,microLessonForDate,microDueLessons,microReviewForDate,microGrade,getMicroRecord} from '../src/sweMicroConcepts.js';
 import {getDailyTasks} from '../src/sweIntegratedPlan.js';
 
 test('the full micro database has unique, stable concepts across all data structures',()=>{
@@ -42,17 +42,17 @@ test('RED, YELLOW, GREEN and MOCK schedule a single concept separately',()=>{
  const red=microGrade({},'red','2026-11-16');
  const yellow=microGrade({},'yellow','2026-11-16');
  const green=microGrade({},'green','2026-11-16');
- assert.equal(red.dueDate,'2026-11-19');
- assert.equal(yellow.dueDate,'2026-11-23');
- assert.equal(green.dueDate,'2026-11-30');
+ assert.equal(red.dueDate,'2026-11-17');
+ assert.equal(yellow.dueDate,'2026-11-19');
+ assert.equal(green.dueDate,'2026-11-17');
  assert.equal(red.history.length,1);
- const again=microGrade(green,'green','2026-11-30');
- assert.equal(again.dueDate,'2026-12-30');
+ const again=microGrade(green,'green','2026-11-17');
+ assert.equal(again.dueDate,'2026-11-20');
  assert.equal(again.history.length,2);
- const corrected=microGrade(again,'yellow','2026-11-30');
+ const corrected=microGrade(again,'yellow','2026-11-17');
  assert.equal(corrected.history.length,2);
- assert.equal(corrected.dueDate,'2026-12-07');
- assert.throws(()=>microGrade(again,'green','2026-11-29'),/before/);
+ assert.equal(corrected.dueDate,'2026-11-20');
+ assert.throws(()=>microGrade(again,'green','2026-11-16'),/before/);
 });
 test('review selection is one oldest due concept; other concepts remain in backlog',()=>{
  const a=MICRO_CONCEPTS[0],b=MICRO_CONCEPTS[1],c=MICRO_CONCEPTS[2];
@@ -61,12 +61,12 @@ test('review selection is one oldest due concept; other concepts remain in backl
   [b.id]:microGrade({},'yellow','2026-11-16'),
   [c.id]:microGrade({},'red','2026-11-17')
  }};
- assert.equal(microDueLessons(db,'2026-11-18').length,0);
- assert.equal(microReviewForDate(db,'2026-11-19').id,a.id);
- assert.deepEqual(microDueLessons(db,'2026-11-23').slice(0,3).map(x=>x.id),[a.id,c.id,b.id]);
- db.microRecords[a.id]=microGrade(db.microRecords[a.id],'green','2026-11-23');
- assert.equal(microReviewForDate(db,'2026-11-23').id,c.id);
- assert.equal(db.microRecords[b.id].dueDate,'2026-11-23');
+ assert.equal(microDueLessons(db,'2026-11-16').length,0);
+ assert.equal(microReviewForDate(db,'2026-11-17').id,a.id);
+ assert.deepEqual(microDueLessons(db,'2026-11-19').slice(0,3).map(x=>x.id),[a.id,c.id,b.id]);
+ db.microRecords[a.id]=microGrade(db.microRecords[a.id],'green','2026-11-19');
+ assert.equal(microReviewForDate(db,'2026-11-19').id,c.id);
+ assert.equal(db.microRecords[b.id].dueDate,'2026-11-19');
 });
 test('existing handbook skill history is available through the micro-library migration',()=>{
  const source=MICRO_CONCEPTS.find(c=>c.sourceSkillId);
@@ -79,6 +79,21 @@ test('existing handbook skill history is available through the micro-library mig
 test('all study dates map to one new lesson until the source-backed curriculum ends',()=>{
  const ids=[];
  for(let i=0;i<MICRO_CONCEPTS.length;i++)ids.push(microLessonForDate(addStudyDays(MICRO_START,i))?.id);
- assert.deepEqual(ids,MICRO_CONCEPTS.map(c=>c.id));
+ assert.deepEqual(ids,MICRO_DAILY_SEQUENCE.map(c=>c.id));
+ assert.equal(new Set(ids).size,MICRO_CONCEPTS.length);
+ assert.equal(new Set(MICRO_DAILY_SEQUENCE.slice(7,35).map(c=>c.family)).size,14);
  assert.equal(microLessonForDate(addStudyDays(MICRO_START,MICRO_CONCEPTS.length)),null);
+});
+
+test('every learned concept keeps returning after the formal curriculum ends',()=>{
+ let record={};let day='2026-11-16';
+ for(let i=0;i<12;i++){
+  record=microGrade(record,'green',day);
+  day=record.dueDate;
+ }
+ assert.ok(record.dueDate>'2028-01-01');
+ assert.ok(record.dueDate>record.lastReviewed);
+ const last=addStudyDays(MICRO_START,MICRO_CONCEPTS.length);
+ assert.equal(microLessonForDate(last),null);
+ assert.ok(microDueLessons({microRecords:{[MICRO_CONCEPTS[0].id]:record}},record.dueDate).length);
 });
