@@ -1,0 +1,7 @@
+# These functions authenticate callers with Supabase Auth themselves or
+# a dedicated private cron secret; the bank-api refuses unauthenticated users.
+[functions.bank-api]
+verify_jwt = false
+
+[functions.bank-cron]
+verify_jwt = false
