@@ -63,12 +63,13 @@ test('backdated attempts sort chronologically, change next review, and can be ed
  let r=logProblemAttempt({},'green','2026-11-14','a','', 'a');
  r=logProblemAttempt(r,'green','2026-11-17','b','', 'b');
  assert.equal(r.dueDate,'2026-11-20');
- r=logProblemAttempt(r,'red','2026-11-15','c','', 'c');
+ r=logProblemAttempt(r,'mock','2026-11-15','c','', 'c');
  assert.deepEqual(r.history.map(h=>h.id),['a','c','b']);
- assert.equal(r.dueDate,'2026-11-18'); // a GREEN then c RED resets; b GREEN starts at day 1
+ assert.equal(r.dueDate,'2026-11-24'); // Backdated MOCK adds a stage before the latest GREEN
  r=editProblemAttempt(r,'c',{date:'2026-11-16',grade:'yellow'});
  assert.equal(r.history[1].date,'2026-11-16');
  assert.equal(r.history[1].grade,'yellow');
+ assert.equal(r.dueDate,'2026-11-20');
  r=deleteProblemAttempt(r,'c');
  assert.deepEqual(r.history.map(h=>h.id),['a','b']);
  assert.equal(r.dueDate,'2026-11-20');
