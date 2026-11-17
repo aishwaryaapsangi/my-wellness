@@ -5,7 +5,8 @@ import {addStudyDays,REVIEW_GAPS,dateKey} from './sweStudyLogic.js';
 export const DIFFICULTIES=['Unrated','Easy','Medium','Hard'];
 export const CONCEPT_GROUPS={
  'Data structures':['Arrays','2D Arrays / Matrix','Strings','HashMap / HashSet','Linked List','Stack','Queue / Deque','Trees / BST','Heap / Priority Queue','Graphs','Trie'],
- 'Algorithms & patterns':['Two Pointers','Sliding Window','Prefix Sum','Binary Search','Sorting','Recursion','Backtracking','Greedy','Dynamic Programming','Intervals','Union Find','Bit Manipulation','Math / Digits']
+ 'Algorithms & patterns':['Two Pointers','Sliding Window','Prefix Sum','Binary Search','Sorting','Recursion','Backtracking','Greedy','Dynamic Programming','Intervals','Union Find','Bit Manipulation','Math / Digits'],
+ 'SQL & databases':['SQL SELECT / Filtering','SQL Joins','SQL Aggregation / GROUP BY','SQL Subqueries / CTE','SQL Window Functions']
 };
 export const ALL_CONCEPTS=Object.values(CONCEPT_GROUPS).flat();
 export const CONCEPT_IDS={
@@ -38,6 +39,7 @@ const seeded=new Map();
 for(const [concept,ids] of Object.entries(CONCEPT_IDS))for(const id of ids)seeded.set(id,[...(seeded.get(id)||[]),concept]);
 export function conceptsForProblem(problem,record={}){
  if(Array.isArray(record.concepts))return [...new Set(record.concepts.filter(x=>ALL_CONCEPTS.includes(x)))];
+ if(Array.isArray(problem?.concepts))return [...new Set(problem.concepts.filter(x=>ALL_CONCEPTS.includes(x)))];
  const id=Number(problem?.id);
  if(seeded.has(id))return [...seeded.get(id)];
  const words=(String(problem?.title||'')+' '+String(problem?.pattern||'')).toLowerCase();
@@ -102,7 +104,7 @@ export function editProblemAttempt(record={},attemptId,patch={}){
 export function deleteProblemAttempt(record={},attemptId){
  return recalcProblem({...record,history:normalizedHistory(record.history).filter(x=>x.id!==attemptId)});
 }
-export function filterLeetCodeProblems(list,records,{search='',phase='all',status='all',concept='all',difficulty='all',today='',firstAttempts=[]}={}){
+export function filterLeetCodeProblems(list,records,{search='',phase='all',status='all',concept='all',difficulty='all',language='all',today='',firstAttempts=[]}={}){
  const first=new Set(firstAttempts.map(Number));
  const q=search.toLowerCase().trim();
  return list.filter(p=>{
@@ -113,11 +115,12 @@ export function filterLeetCodeProblems(list,records,{search='',phase='all',statu
    (status==='unattempted'&&!has)||
    (status==='due'&&((has&&!!r.dueDate&&r.dueDate<=today)||(!has&&first.has(Number(p.id)))))||
    (status===grade);
-  const level=r.difficulty||'Unrated';
+  const level=r.difficulty||p.difficulty||'Unrated';
   const inDifficulty=difficulty==='all'||level===difficulty;
+  const inLanguage=language==='all'||(p.language||'Java')===language;
   const tags=conceptsForProblem(p,r);
   const inConcept=concept==='all'||tags.includes(concept);
   const inQuery=!q||String(p.id).includes(q)||p.title.toLowerCase().includes(q)||(p.pattern||'').toLowerCase().includes(q)||tags.some(tag=>tag.toLowerCase().includes(q));
-  return inPhase&&inStatus&&inDifficulty&&inConcept&&inQuery;
+  return inPhase&&inStatus&&inDifficulty&&inConcept&&inLanguage&&inQuery;
  });
 }
