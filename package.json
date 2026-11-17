@@ -12,7 +12,10 @@
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "@supabase/supabase-js": "^2.57.0"
+    "@supabase/supabase-js": "^2.57.0",
+    "lucide-react": "^1.73.0",
+    "recharts": "^3.10.1",
+    "react-is": "^19.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.0",
