@@ -30,3 +30,20 @@ test('SWE tabs, daily calendar, and LeetCode problem render',async({page})=>{
  await expect(page.locator('.sld-problem').first()).toBeVisible();
  expect(errors,'Uncaught browser exceptions:\n'+errors.join('\n\n')).toEqual([]);
 });
+
+test('micro-concept library, dated grade and single-review cards render',async({page})=>{
+ const errors=[];
+ page.on('pageerror',err=>errors.push(err.message));
+ await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('.sml-daily')).toBeVisible();
+ await expect(page.locator('.sml-daily .sml-card').first()).toBeVisible();
+ await expect(page.locator('.sml-daily .sml-card')).toHaveCount(1);
+ await page.getByRole('button',{name:/Concept memory garden/}).click();
+ await expect(page.locator('.sml-library')).toBeVisible();
+ await expect(page.locator('.sml-list-item').first()).toBeVisible();
+ await page.locator('.sml-list-item').first().click();
+ await expect(page.locator('.sml-library-detail .sml-card')).toBeVisible();
+ await page.locator('.sml-library-detail .sml-grade.green').click();
+ await expect(page.locator('.sml-library-detail .sml-schedule')).toContainText('next due');
+ expect(errors,'Uncaught browser exceptions').toEqual([]);
+});
