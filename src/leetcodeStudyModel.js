@@ -1,6 +1,6 @@
 // LeetCode attempt history, editable metadata and exact concept filtering.
 // Study dates are local YYYY-MM-DD keys. No remote network or LeetCode syncing.
-import {addStudyDays,REVIEW_GAPS} from './sweStudyLogic.js';
+import {addStudyDays,REVIEW_GAPS,dateKey} from './sweStudyLogic.js';
 
 export const DIFFICULTIES=['Unrated','Easy','Medium','Hard'];
 export const CONCEPT_GROUPS={
@@ -55,7 +55,7 @@ export function conceptsForProblem(problem,record={}){
 }
 export function attempted(record){return Array.isArray(record?.history)&&record.history.some(h=>h&&h.grade&&h.date);}
 const validGrade=g=>['red','yellow','green','mock'].includes(g);
-export function validStudyDate(date,today){
+export function validStudyDate(date,today=dateKey()){
  if(typeof date!=='string'||!/^(\d{4})-(\d{2})-(\d{2})$/.test(date))return false;
  const parsed=new Date(date+'T12:00:00Z');
  return !Number.isNaN(parsed.getTime())&&parsed.toISOString().slice(0,10)===date&&date<=today;
@@ -81,7 +81,7 @@ export function recalcProblem(record={}){
 }
 export function logProblemAttempt(record={},grade,date,code='',notes='',id){
  if(!validGrade(grade))throw new Error('Choose RED, YELLOW, GREEN or MOCK');
- if(!validStudyDate(date,date))throw new Error('Select a valid attempt date');
+ if(!validStudyDate(date))throw new Error('Select a valid attempt date on or before today');
  const history=normalizedHistory(record.history);
  // A double-click on the same grade/date/code is not two distinct attempts.
  const last=history.at(-1);
@@ -95,7 +95,7 @@ export function editProblemAttempt(record={},attemptId,patch={}){
  const history=normalizedHistory(record.history);
  const found=history.find(x=>x.id===attemptId);
  if(!found)return record;
- if(patch.date!==undefined&&!validStudyDate(patch.date,patch.date))throw new Error('Invalid date');
+ if(patch.date!==undefined&&!validStudyDate(patch.date))throw new Error('Invalid or future attempt date');
  if(patch.grade!==undefined&&!validGrade(patch.grade))throw new Error('Invalid grade');
  return recalcProblem({...record,history:history.map(x=>x.id===attemptId?{...x,...patch}:x)});
 }
