@@ -10,9 +10,14 @@ export function addStudyDays(iso,days){
 export function gradeStudy(previous={},grade,date){
  if(!["red","yellow","green","mock"].includes(grade))throw Error("Unknown grade");
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error("Use YYYY-MM-DD");
- const stage=grade==="red"?0:grade==="yellow"?Math.max(0,(previous.stage||0)-1):Math.min((previous.stage??-1)+1,REVIEW_GAPS.length-1);
+ const isCorrection=previous.lastReviewed===date && (previous.history||[]).length>0;
+ const oldHistory=isCorrection?(previous.history||[]).slice(0,-1):(previous.history||[]);
+ const last=previous.history?.[previous.history.length-1];
+ if(isCorrection && last?.grade===grade)return previous; // double-clicks must not advance mastery
+ const previousStage=isCorrection?(last?.previousStage??-1):(previous.stage??-1);
+ const stage=grade==="red"?0:grade==="yellow"?Math.max(0,previousStage-1):Math.min(previousStage+1,REVIEW_GAPS.length-1);
  const gap=grade==="red"?1:grade==="yellow"?3:REVIEW_GAPS[stage];
- const history=[...(previous.history||[]),{date,grade}];
+ const history=[...oldHistory,{date,grade,previousStage}];
  return {...previous,grade,stage,lastReviewed:date,dueDate:addStudyDays(date,gap),history,attempts:history.length};
 }
 export function reviewDue(item,date){
