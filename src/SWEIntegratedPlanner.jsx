@@ -17,9 +17,9 @@ function Progress({done,total}){const n=total?Math.round(done/total*100):0;retur
 function Flag({children,tone='pink'}){return <span className={'sip-flag '+tone}>{children}</span>}
 function monthWeeks(key){return WEEKLY_SPRINTS.filter(w=>w.monday.slice(0,7)===key||w.ends.slice(0,7)===key)}
 function Hero({onGoDaily,view}){return <div className="sip-banner"><span className="sip-eyebrow">✦ THE BIG PICTURE + LITTLE STEPS</span><div className="sip-hero-row"><div><h3>your career, <em>built week by week.</em></h3><p>Not a LeetCode checklist. Every week revisits old coding patterns, introduces one engineering skill, builds your actual project, and moves your career forward.</p></div><div className="sip-sticker" aria-hidden="true">✿<span>REPEAT<br/>BUILD<br/>APPLY</span></div></div><div className="sip-banner-actions">{view!=='daily'&&<button onClick={onGoDaily}>Back to today’s plan <ArrowRight size={14}/></button>}<span>Balanced for a working engineer · ~5–7h/week · no five-hour weekday marathons</span></div></div>}
-export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems,onOpenProblem,onOpenSection,today}){
+export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems,onOpenProblem,onOpenSection,onGoToDaily,initialDay,today}){
  const initial=isInRange(today)?today:start;
- const [selectedDay,setSelectedDay]=useState(initial);
+ const [selectedDay,setSelectedDay]=useState(isInRange(initialDay)?initialDay:initial);
  const [selectedMonth,setSelectedMonth]=useState(initial.slice(0,7));
  const [showApplicationForm,setShowApplicationForm]=useState(false);
  const [newRole,setNewRole]=useState({company:'Google',title:'',url:'',location:'New York, NY',status:'Watching',deadline:'',appliedAt:'',nextAction:'',notes:''});
@@ -32,7 +32,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const dateDueProblems=allProblems.filter(p=>reviewDue(db.problems?.[p.id],selectedDay)).sort((a,b)=>(db.problems[a.id]?.dueDate||'').localeCompare(db.problems[b.id]?.dueDate||''));
  const sectionSkills=useMemo(()=>handbook.sections.flatMap(s=>s.skills.map(x=>({...x,section:s.title,sectionId:s.id,page:s.page}))),[]);
  const dateDueSkills=sectionSkills.filter(sk=>reviewDue(db.skills?.[sk.id],selectedDay)).sort((a,b)=>(db.skills[a.id]?.dueDate||'').localeCompare(db.skills[b.id]?.dueDate||''));
- const dayTasks=getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills});
+ const dayTasks=getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills,sprintOverride:overrides[chosen.id]});
  const dayDone=dayTasks.filter(t=>checks[t.id]&&!t.optional).length;
  const dayTotal=dayTasks.filter(t=>!t.optional).length;
  const weekStats=planProgress(checks,chosen,lightDays);
@@ -75,7 +75,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const showSkill=(sectionPage)=>{const sec=handbook.sections.find(s=>s.page===sectionPage)||handbook.sections.find(s=>s.page===63);onOpenSection(sec?.id)};
  const jobCard=<div className="sip-job-card"><div className="sip-job-top"><Flag tone="sky">Verified November 16, 2026</Flag><span>Official Google listing · not auto-refreshed</span></div><h4>{OFFICIAL_SWE_II.title}</h4><p>{OFFICIAL_SWE_II.locations}. Listed to remain open until at least <strong>Nov 27, 2026</strong>, subject to business needs. Check its live status before applying; there is no guarantee it stays open.</p><div className="sip-inline-actions"><a href={OFFICIAL_SWE_II.url} target="_blank" rel="noopener noreferrer">Review the official job <ExternalLink size={14}/></a><button onClick={()=>{setNewRole({...newRole,company:'Google',title:OFFICIAL_SWE_II.title,url:OFFICIAL_SWE_II.url,location:'New York, NY',deadline:'2026-11-27',status:'Watching'});setShowApplicationForm(true);setNotice('Draft populated. Verify the posting live before you save or submit anything.')}}>Add to my applications <Plus size={14}/></button></div></div>;
  return <section className="sip">
-  <Hero view={mode} onGoDaily={()=>{setSelectedDay(isInRange(today)?today:start);setSelectedMonth(today.slice(0,7))}}/>
+  <Hero view={mode} onGoDaily={()=>onGoToDaily?.(isInRange(today)?today:start)}/>
   {notice&&<div className="sip-notice" role="status">{notice}<button onClick={()=>setNotice('')} aria-label="Dismiss">×</button></div>}
   {mode==='daily'?<div className="sip-column">
    <div className="sip-summary-grid">
@@ -109,7 +109,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
       </div>
     </aside>
    </div>
-   <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">MONDAY TO SUNDAY</span><h3>See your whole week at once</h3></div><span className="sip-muted">A balanced mix every week · weekly tech focus rotates</span></div><div className="sip-week-strip">{weekDates.map((date,i)=>{const d=getDailyTasks(date,{light:lightDays[date]});const done=d.filter(t=>checks[t.id]&&!t.optional).length,total=d.filter(t=>!t.optional).length;return <button key={date} className={'sip-week-day '+(selectedDay===date?'is-selected':'')+(done===total?' is-complete':'')} onClick={()=>setSelectedDay(date)}><span>{weekdays[i]}</span><strong>{date.slice(-2)}</strong><small>{DAY_ROLE[i][0]}</small><Progress done={done} total={total}/><i>{done}/{total}</i></button>})}</div>
+   <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">MONDAY TO SUNDAY</span><h3>See your whole week at once</h3></div><span className="sip-muted">A balanced mix every week · weekly tech focus rotates</span></div><div className="sip-week-strip">{weekDates.map((date,i)=>{const d=getDailyTasks(date,{light:lightDays[date],sprintOverride:overrides[chosen.id]});const done=d.filter(t=>checks[t.id]&&!t.optional).length,total=d.filter(t=>!t.optional).length;return <button key={date} className={'sip-week-day '+(selectedDay===date?'is-selected':'')+(done===total?' is-complete':'')} onClick={()=>setSelectedDay(date)}><span>{weekdays[i]}</span><strong>{date.slice(-2)}</strong><small>{DAY_ROLE[i][0]}</small><Progress done={done} total={total}/><i>{done}/{total}</i></button>})}</div>
    </div>
    <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">PRACTICE ASSIGNMENTS</span><h3>This week's LeetCode ladder</h3></div><span className="sip-muted">New attempts + intentional re-attempts</span></div><div className="sip-problem-grid">{questions.map((p,i)=><div key={p.id} className="sip-problem-card"><div><Flag tone={i===0?'pink':'sky'}>{i===0?'TUE · ANCHOR':i===1?'THU · VARIATION':'SAT · APPLY'}</Flag><span>#{p.id}</span></div><strong>{p.title}</strong><small>{p.pattern}</small><button onClick={()=>onOpenProblem(p.id)}>Practice / review <ChevronRight size={14}/></button></div>)}</div><p className="sip-muted">On fourth-week consolidations, these are re-solves—not a requirement to learn three new patterns. Every second Sunday also explicitly asks for a two-week LeetCode replay.</p></div>
   </div>:
@@ -123,7 +123,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
       <div className="sip-month-notes"><label>Monthly proof journal (how do you KNOW you've learned it?)<textarea rows={5} placeholder="Specific problems I solved independently, one deployed feature, an engineering explanation, interview feedback…" value={(db.monthNotes||{})[selectedMonth]||''} onChange={e=>updateObj('monthNotes',{[selectedMonth]:e.target.value.slice(0,2500)})}/></label></div>
      </div>
      <aside className="sip-panel"><span className="sip-eyebrow">THE ROTATION MAKES THE DIFFERENCE</span><h3>Where each week goes</h3><p className="sip-muted">Each sprint has a coding focus, ONE engineering/technology deep dive, one personal-project deliverable, and one recruiting action. Week 4, 8, 12… are revision-heavy.</p>
-      <div className="sip-month-week-list">{allMonthlyWeeks.map(w=>{const p=stats(w);return <button key={w.id} onClick={()=>{setSelectedDay(w.monday);setSelectedMonth(w.monday.slice(0,7));onGoToDaily?.()}}><span><strong>Week {w.index} · {short(w.monday)}–{short(w.ends)}</strong><small>{w.dsa} · {w.engineering}</small><small>{w.project}</small></span><span className="sip-mini-progress">{p.pct}%</span></button>})}</div>
+      <div className="sip-month-week-list">{allMonthlyWeeks.map(w=>{const p=stats(w);return <button key={w.id} onClick={()=>{setSelectedDay(w.monday);setSelectedMonth(w.monday.slice(0,7));onGoToDaily?.(w.monday)}}><span><strong>Week {w.index} · {short(w.monday)}–{short(w.ends)}</strong><small>{w.dsa} · {w.engineering}</small><small>{w.project}</small></span><span className="sip-mini-progress">{p.pct}%</span></button>})}</div>
       <div className="sip-fortnight-legend"><span>↻ Every 1, 3, 7, 14, 30, 60 days: recall due concepts</span><span>↻ Every two weeks: blank-file LeetCode replay</span><span>↻ Every four weeks: reduce new study; consolidate old material</span><span>✿ Every week: build, test, reflect and watch roles</span></div>
      </aside></div>
    <div className="sip-panel">
