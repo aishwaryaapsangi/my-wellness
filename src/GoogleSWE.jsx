@@ -8,6 +8,7 @@ import './google-swe.css';
 import FlowerBouquet from './ThemeDoodles.jsx';
 import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
 import SWELeetCodeDojo from './SWELeetCodeDojo.jsx';
+import SWEMicroLab from './SWEMicroLab.jsx';
 import {EXTRA_QUESTIONS} from './sweQuestionBank.js';
 
 const STORAGE='bloom-google-swe-prep-v1';
@@ -18,7 +19,7 @@ const SECTIONS=handbook.sections;
 const GROUPS=['Java fundamentals','Algorithms & data structures','Computer science','Full-stack technologies','System design','Engineering practice','Behavioral','Projects & portfolio','Career & networking'];
 const ENGINEERING_GROUPS=GROUPS.filter(g=>g!=='Java fundamentals'&&g!=='Algorithms & data structures');
 const INITIAL=()=>({
- version:1,problems:{},skills:{},customProblems:[],roadmapDone:{},projectDone:{},readinessDone:{},
+ version:1,problems:{},skills:{},microRecords:{},customProblems:[],roadmapDone:{},projectDone:{},readinessDone:{},
  sessions:[],stories:[],targetDate:'2027-05-31',weeklyGoalMinutes:420,focusNote:'',studyNotes:'',preferredLanguage:'Java'
 });
 function load(){
@@ -135,6 +136,7 @@ export default function GoogleSWE(){
   {key:'journey',label:'Hawk-eye roadmap',icon:Workflow},
   {key:'dashboard',label:'Progress snapshot',icon:Flower2},
   {key:'leetcode',label:'LeetCode dojo',icon:Code2},
+  {key:'micro',label:'Concept memory garden',icon:BookOpen},
   {key:'skills',label:'Java + DSA',icon:BrainCircuit},
   {key:'engineering',label:'Tech + engineering',icon:Layers3},
   {key:'projects',label:'Projects + portfolio',icon:BookOpen},
@@ -210,6 +212,7 @@ export default function GoogleSWE(){
    </div>
    <article className="swe-paper">{title('A realistic week','5–7 hours is the handbook’s sustainable base. More is optional after you build consistency.')}<div className="swe-week-grid">{WEEKLY_RHYTHM.map(x=><div key={x.day}><strong>{x.day}</strong><span>{x.focus}</span><small>{x.minutes}</small></div>)}</div></article>
   </div>}
+  {tab==='micro'&&<SWEMicroLab db={db} update={update} today={today} onOpenProblem={id=>{setSelectedProblemId(id);setNoteDraft(db.problems?.[id]?.notes||'');setTab('leetcode')}} onOpenSection={page=>{const sec=SECTIONS.find(x=>x.page===page);if(!sec)return;setSectionId(sec.id);setSkillGroup(sec.group);setTab(['Java fundamentals','Algorithms & data structures'].includes(sec.group)?'skills':'engineering')}}/>}
   {tab==='leetcode'&&<SWELeetCodeDojo db={db} update={update} allProblems={allProblems} today={today} initialProblemId={selectedProblemId}/>}
   {tab==='skills'&&<div className="swe-content">
    {title('Java + DSA mastery studio','Learn each micro-action, explain it, code a tiny example, test it, and revisit it. “Read once” is not mastered.')}
