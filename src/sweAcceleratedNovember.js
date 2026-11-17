@@ -307,15 +307,22 @@ export const NOVEMBER_DAILY={
     ]
   }
 };
+const LESSON_PAGES={
+ '2026-11-16':[17,31],'2026-11-17':[25,63],'2026-11-18':[39,63],
+ '2026-11-19':[46,31],'2026-11-20':[43,70],'2026-11-21':[48,68],
+ '2026-11-22':[51,63],'2026-11-23':[55,31],'2026-11-24':[57,63],
+ '2026-11-25':[58,63],'2026-11-26':[53,64],'2026-11-27':[33,63],
+ '2026-11-28':[33,68],'2026-11-29':[33,62],'2026-11-30':[33,63]
+};
 const CLEAN=(date,type,label,detail,minutes,extra={})=>({id:date+':'+type,type,label,detail,minutes,...extra});
 export function novemberTasks(date,{light=false,sprintOverride={}}={}){
  const d=NOVEMBER_DAILY[date];if(!d)return null;
  const holiday=date==='2026-11-26';const weekend=[0,6].includes(new Date(date+'T12:00:00').getDay());
  const focused=weekend?45:30;const lcMinutes=weekend?48:36;
  const tasks=[
-  CLEAN(date,'fast-foundation','DSA sprint · '+d.title,d.dsa,focused,{category:'dsa',sectionPage:d.pages[0]}),
+  CLEAN(date,'fast-foundation','DSA sprint · '+d.title,d.dsa,focused,{category:'dsa',sectionPage:LESSON_PAGES[date][0]}),
   CLEAN(date,'java-leetcode','Java coding · #'+d.problemIds[0], 'Open LeetCode #'+d.problemIds[0]+'. First write the brute force, then independent Java code with 3 edge cases, time/space; log the actual grade and date.',lcMinutes,{category:'leetcode',problemId:d.problemIds[0]}),
-  CLEAN(date,'engineering-lab',sprintOverride.engineering||d.engineering,(sprintOverride.engineeringExercise||d.engineeringExercise),weekend?35:25,{category:'engineering',sectionPage:d.pages[d.pages.length-1]}),
+  CLEAN(date,'engineering-lab',sprintOverride.engineering||d.engineering,(sprintOverride.engineeringExercise||d.engineeringExercise),weekend?35:25,{category:'engineering',sectionPage:LESSON_PAGES[date][1]}),
   CLEAN(date,'project-build','Portfolio / personal engineering artifact',sprintOverride.project||d.project,weekend?55:20,{category:'project'}),
   CLEAN(date,'proof-log','Proof + error log',d.proof,12,{category:'review',proof:true})
  ];
