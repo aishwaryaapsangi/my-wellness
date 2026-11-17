@@ -8,6 +8,7 @@ import './google-swe.css';
 import FlowerBouquet from './ThemeDoodles.jsx';
 import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
 import SWELeetCodeDojo from './SWELeetCodeDojo.jsx';
+import {EXTRA_QUESTIONS} from './sweQuestionBank.js';
 
 const STORAGE='bloom-google-swe-prep-v1';
 const REVIEWS=['red','yellow','green','mock'];
@@ -55,6 +56,7 @@ export default function GoogleSWE(){
  const update=(patch)=>setDb(old=>({...old,...(typeof patch==='function'?patch(old):patch)}));
  const allProblems=useMemo(()=>{
    const map=new Map(handbook.problems.map(p=>[String(p.id),{...p,prior:false,suggestedReview:!!p.review}]));
+   for(const p of EXTRA_QUESTIONS){if(!map.has(String(p.id)))map.set(String(p.id),{...p,prior:false})}
    for(const p of EARLIER_PRACTICE){if(!map.has(String(p.id)))map.set(String(p.id),{...p,page:0,phase:'PRIOR',prior:true});
     else map.set(String(p.id),{...map.get(String(p.id)),prior:true})}
    for(const p of db.customProblems||[])map.set(String(p.id),{...p,phase:p.phase||'PRIOR',page:0,prior:false});
