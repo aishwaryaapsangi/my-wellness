@@ -41,12 +41,12 @@ export const NOVEMBER_DAILY={
     ]
   },
   "2026-11-18": {
-    "title": "Strings + two pointers + sliding windows",
-    "dsa": "String vs char[], StringBuilder, opposite/end pointer movement, fixed vs variable window and window invariant.",
+    "title": "Strings + pointers + windows + prefix/suffix",
+    "dsa": "String vs char[], StringBuilder, two-pointer movement, fixed/variable windows and invariants. Add prefix[0]=0, range sum=prefix[r+1]-prefix[l], suffix accumulators and the difference-array idea.",
     "engineering": "SQL JOIN / relational keys",
     "engineeringExercise": "Draw PK/FK and implement INNER/LEFT JOIN with 2 demo tables; solve SQL #175.",
     "project": "Create project README: who needs it, MVP scope, what will NOT be built.",
-    "proof": "Write pointer template and a window template from memory; explain left<=right.",
+    "proof": "Write two-pointer, window and prefix-range-sum templates from memory; explain boundaries and invariants.",
     "problemIds": [
       125,
       643
@@ -333,7 +333,7 @@ export function novemberTasks(date,{light=false,sprintOverride={}}={}){
  return tasks;
 }
 export const NOVEMBER_DSA_FAMILIES=[
- 'Java arrays + ArrayList + Big-O','HashSet / HashMap','Strings / two pointers / windows','Linked lists / stacks / queues','Sorting / binary search','Trees / BST / heaps','Graphs + grid BFS/DFS','Recursion / backtracking / trie','Greedy / intervals / union-find','Dynamic programming','Topological / weighted graphs / bit operations'];
+ 'Java arrays + ArrayList + Big-O','HashSet / HashMap','Strings / two pointers / windows / prefix-suffix-difference','Linked lists / stacks / queues','Sorting / binary search','Trees / BST / heaps','Graphs + grid BFS/DFS','Recursion / backtracking / trie','Greedy / intervals / union-find','Dynamic programming','Topological / weighted graphs / bit operations'];
 const DECEMBER_ROTATION=[
  ['Arrays + in-place patterns',27,26],['HashMap / HashSet',1,49],['Two pointers / strings',125,11],
  ['Sliding window',3,424],['Prefix sum / ranges',560,238],['Binary search / sorting',704,33],
