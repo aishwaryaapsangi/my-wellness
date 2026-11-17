@@ -14,6 +14,8 @@ export async function userFromRequest(req:Request){
  const client=createClient(getEnv("SUPABASE_URL"),getEnv("SUPABASE_ANON_KEY"),{auth:{persistSession:false}});
  const {data,error}=await client.auth.getUser(token);
  if(error||!data.user)throw new Error("Invalid or expired login. Please sign in again.");
+ const allowed=getEnv("MONEY_GARDEN_ALLOWED_EMAIL").toLowerCase();
+ if((data.user.email||"").toLowerCase()!==allowed)throw new Error("This private Money Garden is limited to its owner.");
  return data.user;
 }
 export async function plaid(endpoint:string,body:Record<string,unknown>){
