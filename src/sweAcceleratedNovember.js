@@ -332,7 +332,7 @@ export function novemberTasks(date,{light=false,sprintOverride={}}={}){
  const micro=microLessonForDate(date);
  if(micro){
   const first=tasks.find(t=>t.type==='fast-foundation');
-  if(first){first.label='ONE concept · '+micro.title;first.detail=micro.goal+' · Recall prompt: '+micro.recall;first.microId=micro.id;first.sectionPage=micro.page;first.minutes=25}
+  if(first){first.label='ONE concept · '+micro.title;first.detail=micro.goal+' · Review independently; no question card required.';first.microId=micro.id;first.sectionPage=micro.page;first.minutes=25}
   const coding=tasks.find(t=>t.type==='java-leetcode');
   if(coding){coding.label='Apply today’s concept · LeetCode #'+micro.problemId;coding.problemId=micro.problemId;coding.detail='Practice #'+micro.problemId+' using just '+micro.title+'. First write the brute-force idea, then Java, 3 edge cases and Big-O. Log the real attempt.'}
   const proof=tasks.find(t=>t.type==='proof-log');
@@ -364,14 +364,14 @@ export function decemberTasks(date,{dueProblems=[],dueSkills=[],light=false,spri
  const study=dueSkills.slice(0,1).map(s=>s.text).join(' · ')||rev[0]+' (draw the invariant and Big-O)';
  const project=day<=8?'Scaffold CityCircle data model, screens and tests':day<=16?'Build the first CRUD API and React/Angular prototype':day<=24?'Connect frontend to API, test error states': 'Deploy a demonstrable slice and document decisions';
  const tasks=[
-  CLEAN(date,'recall','One prior concept from memory','Your concept memory garden assigns the oldest due concept only. Explain it without notes, then mark RED/YELLOW/GREEN. Optional LeetCode redo: '+recall+'.',15,{category:'review',problemId:dueProblems[0]?.id||rev[1]}),
+  CLEAN(date,'recall','One prior concept from memory','Your due-concept reminders are listed in your daily to-do. Review independently. Optional LeetCode redo: '+recall+'.',15,{category:'review',problemId:dueProblems[0]?.id||rev[1]}),
   CLEAN(date,'solve','Solve Java variation · #'+rev[2],'Recommended #'+rev[2]+' to transfer the old pattern to a different problem. Three test cases, independent Java and complexity.',weekend?45:35,{category:'leetcode',problemId:rev[2]}),
   CLEAN(date,'engineer',sprintOverride.engineering||tech[0],sprintOverride.engineeringExercise||('Experiment in a sandbox with '+tech[0]+'; write a query, tiny program or request trace. Explain why it works.'),weekend?35:25,{category:'engineering',sectionPage:tech[1]}),
   CLEAN(date,'project','Project shipping · 1 small artifact',sprintOverride.project||project,weekend?70:25,{category:'project'}),
   CLEAN(date,'reflection','Reflect + repair weak areas','Name what you can solve again without help; mark RED/YELLOW as revisit targets. Every other Sunday, re-solve a problem from 14 days earlier.',10,{category:'review'})
  ];
  const micro=microLessonForDate(date);
- if(micro)tasks.splice(1,0,CLEAN(date,'micro-new','New micro-concept · '+micro.title,micro.goal+' · Recall: '+micro.recall,23,{category:'dsa',microId:micro.id,sectionPage:micro.page,problemId:micro.problemId}));
+ if(micro)tasks.splice(1,0,CLEAN(date,'micro-new','New micro-concept · '+micro.title,micro.goal+' · Review it independently when scheduled',23,{category:'dsa',microId:micro.id,sectionPage:micro.page,problemId:micro.problemId}));
  if(tech[2])tasks.splice(3,0,CLEAN(date,'sql-drill','SQL LeetCode · #'+tech[2],'Open SQL #'+tech[2]+'; save SELECT/JOIN/aggregate query and explain it without notes.',weekend?30:20,{category:'leetcode',problemId:tech[2],optional:!weekend}));
  if(light)return [ {...tasks[0],minutes:12}, {...tasks[1],minutes:12}, CLEAN(date,'light-note','Light-day momentum','Quickly write the key invariant or one SQL/OOP fact. Rest is allowed.',5,{category:'optional',optional:true}) ];
  return tasks;
