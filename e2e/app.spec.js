@@ -31,13 +31,13 @@ test('SWE tabs, daily calendar, and LeetCode problem render',async({page})=>{
  expect(errors,'Uncaught browser exceptions:\n'+errors.join('\n\n')).toEqual([]);
 });
 
-test('micro-concept library, dated grade and single-review cards render',async({page})=>{
+test('daily recall stays a plain to-do while the optional concept library remains usable',async({page})=>{
  const errors=[];
  page.on('pageerror',err=>errors.push(err.message));
  await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
- await expect(page.locator('.sml-daily')).toBeVisible();
- await expect(page.locator('.sml-daily .sml-card').first()).toBeVisible();
- await expect(page.locator('.sml-daily .sml-card')).toHaveCount(1);
+ await expect(page.locator('.sip-task-list')).toBeVisible();
+ await expect(page.locator('.sml-daily')).toHaveCount(0);
+ await expect(page.locator('.sip-task').first()).toBeVisible();
  await page.getByRole('button',{name:/Concept memory garden/}).click();
  await expect(page.locator('.sml-library')).toBeVisible();
  await expect(page.locator('.sml-list-item').first()).toBeVisible();
