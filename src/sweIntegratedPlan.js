@@ -1,6 +1,7 @@
 import {addStudyDays,reviewDue} from './sweStudyLogic.js';
 import {novemberTasks,decemberTasks,acceleratedWeekProblemIds} from './sweAcceleratedNovember.js';
 import {microLessonForDate} from './sweMicroConcepts.js';
+import {engineeringLessonsForDate} from './sweEngineeringMicro.js';
 
 // An editable plan, not an official Google interview syllabus or hiring forecast.
 // Week 1 begins Monday November 16, 2026. Some weeks are intentionally retrieval-heavy.
@@ -119,7 +120,12 @@ export const DAY_ROLE=[
 ];
 export function getDailyTasks(date,options={}){
  const accelerated=novemberTasks(date,options)||decemberTasks(date,options);
- if(accelerated)return accelerated;
+ const techMicros=engineeringLessonsForDate(date);
+ const technicalToDos=techMicros.map((lesson,i)=>({id:date+':engineering-micro-'+lesson.id,type:'engineering-micro',
+  category:'engineering',label:(lesson.priority==='core'?'★ Interview-priority · ':'Project-depth · ')+lesson.title,
+  detail:lesson.goal+' Then answer from memory: '+lesson.recall,
+  minutes:18,engineeringMicroId:lesson.id,optional:false}));
+ if(accelerated)return options.light?accelerated:[...accelerated,...technicalToDos];
  const sprint={...sprintForDate(date),...(options.sprintOverride||{})},weekday=Math.round((Date.parse(date+'T12:00:00Z')-Date.parse(sprint.monday+'T12:00:00Z'))/86400000);
  const ids=sprint.problemIds,primary=ids[Math.min(ids.length-1,weekday===3?1:weekday===5?2:0)],second=ids[1]||ids[0];
  const clean=(type,label,detail,minutes,extra={})=>({id:date+':'+type,type,label,detail,minutes,...extra});
@@ -142,7 +148,7 @@ export function getDailyTasks(date,options={}){
  const micro=microLessonForDate(date);
  const daily=micro?[clean('micro-focus','Learn ONE concept · '+micro.title, micro.goal+' Recall: '+micro.recall,24,{category:'dsa',sectionPage:micro.page,microId:micro.id,problemId:micro.problemId}),...list.filter(t=>t.type!=='concept')]:list;
  if(options.light) return daily.filter(t=>['dsa','review'].includes(t.category)).slice(0,2).map(t=>({...t,minutes:Math.min(t.minutes,12)})).concat([clean('light-note','Light-day win',sprint.engineering+' or '+sprint.dsa+': say one takeaway out loud and move on.',5,{category:'optional',optional:true})]);
- return daily;
+ return [...daily,...technicalToDos];
 }
 export function dueCounts(records,asOf){
  return Object.values(records||{}).filter(item=>reviewDue(item,asOf)).length;
