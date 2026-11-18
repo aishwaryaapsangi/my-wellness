@@ -46,7 +46,13 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
   id:selectedDay+':micro-review-'+l.id,type:'micro-review',microId:l.id,category:'review',minutes:8,
   label:'↻ Review '+l.title,detail:(l.family||'DSA')+' · Self-review only; tick when done.',optional:false
  }));
- const dayTasks=[...getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills,sprintOverride:overrides[chosen.id]}),...recallTasks];
+ const priorLeetReviewed=allProblems.filter(p=>checks[selectedDay+':leet-due-'+p.id]&&!dateDueProblems.some(x=>x.id===p.id));
+ const leetcodeRecallTasks=[...new Map([...dateDueProblems.slice(0,isLight?1:2),...priorLeetReviewed].map(p=>[p.id,p])).values()].map(p=>({
+  id:selectedDay+':leet-due-'+p.id,type:'leet-due',problemId:p.id,category:'leetcode',minutes:25,
+  label:'★ PRIORITY REATTEMPT · LeetCode #'+p.id+' '+p.title,
+  detail:'From scratch, no hints. Record RED / YELLOW / GREEN and how hard it felt in the LeetCode Dojo to schedule the next review.',optional:false
+ }));
+ const dayTasks=[...getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills,sprintOverride:overrides[chosen.id]}),...leetcodeRecallTasks,...recallTasks];
  const dailyMicroReview=reviewed[0]||null;
  const dayDone=dayTasks.filter(t=>checks[t.id]&&!t.optional).length;
  const dayTotal=dayTasks.filter(t=>!t.optional).length;
@@ -117,7 +123,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
    <div className="sip-summary-grid">
     <article className="sip-summary"><CalendarDays size={19}/><span>Today’s agenda</span><strong>{dayDone}/{dayTotal}</strong><small>{dayMinutes} planned focused minutes</small></article>
     <article className="sip-summary"><CheckCircle2 size={19}/><span>Week {chosen.index} · daily tasks</span><strong>{weekStats.pct}%</strong><small>{weekStats.completed}/{weekStats.total} essential blocks</small></article>
-    <article className="sip-summary"><RefreshCcw size={19}/><span>Self-review to-dos</span><strong>{recallTasks.length}</strong><small>{microBacklog.length+engineeringBacklog.length} due across DSA and engineering · no question cards</small></article>
+    <article className="sip-summary"><RefreshCcw size={19}/><span>Recall to-dos</span><strong>{recallTasks.length+leetcodeRecallTasks.length}</strong><small>{leetcodeRecallTasks.length} LeetCode · {recallTasks.length} topic review · no question cards</small></article>
     <article className="sip-summary"><Target size={19}/><span>Next role milestone</span><strong>May ’27</strong><small>Readiness evidence review, not a hiring deadline</small></article>
    </div>
    <div className="sip-split">
