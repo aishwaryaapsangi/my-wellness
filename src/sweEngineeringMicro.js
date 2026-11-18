@@ -18,8 +18,11 @@ const used=new Set(Object.values(ENGINEERING_OPENING).flat());
 const FAMILIES=[...new Set(ENGINEERING_MICROS.map(x=>x.family))];
 const queues=new Map(FAMILIES.map(x=>[x,ENGINEERING_MICROS.filter(c=>c.family===x&&!used.has(c.title))]));
 const ROTATION=[];
+// Interview-oriented weighting: repeat OOP/Java and API/SQL more often in the new-lesson
+// calendar, while Angular and engineering practice still receive complete coverage.
+const WEIGHTED_FAMILIES=['Java OOP','Backend / APIs','Java OOP','SQL / databases','Angular / TypeScript','Java OOP','Engineering practice','Backend / APIs','SQL / databases'];
 while(ROTATION.length<ENGINEERING_MICROS.length-used.size){
- for(const family of FAMILIES){const next=queues.get(family).shift();if(next)ROTATION.push(next);}
+ for(const family of WEIGHTED_FAMILIES){const next=queues.get(family).shift();if(next)ROTATION.push(next);}
 }
 export function engineeringLessonsForDate(date){
  if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<ENGINEERING_START)return [];
