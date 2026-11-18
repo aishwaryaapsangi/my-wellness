@@ -4,9 +4,9 @@ import handbook from './sweHandbookData.json';
 import {addStudyDays,daysUntil,reviewDue} from './sweStudyLogic.js';
 import {APPLICATION_RULES,DAY_NAMES,DAY_ROLE,MONTH_FOCUS,OFFICIAL_SWE_II,PLAN_START,WEEKLY_SPRINTS,getDailyTasks,monthForDate,planProgress,sprintDates,sprintForDate,weekIndexFor} from './sweIntegratedPlan.js';
 import {NOVEMBER_DAILY} from './sweAcceleratedNovember.js';
-import {DailyMicroConcepts} from './SWEMicroLab.jsx';
-import SWEEngineeringDaily from './SWEEngineeringDaily.jsx';
-import {MICRO_FAMILIES,microLessonForDate,microDueLessons} from './sweMicroConcepts.js';
+import {MICRO_FAMILIES,MICRO_CONCEPTS,microLessonForDate,microDueLessons,microLogSelfReview,getMicroRecord} from './sweMicroConcepts.js';
+import {ENGINEERING_MICROS,engineeringDueLessons} from './sweEngineeringMicro.js';
+import {prioritizeDueProblems} from './sweInterviewPriorities.js';
 import './swe-integrated-plan.css';
 
 const start='2026-11-16';
@@ -33,13 +33,21 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const checks=db.planChecks||{},lightDays=db.lightDays||{},overrides=db.sprintOverrides||{};
  const userWeek={...chosen,...(overrides[chosen.id]||{})};
  const isLight=!!lightDays[selectedDay];
- const dateDueProblems=allProblems.filter(p=>reviewDue(db.problems?.[p.id],selectedDay)).sort((a,b)=>(db.problems[a.id]?.dueDate||'').localeCompare(db.problems[b.id]?.dueDate||''));
+ const dateDueProblems=prioritizeDueProblems(allProblems,db.problems||{},selectedDay);
  const sectionSkills=useMemo(()=>handbook.sections.flatMap(s=>s.skills.map(x=>({...x,section:s.title,sectionId:s.id,page:s.page}))),[]);
  const dateDueSkills=sectionSkills.filter(sk=>reviewDue(db.skills?.[sk.id],selectedDay)).sort((a,b)=>(db.skills[a.id]?.dueDate||'').localeCompare(db.skills[b.id]?.dueDate||''));
- const dayTasks=getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills,sprintOverride:overrides[chosen.id]});
  const todayMicro=microLessonForDate(selectedDay);
  const microBacklog=microDueLessons(db,selectedDay);
- const dailyMicroReview=microBacklog.find(c=>c.id!==todayMicro?.id)||null;
+ const engineeringBacklog=engineeringDueLessons(db,selectedDay);
+ const lessons=[...MICRO_CONCEPTS,...ENGINEERING_MICROS];
+ const reviewedToday=lessons.filter(l=>checks[selectedDay+':micro-review-'+l.id]).filter(l=>!microBacklog.some(d=>d.id===l.id)&&!engineeringBacklog.some(d=>d.id===l.id));
+ const reviewed=Array.from(new Map([...microBacklog.slice(0,isLight?1:2),...engineeringBacklog.slice(0,isLight?1:2),...reviewedToday].map(l=>[l.id,l])).values());
+ const recallTasks=reviewed.filter(l=>l.id!==todayMicro?.id).map(l=>({
+  id:selectedDay+':micro-review-'+l.id,type:'micro-review',microId:l.id,category:'review',minutes:8,
+  label:'↻ Review '+l.title,detail:(l.family||'DSA')+' · Self-review only; tick when done.',optional:false
+ }));
+ const dayTasks=[...getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills,sprintOverride:overrides[chosen.id]}),...recallTasks];
+ const dailyMicroReview=reviewed[0]||null;
  const dayDone=dayTasks.filter(t=>checks[t.id]&&!t.optional).length;
  const dayTotal=dayTasks.filter(t=>!t.optional).length;
  const weekStats=planProgress(checks,chosen,lightDays);
@@ -56,7 +64,27 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const milestoneChecks=db.monthMilestones||{};
  const checkedMonth=['proof','code','engineer','project','career'].filter(id=>milestoneChecks[selectedMonth+':'+id]).length;
  const updateObj=(key,patch)=>update(old=>({[key]:{...(old[key]||{}),...patch}}));
- const setCheck=(id,done)=>updateObj('planChecks',{[id]:done});
+ const setCheck=(id,done)=>{
+  const task=dayTasks.find(t=>t.id===id);
+  const lesson=task?.microId?[...MICRO_CONCEPTS,...ENGINEERING_MICROS].find(x=>x.id===task.microId):task?.engineeringMicroId?ENGINEERING_MICROS.find(x=>x.id===task.engineeringMicroId):null;
+  if(lesson&&selectedDay<=today){
+   update(old=>{
+    const key=selectedDay+':'+lesson.id;
+    const snapshots={...(old.microTodoSnapshots||{})};
+    const records={...(old.microRecords||{})};
+    if(done){
+     if(!Object.prototype.hasOwnProperty.call(snapshots,key))snapshots[key]=records[lesson.id]||getMicroRecord(old,lesson)||{};
+     records[lesson.id]=microLogSelfReview(records[lesson.id]||getMicroRecord(old,lesson)||{},selectedDay);
+    }else if(Object.prototype.hasOwnProperty.call(snapshots,key)){
+     if(Object.keys(snapshots[key]).length)records[lesson.id]=snapshots[key];else delete records[lesson.id];
+     delete snapshots[key];
+    }
+    return {planChecks:{...(old.planChecks||{}),[id]:done},microRecords:records,microTodoSnapshots:snapshots};
+   });
+   return;
+  }
+  updateObj('planChecks',{[id]:done});
+ };
  const moveDay=number=>setSelectedDay(day=>{const proposed=addStudyDays(day,number);return isInRange(proposed)?proposed:day});
  const jumpWeek=number=>setSelectedDay(day=>{const target=addStudyDays(day,number*7);return isInRange(target)?target:day});
  const setFocus=(field,value)=>updateObj('sprintOverrides',{[chosen.id]:{...(overrides[chosen.id]||{}),[field]:value}});
@@ -89,11 +117,9 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
    <div className="sip-summary-grid">
     <article className="sip-summary"><CalendarDays size={19}/><span>Today’s agenda</span><strong>{dayDone}/{dayTotal}</strong><small>{dayMinutes} planned focused minutes</small></article>
     <article className="sip-summary"><CheckCircle2 size={19}/><span>Week {chosen.index} · daily tasks</span><strong>{weekStats.pct}%</strong><small>{weekStats.completed}/{weekStats.total} essential blocks</small></article>
-    <article className="sip-summary"><RefreshCcw size={19}/><span>Single-concept recall</span><strong>{dailyMicroReview?'1':'0'}</strong><small>{microBacklog.length} micro-concepts queued · only one assigned</small></article>
+    <article className="sip-summary"><RefreshCcw size={19}/><span>Self-review to-dos</span><strong>{recallTasks.length}</strong><small>{microBacklog.length+engineeringBacklog.length} due across DSA and engineering · no question cards</small></article>
     <article className="sip-summary"><Target size={19}/><span>Next role milestone</span><strong>May ’27</strong><small>Readiness evidence review, not a hiring deadline</small></article>
    </div>
-   <DailyMicroConcepts date={selectedDay} today={today} db={db} update={update} light={isLight} onOpenProblem={onOpenProblem} onOpenSection={showSkill}/>
-   <SWEEngineeringDaily date={selectedDay} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={showSkill}/>
    <div className="sip-split">
     <div className="sip-panel sip-main-day">
      <div className="sip-panel-top"><div><span className="sip-eyebrow">✦ YOUR DAY-TO-DAY PLAN</span><h3>{readable(selectedDay)}</h3><p>{todayMicro?.title||NOVEMBER_DAILY[selectedDay]?.title||DAY_ROLE[Math.round((Date.parse(selectedDay+'T12:00:00Z')-Date.parse(chosen.monday+'T12:00:00Z'))/86400000)]?.[0]||'Weekly focus'} · {dayMinutes} essential minutes</p></div><div className="sip-date-nav"><button aria-label="Previous day" onClick={()=>moveDay(-1)} disabled={selectedDay<=start}><ArrowLeft size={16}/></button><input aria-label="Choose a study date" type="date" min={start} value={selectedDay} onChange={e=>{if(isInRange(e.target.value))setSelectedDay(e.target.value)}}/><button aria-label="Next day" onClick={()=>moveDay(1)} ><ArrowRight size={16}/></button></div></div>
@@ -103,7 +129,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
       <label><input type="checkbox" checked={!!checks[t.id]} onChange={e=>setCheck(t.id,e.target.checked)}/><span className={'sip-task-icon '+(DOMAIN_STYLES[t.category]||'')}>{t.category==='review'?<RefreshCcw size={16}/>:t.category==='leetcode'?<Code2 size={16}/>:t.category==='project'?<GitBranch size={16}/>:t.category==='career'?<Target size={16}/>:t.category==='engineering'?<Layers3 size={16}/>:<BookOpen size={16}/>}</span><span className="sip-task-detail"><strong>{t.label}{t.optional?' · optional':''}</strong><small>{t.detail}</small><span className="sip-task-meta"><Clock3 size={12}/> {t.minutes} min · {t.category}</span></span></label>
       {(t.problemId||t.sectionPage||t.skillId)&&<div className="sip-task-helpers">{t.problemId&&<button onClick={()=>onOpenProblem(t.problemId)}>Open problem #{t.problemId} <ChevronRight size={13}/></button>}{t.sectionPage&&<button onClick={()=>showSkill(t.sectionPage)}>Open tech lesson <ChevronRight size={13}/></button>}{t.skillId&&<button onClick={()=>{const s=handbook.sections.find(x=>x.skills.some(z=>z.id===t.skillId));onOpenSection(s?.id)}}>Review micro-skill <ChevronRight size={13}/></button>}</div>}
      </div>)}</div>
-     <p className="sip-honesty">Checking a plan task means you did the activity. It does <strong>not</strong> automatically mark a LeetCode problem or micro-skill GREEN. Log your real independent performance in the appropriate tracker.</p>
+     <p className="sip-honesty">Topic reviews are checklist reminders, not question cards. Ticking one schedules its next reminder without claiming GREEN. Log independent LeetCode attempts in the Dojo.</p>
     </div>
     <aside className="sip-side-stack">
       <div className="sip-panel"><span className="sip-eyebrow">YOUR CURRENT ROTATION</span><div className="sip-panel-top"><h3>Week {chosen.index}: {short(chosen.monday)}–{short(chosen.ends)}</h3><div className="sip-date-nav"><button onClick={()=>jumpWeek(-1)} disabled={chosen.index===1} aria-label="Previous study week"><ArrowLeft size={15}/></button><button onClick={()=>jumpWeek(1)}  aria-label="Next study week"><ArrowRight size={15}/></button></div></div>
@@ -112,9 +138,9 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
        <button className="sip-underlink" onClick={()=>setEditingFocus(v=>!v)}><Settings2 size={14}/> {editingFocus?'Close this week’s customization':'Customize this week’s rotation'}</button>
        {editingFocus&&<div className="sip-editor">{[['dsa','DSA focus'],['engineering','Weekly tech skill'],['engineeringExercise','Engineering drill'],['project','Project deliverable'],['career','Career action']].map(([key,label])=><label key={key}>{label}<textarea rows={2} value={userWeek[key]||''} onChange={e=>setFocus(key,e.target.value)}/></label>)}<button onClick={resetFocus}>Restore handbook suggestions</button></div>}
       </div>
-      <div className="sip-panel"><span className="sip-eyebrow">REVISIT, DON'T RESTART</span><h3>Optional LeetCode reviews</h3><p className="sip-muted">Your one scheduled concept recall is above. These LeetCode reattempts are a separate optional queue, not additional mandatory concept prompts.</p>
+      <div className="sip-panel"><span className="sip-eyebrow">REVISIT, DON'T RESTART</span><h3>Priority LeetCode reattempts</h3><p className="sip-muted">RED, struggles and overdue attempts come back first. Re-solve from memory and log your effort in the Dojo.</p>
        {dateDueProblems.slice(0,3).map(p=><button key={p.id} className="sip-review-link" onClick={()=>onOpenProblem(p.id)}><RefreshCcw size={15}/><span><strong>#{p.id} {p.title}</strong><small>Due {db.problems[p.id]?.dueDate}</small></span><ChevronRight size={15}/></button>)}
-       {!dateDueProblems.length&&<p className="sip-empty-inline">No LeetCode problems due. Micro-concept recalls are assigned one at a time above after you grade a lesson.</p>}
+       {!dateDueProblems.length&&<p className="sip-empty-inline">No LeetCode reattempt currently due. Continue the next targeted problem and log your result in the Dojo.</p>}
       </div>
     </aside>
    </div>
