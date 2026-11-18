@@ -122,8 +122,8 @@ export function getDailyTasks(date,options={}){
  const accelerated=novemberTasks(date,options)||decemberTasks(date,options);
  const techMicros=engineeringLessonsForDate(date);
  const technicalToDos=techMicros.map((lesson,i)=>({id:date+':engineering-micro-'+lesson.id,type:'engineering-micro',
-  category:'engineering',label:(lesson.priority==='core'?'★ Interview-priority · ':'Project-depth · ')+lesson.title,
-  detail:lesson.goal+' Then answer from memory: '+lesson.recall,
+  category:'engineering',label:(lesson.priority==='core'?'P0 · Core · ':'P1 · Supporting · ')+lesson.title,
+  detail:lesson.goal+' · Review on your own; future recall appears as a simple to-do.',
   minutes:18,engineeringMicroId:lesson.id,optional:false}));
  if(accelerated)return options.light?accelerated:[...accelerated,...technicalToDos];
  const sprint={...sprintForDate(date),...(options.sprintOverride||{})},weekday=Math.round((Date.parse(date+'T12:00:00Z')-Date.parse(sprint.monday+'T12:00:00Z'))/86400000);
@@ -132,7 +132,7 @@ export function getDailyTasks(date,options={}){
  const dueLeet=(options.dueProblems||[]).slice(0,2),dueSkills=(options.dueSkills||[]).slice(0,2);
  const dueText=dueLeet.length?'#'+dueLeet[0].id+' '+dueLeet[0].title:'one earlier LeetCode problem (optional)';
  const skillText='the single due micro-concept shown in your memory garden';
- const baseReview=clean('recall','Recall ONE due concept', 'Recall '+skillText+'. If none is due, use the time for one Java mistake. Optional LeetCode: '+dueText+'. Record an honest grade on the concept card.',12,{category:'review',problemId:dueLeet[0]?.id||null});
+ const baseReview=clean('recall','Recall ONE due concept', 'Your due topics are simple checklist reminders. Review independently; no on-screen questions. Optional LeetCode: '+dueText+'.',12,{category:'review',problemId:dueLeet[0]?.id||null});
  const reviewHeavy=sprint.revisionWeek;
  const problemDetail='Recommended: #'+primary+'. State brute force → optimized invariant → code Java → test three edge cases → complexity.';
  const tasks={
