@@ -32,14 +32,15 @@ test('engineering curriculum has atomic cross-stack coverage, distinct IDs, and 
  assert.ok(engineeringLessonsForDate('2027-02-01').length===0);
 });
 test('LeetCode official difficulty is independent of self-reported attempt effort',()=>{
- const first=logProblemAttempt({difficulty:'Hard'},'green','2026-11-18','class Solution {}','','one','struggled');
- const normal=logProblemAttempt({difficulty:'Hard'},'green','2026-11-18','class Solution {}','','one','normal');
- const easy=logProblemAttempt({difficulty:'Hard'},'green','2026-11-18','class Solution {}','','one','easy');
+ const baseline=logProblemAttempt({difficulty:'Hard'},'green','2026-11-16','class Solution {}','','seed','normal');
+ const first=logProblemAttempt(baseline,'green','2026-11-18','class Solution {}','','one','struggled');
+ const normal=logProblemAttempt(baseline,'green','2026-11-18','class Solution {}','','one','normal');
+ const easy=logProblemAttempt(baseline,'green','2026-11-18','class Solution {}','','one','easy');
  assert.equal(first.difficulty,'Hard');
  assert.ok(first.dueDate<normal.dueDate);
  assert.ok(easy.dueDate>normal.dueDate);
- assert.equal(first.history[0].effort,'struggled');
- assert.equal(editProblemAttempt(first,first.history[0].id,{effort:'easy'}).dueDate,easy.dueDate);
+ assert.equal(first.history.at(-1).effort,'struggled');
+ assert.equal(editProblemAttempt(first,first.history.at(-1).id,{effort:'easy'}).dueDate,easy.dueDate);
  assert.equal(problemRecallGap('yellow',0,'struggled'),1);
  assert.equal(problemRecallGap('red',0,'struggled'),1);
 });
