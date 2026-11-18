@@ -68,7 +68,7 @@ test('December implements spaced recall and still includes varied engineering + 
  const tasks=getDailyTasks('2026-12-01',{dueProblems,dueSkills});
  assert.equal(tasks[0].category,'review');
  assert.match(tasks[0].detail,/#27/);
- assert.match(tasks[0].detail,/oldest due concept/);
+ assert.match(tasks[0].detail,/daily to-do/);
  assert.ok(tasks.some(t=>t.category==='leetcode'));
  assert.ok(tasks.some(t=>t.category==='engineering'));
  assert.ok(tasks.some(t=>t.category==='project'));
