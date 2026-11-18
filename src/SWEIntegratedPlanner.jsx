@@ -5,6 +5,7 @@ import {addStudyDays,daysUntil,reviewDue} from './sweStudyLogic.js';
 import {APPLICATION_RULES,DAY_NAMES,DAY_ROLE,MONTH_FOCUS,OFFICIAL_SWE_II,PLAN_START,WEEKLY_SPRINTS,getDailyTasks,monthForDate,planProgress,sprintDates,sprintForDate,weekIndexFor} from './sweIntegratedPlan.js';
 import {NOVEMBER_DAILY} from './sweAcceleratedNovember.js';
 import {DailyMicroConcepts} from './SWEMicroLab.jsx';
+import SWEEngineeringDaily from './SWEEngineeringDaily.jsx';
 import {MICRO_FAMILIES,microLessonForDate,microDueLessons} from './sweMicroConcepts.js';
 import './swe-integrated-plan.css';
 
@@ -19,7 +20,7 @@ const DOMAIN_STYLES={review:'review',dsa:'dsa',leetcode:'leetcode',engineering:'
 function Progress({done,total}){const n=total?Math.round(done/total*100):0;return <div className="sip-progress" role="progressbar" aria-valuemin={0} aria-valuemax={total||1} aria-valuenow={done} aria-label={done+' of '+total+' tasks finished'}><span style={{width:n+'%'}}/></div>}
 function Flag({children,tone='pink'}){return <span className={'sip-flag '+tone}>{children}</span>}
 function monthWeeks(key){const first=key+'-01';if(!/^\d{4}-\d{2}$/.test(key))return [];const initial=sprintForDate(first).monday;return Array.from({length:7},(_,i)=>sprintForDate(addStudyDays(initial,i*7))).filter(w=>w.monday.slice(0,7)===key||w.ends.slice(0,7)===key)}
-function Hero({onGoDaily,view}){return <div className="sip-banner"><span className="sip-eyebrow">✦ THE BIG PICTURE + LITTLE STEPS</span><div className="sip-hero-row"><div><h3>your career, <em>built week by week.</em></h3><p>Not a LeetCode checklist. Every week revisits old coding patterns, introduces one engineering skill, builds your actual project, and moves your career forward.</p></div><div className="sip-sticker" aria-hidden="true">✿<span>REPEAT<br/>BUILD<br/>APPLY</span></div></div><div className="sip-banner-actions">{view!=='daily'&&<button onClick={onGoDaily}>Back to today’s plan <ArrowRight size={14}/></button>}<span>14 DSA families · ongoing micro-recall · LeetCode, engineering and career prep without an end date</span></div></div>}
+function Hero({onGoDaily,view}){return <div className="sip-banner"><span className="sip-eyebrow">✦ THE BIG PICTURE + LITTLE STEPS</span><div className="sip-hero-row"><div><h3>your career, <em>built week by week.</em></h3><p>Not a LeetCode checklist. Every DSA, OOP, backend, database and Angular skill gets its own micro-lesson and recurring recall, while LeetCode adapts to how hard each attempt felt.</p></div><div className="sip-sticker" aria-hidden="true">✿<span>REPEAT<br/>BUILD<br/>APPLY</span></div></div><div className="sip-banner-actions">{view!=='daily'&&<button onClick={onGoDaily}>Back to today’s plan <ArrowRight size={14}/></button>}<span>14 DSA families · ongoing micro-recall · LeetCode, engineering and career prep without an end date</span></div></div>}
 export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems,onOpenProblem,onOpenSection,onGoToDaily,initialDay,today}){
  const initial=isInRange(today)?today:start;
  const [selectedDay,setSelectedDay]=useState(isInRange(initialDay)?initialDay:initial);
@@ -92,6 +93,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
     <article className="sip-summary"><Target size={19}/><span>Next role milestone</span><strong>May ’27</strong><small>Readiness evidence review, not a hiring deadline</small></article>
    </div>
    <DailyMicroConcepts date={selectedDay} today={today} db={db} update={update} light={isLight} onOpenProblem={onOpenProblem} onOpenSection={showSkill}/>
+   <SWEEngineeringDaily date={selectedDay} today={today} db={db} update={update} onOpenProblem={onOpenProblem} onOpenSection={showSkill}/>
    <div className="sip-split">
     <div className="sip-panel sip-main-day">
      <div className="sip-panel-top"><div><span className="sip-eyebrow">✦ YOUR DAY-TO-DAY PLAN</span><h3>{readable(selectedDay)}</h3><p>{todayMicro?.title||NOVEMBER_DAILY[selectedDay]?.title||DAY_ROLE[Math.round((Date.parse(selectedDay+'T12:00:00Z')-Date.parse(chosen.monday+'T12:00:00Z'))/86400000)]?.[0]||'Weekly focus'} · {dayMinutes} essential minutes</p></div><div className="sip-date-nav"><button aria-label="Previous day" onClick={()=>moveDay(-1)} disabled={selectedDay<=start}><ArrowLeft size={16}/></button><input aria-label="Choose a study date" type="date" min={start} value={selectedDay} onChange={e=>{if(isInRange(e.target.value))setSelectedDay(e.target.value)}}/><button aria-label="Next day" onClick={()=>moveDay(1)} ><ArrowRight size={16}/></button></div></div>
