@@ -3,6 +3,14 @@
 import {addStudyDays,REVIEW_GAPS,dateKey} from './sweStudyLogic.js';
 
 export const DIFFICULTIES=['Unrated','Easy','Medium','Hard'];
+export const EFFORTS=['struggled','normal','easy'];
+// Difficulty is the official problem level; effort is how THIS attempt felt.
+export function problemRecallGap(grade,stage,effort='normal'){
+ const base=grade==='red'?1:grade==='yellow'?3:REVIEW_GAPS[Math.max(0,Math.min(REVIEW_GAPS.length-1,stage))];
+ if(effort==='struggled')return grade==='red'?1:Math.max(1,Math.floor(base/2));
+ if(effort==='easy'&&['green','mock'].includes(grade))return Math.min(90,Math.max(2,Math.ceil(base*1.5)));
+ return base;
+}
 export const CONCEPT_GROUPS={
  'Data structures':['Arrays','2D Arrays / Matrix','Strings','HashMap / HashSet','Linked List','Stack','Queue / Deque','Trees / BST','Heap / Priority Queue','Graphs','Trie'],
  'Algorithms & patterns':['Two Pointers','Sliding Window','Prefix Sum','Binary Search','Sorting','Recursion','Backtracking','Greedy','Dynamic Programming','Intervals','Union Find','Bit Manipulation','Math / Digits'],
@@ -67,7 +75,8 @@ function normalizedHistory(history=[]){
  return history.filter(h=>h&&validGrade(h.grade)&&typeof h.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(h.date)).map((h,i)=>({
   ...h,id:h.id||'legacy-'+i+'-'+h.date+'-'+h.grade,
   code:typeof h.code==='string'?h.code:'',
-  notes:typeof h.notes==='string'?h.notes:''
+  notes:typeof h.notes==='string'?h.notes:'',
+  effort:EFFORTS.includes(h.effort)?h.effort:'normal'
  }));
 }
 export function recalcProblem(record={}){
@@ -76,22 +85,23 @@ export function recalcProblem(record={}){
  for(const attempt of sorted){
   grade=attempt.grade;review=attempt.date;
   stage=grade==='red'?0:grade==='yellow'?Math.max(0,stage-1):Math.min(REVIEW_GAPS.length-1,stage+1);
-  const gap=grade==='red'?1:grade==='yellow'?3:REVIEW_GAPS[stage];
+  const gap=problemRecallGap(grade,stage,attempt.effort);
   due=addStudyDays(review,gap);
  }
  return {...record,history:sorted,grade,stage,lastReviewed:review,dueDate:due,attempts:sorted.length};
 }
-export function logProblemAttempt(record={},grade,date,code='',notes='',id){
+export function logProblemAttempt(record={},grade,date,code='',notes='',id,effort='normal'){
+ if(!EFFORTS.includes(effort))throw new Error('Choose a valid effort rating');
  if(!validGrade(grade))throw new Error('Choose an attempt grade: RED, YELLOW, GREEN or MOCK');
  if(!validStudyDate(date))throw new Error('Select a valid attempt date on or before today');
  const history=normalizedHistory(record.history);
  // A double-click on the same grade/date/code is not two distinct attempts.
  const last=history.at(-1);
- if(last?.date===date&&last.grade===grade&&(last.code||'')===code&&(last.notes||'')===notes){
+ if(last?.date===date&&last.grade===grade&&(last.code||'')===code&&(last.notes||'')===notes&&(last.effort||'normal')===effort){
   return recalcProblem({...record,history});
  }
  const newId=id||'attempt-'+date+'-'+Math.random().toString(36).slice(2,10);
- return recalcProblem({...record,history:[...history,{id:newId,date,grade,code,notes}]});
+ return recalcProblem({...record,history:[...history,{id:newId,date,grade,code,notes,effort}]});
 }
 export function editProblemAttempt(record={},attemptId,patch={}){
  const history=normalizedHistory(record.history);
@@ -99,6 +109,7 @@ export function editProblemAttempt(record={},attemptId,patch={}){
  if(!found)return record;
  if(patch.date!==undefined&&!validStudyDate(patch.date))throw new Error('Invalid or future attempt date');
  if(patch.grade!==undefined&&!validGrade(patch.grade))throw new Error('Invalid grade');
+ if(patch.effort!==undefined&&!EFFORTS.includes(patch.effort))throw new Error('Invalid effort');
  return recalcProblem({...record,history:history.map(x=>x.id===attemptId?{...x,...patch}:x)});
 }
 export function deleteProblemAttempt(record={},attemptId){
