@@ -6970,3 +6970,17 @@ export function microGrade(previous={},grade,date){
  const days=grade==='red'?1:grade==='yellow'?3:[1,3,7,14,30,60,90,90][stage];
  return {...previous,grade,stage,lastReviewed:date,dueDate:addStudyDays(date,days),history:[...history,{date,grade,previousStage}],attempts:history.length+1};
 }
+
+// Completing an ordinary to-do records a self-directed review, NOT a passing grade.
+// Maintain the last honest RED/YELLOW/GREEN assessment and schedule the next reminder.
+export function microLogSelfReview(previous={},date){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw new Error('Use YYYY-MM-DD');
+ if(previous.lastReviewed&&date<previous.lastReviewed)throw new Error('Cannot review before a later recorded attempt');
+ if(previous.lastReviewed===date)return previous;
+ const old=Array.isArray(previous.history)?previous.history:[];
+ const grade=previous.grade||'unrated';
+ const defaultGaps={red:1,yellow:3,green:14,mock:30,unrated:7};
+ const days=defaultGaps[grade]||7;
+ return {...previous,grade:previous.grade||null,lastReviewed:date,dueDate:addStudyDays(date,days),
+  history:[...old,{date,activity:'self-review',grade:'reviewed'}],attempts:old.length+1};
+}
