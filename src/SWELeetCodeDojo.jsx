@@ -5,7 +5,7 @@ import {sql,PostgreSQL} from '@codemirror/lang-sql';
 import {CalendarDays,Check,ChevronDown,ChevronRight,ClipboardCheck,Code2,ExternalLink,FileCode2,Filter,History,NotebookPen,Plus,RefreshCcw,RotateCcw,Search,Tag,Trash2} from 'lucide-react';
 import {dateKey} from './sweStudyLogic.js';
 import {sprintForDate,sprintDates,getDailyTasks} from './sweIntegratedPlan.js';
-import {ALL_CONCEPTS,CONCEPT_GROUPS,DIFFICULTIES,attempted,conceptsForProblem,logProblemAttempt,editProblemAttempt,deleteProblemAttempt,filterLeetCodeProblems,recalcProblem,validStudyDate} from './leetcodeStudyModel.js';
+import {ALL_CONCEPTS,CONCEPT_GROUPS,DIFFICULTIES,problemRecallGap,attempted,conceptsForProblem,logProblemAttempt,editProblemAttempt,deleteProblemAttempt,filterLeetCodeProblems,recalcProblem,validStudyDate} from './leetcodeStudyModel.js';
 import './swe-leetcode-dojo.css';
 
 const JAVA_EXT=[java()];
@@ -38,6 +38,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
  const [language,setLanguage]=useState('all');
  const [activeId,setActiveId]=useState(initialProblemId);
  const [attemptDate,setAttemptDate]=useState(today);
+ const [attemptEffort,setAttemptEffort]=useState('normal');
  const [editorTab,setEditorTab]=useState('my');
  const [message,setMessage]=useState('');
  const [addOpen,setAddOpen]=useState(false);
@@ -113,7 +114,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
   const was=record.history?.length||0;
   update(old=>{
    const existing=old.problems?.[chosen.id]||{};
-   const next=logProblemAttempt(existing,grade,attemptDate,existing.workingCode||'',existing.notes||'');
+   const next=logProblemAttempt(existing,grade,attemptDate,existing.workingCode||'',existing.notes||'',undefined,attemptEffort);
    return {problems:{...(old.problems||{}),[chosen.id]:next}};
   });
   setStatus(prev=>prev==='unattempted'||prev==='due'?'prior':prev);
@@ -183,18 +184,19 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
     <div className="sld-tag-heading"><strong>What data structures and concepts does it test?</strong><button type="button" onClick={resetConcepts}><RotateCcw size={12}/> Restore suggested tags</button></div>
     <div className="sld-concept-tags">{(showAllTags?ALL_CONCEPTS:tags.length?tags:ALL_CONCEPTS.slice(0,7)).map(label=><button key={label} type="button" className={'sld-concept-tag '+(tags.includes(label)?'selected':'')} onClick={()=>toggleConcept(label)} aria-pressed={tags.includes(label)}>{tags.includes(label)?'✓ ':'+ '}{label}</button>)}</div>
     <button className="sld-see-tags" onClick={()=>setShowAllTags(v=>!v)}>{showAllTags?'Show only chosen concepts':'Edit / add more concepts'} <ChevronDown size={13}/></button>
-    <div className="sld-attempt-header"><div><span className="sld-overline">ACTUAL PRACTICE LOG</span><h4>Record an attempt or reattempt</h4><p>Pick the day you worked on it. Your grade determines the next spaced review; your code and notes are snapshotted with that attempt.</p></div><CalendarDays size={25}/></div>
+    <div className="sld-attempt-header"><div><span className="sld-overline">ACTUAL PRACTICE LOG</span><h4>Record an attempt or reattempt</h4><p>Pick the date and rate your actual effort. A struggle comes back quickly; an easy independent solve gets more time before recall. Your code and notes stay with every attempt.</p></div><CalendarDays size={25}/></div>
     <label className="sld-attempt-date"><span><CalendarDays size={15}/> Date I worked on this problem</span><input type="date" value={attemptDate} max={today} onChange={e=>setAttemptDate(e.target.value)}/><small>Backdate older attempts instead of falsely logging them today.</small></label>
     <div className="sld-editor-tabs" role="tablist" aria-label="Code notes"><button type="button" role="tab" aria-selected={editorTab==='my'} className={editorTab==='my'?'active':''} onClick={()=>setEditorTab('my')}><Code2 size={15}/> My {chosenLanguage} attempt</button><button type="button" role="tab" aria-selected={editorTab==='reference'} className={editorTab==='reference'?'active':''} onClick={()=>setEditorTab('reference')}><FileCode2 size={15}/> Expected / reference solution</button></div>
     {editorTab==='my'?<CodeNotebook key={'my-'+chosen.id} language={chosenLanguage} label={'My working '+chosenLanguage+' solution'} sub="Write or paste your current code before marking RED / YELLOW / GREEN. The editor autosaves, and each logged attempt keeps a snapshot of this code." value={record.workingCode||''} onChange={value=>changeRecord({workingCode:value})}/>:<CodeNotebook key={'reference-'+chosen.id} language={chosenLanguage} label={'My reference / expected '+chosenLanguage+' solution'} sub="Paste a verified solution or an approach you want to study. It stays separate from your own attempt and does not change your grade." value={record.referenceCode||''} onChange={value=>changeRecord({referenceCode:value})}/>}
     <label className="sld-reflection"><span><NotebookPen size={15}/> My mistake / invariant / edge cases to remember</span><textarea value={record.notes||''} onChange={e=>changeRecord({notes:e.target.value.slice(0,3500)})} rows={4} placeholder="What went wrong? What did the two pointers mean? Which Java syntax will I review next time?"/></label>
+    <div className="sld-difficulty"><label>How difficult was this attempt for YOU?<select aria-label="My effort on this attempt" value={attemptEffort} onChange={e=>setAttemptEffort(e.target.value)}><option value="struggled">Struggled · review sooner</option><option value="normal">Some effort · standard review</option><option value="easy">Felt easy · review later</option></select></label><span className="sld-meta-help">This is different from LeetCode's official Easy / Medium / Hard rating. Each attempt saves its own effort, so improvements automatically change future review spacing.</span></div>
     <div className="sld-rating-title"><strong>How did THIS attempt go?</strong><span>Click once to record the grade + chosen date + current code.</span></div>
     <div className="sld-ratings">{Object.entries(GRADE_DESCRIPTIONS).map(([grade,caption])=><button type="button" key={grade} className={'sld-rating '+grade} onClick={()=>saveAttempt(grade)}><strong>{grade.toUpperCase()}</strong><small>{caption}</small></button>)}</div>
-    <div className="sld-next-review"><RefreshCcw size={17}/><div><strong>{dueLabel}</strong><small>{history.length} logged attempt{history.length===1?'':'s'} · {hasAttempt?'most recent '+displayDate(record.lastReviewed):'first try not yet logged'}. Reviews follow RED → tomorrow, YELLOW → 3 days, and GREEN/MOCK → 1, 3, 7, 14, 30, 60 days with advancing recall.</small></div></div>
+    <div className="sld-next-review"><RefreshCcw size={17}/><div><strong>{dueLabel}</strong><small>{history.length} logged attempt{history.length===1?'':'s'} · {hasAttempt?'most recent '+displayDate(record.lastReviewed):'first try not yet logged'}. Your own effort changes review timing: struggled returns earlier, independent easy solves return later. RED and YELLOW remain urgent; successful recall advances through 1, 3, 7, 14, 30 and 60 days.</small></div></div>
     <section className="sld-history"><div className="sld-history-title"><div><History size={17}/><h4>Every attempt, every date</h4></div><span>{history.length} saved</span></div>
      {!history.length?<div className="sld-empty-history">Your first entry will appear here. Dates, grades, old code and reflections stay attached to each attempt so you can see improvement over time.</div>:
      [...history].reverse().map((event,i)=><div className="sld-history-item" key={event.id||i}><div className="sld-history-top"><div><GradePill grade={event.grade}/><strong>{displayDate(event.date)}</strong><small>{i===0?'Latest attempt':'Earlier attempt'}</small></div><button className="sld-delete" title="Delete this attempt" aria-label={'Delete attempt on '+event.date} onClick={()=>removeAttempt(event.id)}><Trash2 size={15}/></button></div>
-      <div className="sld-history-edit"><label>Correct this date<input type="date" value={event.date} max={today} onChange={e=>modifyAttempt(event.id,{date:e.target.value})}/></label><label>Correct this grade<select value={event.grade} onChange={e=>modifyAttempt(event.id,{grade:e.target.value})}>{Object.keys(GRADE_DESCRIPTIONS).map(g=><option key={g} value={g}>{g.toUpperCase()}</option>)}</select></label></div>
+      <div className="sld-history-edit"><label>Correct this date<input type="date" value={event.date} max={today} onChange={e=>modifyAttempt(event.id,{date:e.target.value})}/></label><label>Correct this grade<select value={event.grade} onChange={e=>modifyAttempt(event.id,{grade:e.target.value})}>{Object.keys(GRADE_DESCRIPTIONS).map(g=><option key={g} value={g}>{g.toUpperCase()}</option>)}</select></label><label>Effort<select value={event.effort||'normal'} onChange={e=>modifyAttempt(event.id,{effort:e.target.value})}><option value="struggled">Struggled</option><option value="normal">Some effort</option><option value="easy">Felt easy</option></select></label></div>
       <details><summary>Code and reflection from this attempt <ChevronDown size={13}/></summary><label>My code snapshot<pre className="sld-code-snapshot">{event.code||'No code was saved with this attempt.'}</pre></label><label>My note for this attempt<textarea rows={3} value={event.notes||''} onChange={e=>modifyAttempt(event.id,{notes:e.target.value.slice(0,3500)})} placeholder="An important mistake, tricky test or better approach…"/></label></details>
      </div>)}
     </section>
