@@ -5,6 +5,7 @@ import {sql,PostgreSQL} from '@codemirror/lang-sql';
 import {CalendarDays,Check,ChevronDown,ChevronRight,ClipboardCheck,Code2,ExternalLink,FileCode2,Filter,History,NotebookPen,Plus,RefreshCcw,RotateCcw,Search,Tag,Trash2} from 'lucide-react';
 import {dateKey} from './sweStudyLogic.js';
 import {sprintForDate,sprintDates,getDailyTasks} from './sweIntegratedPlan.js';
+import {priorityForProblem,INTERVIEW_PRIORITIES} from './sweInterviewPriorities.js';
 import {ALL_CONCEPTS,CONCEPT_GROUPS,DIFFICULTIES,problemRecallGap,attempted,conceptsForProblem,logProblemAttempt,editProblemAttempt,deleteProblemAttempt,filterLeetCodeProblems,recalcProblem,validStudyDate} from './leetcodeStudyModel.js';
 import './swe-leetcode-dojo.css';
 
@@ -48,13 +49,17 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
  const [draftLanguage,setDraftLanguage]=useState('Java');
  const [showAllTags,setShowAllTags]=useState(false);
  const [historyExpanded,setHistoryExpanded]=useState(false);
- const [sort,setSort]=useState('curriculum');
+ const [sort,setSort]=useState('priority');
  const currentSprint=sprintForDate(today);
  const firstAttempts=[...new Set(sprintDates(currentSprint).flatMap(day=>getDailyTasks(day).filter(t=>t.problemId).map(t=>t.problemId)))].filter(id=>!attempted(db.problems?.[id]));
  const records=db.problems||{};
  const filtered=useMemo(()=>filterLeetCodeProblems(allProblems,records,{search,phase,status,concept,difficulty,language,today,firstAttempts}),[allProblems,records,search,phase,status,concept,difficulty,language,today,firstAttempts.join(',')]);
  const ordered=useMemo(()=>{
   const arr=[...filtered];
+  if(sort==='priority')arr.sort((a,b)=>{
+   const rank=p=>{const r=records[p.id]||{};const due=attempted(r)&&r.dueDate<=today;return (due?0:attempted(r)?2:1)+(r.grade==='red'?-0.3:r.grade==='yellow'?-0.1:0)+(priorityForProblem(p,r)==='P0'?0:0.5)};
+   return rank(a)-rank(b)||String(records[a.id]?.dueDate||'9999').localeCompare(String(records[b.id]?.dueDate||'9999'));
+  });
   if(sort==='last')arr.sort((a,b)=>(records[b.id]?.lastReviewed||'').localeCompare(records[a.id]?.lastReviewed||''));
   if(sort==='id')arr.sort((a,b)=>a.id-b.id);
   if(sort==='due')arr.sort((a,b)=>{
@@ -62,7 +67,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
    return aDate.localeCompare(bDate);
   });
   return arr;
- },[filtered,records,sort]);
+ },[filtered,records,sort,today]);
  const chosen=allProblems.find(p=>String(p.id)===String(activeId))||ordered[0]||null;
  const record=chosen?records[chosen.id]||{}:{};
  const history=recalcProblem(record).history;
@@ -146,7 +151,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
  const chosenLanguage=chosen?.language||'Java';
  const dueLabel=due?'Due now'+(record.dueDate?' (since '+displayDate(record.dueDate)+')':''):suggestedFirst?'Planned first attempt this week':record.dueDate?'Next recall '+displayDate(record.dueDate):'No scheduled review yet';
  return <div className="sld-wrap">
-  <header className="sld-page-heading"><div><span className="sld-kicker">✿ A REAL CODING LAB · MEMORY OVER STREAKS</span><h3>your LeetCode <em>study archive.</em></h3><p>Choose an attempt date, save Java or SQL solutions, tag the concepts, and keep every redo. Only your recorded attempts count as attempted.</p></div><div className="sld-counters"><span><strong>{countAttempted}</strong> attempted</span><span><strong>{countNotAttempted}</strong> not yet</span><span><strong>{countDue}</strong> due reviews</span></div></header>
+  <header className="sld-page-heading"><div><span className="sld-kicker">✿ A REAL CODING LAB · MEMORY OVER STREAKS</span><h3>your LeetCode <em>study archive.</em></h3><p>Highest interview priority: independent Java coding, fresh variations, edge cases, and RED/struggled reattempts. Difficulty and your personal effort separately control what comes back. P0/P1 are evidence-informed planning tiers, not actual Google question frequencies.</p></div><div className="sld-counters"><span><strong>{countAttempted}</strong> attempted</span><span><strong>{countNotAttempted}</strong> not yet</span><span><strong>{countDue}</strong> due reviews</span></div></header>
   {message&&<div role="status" className="sld-notice">{message}<button onClick={()=>setMessage('')} aria-label="Dismiss message">×</button></div>}
   <div className="sld-grid"><aside className="swe-paper sld-browser">
    <div className="sld-browser-top"><div><Search size={15}/><input type="search" aria-label="Search LeetCode questions" placeholder="Find a problem, number or pattern…" value={search} onChange={e=>chooseFilter(setSearch,e.target.value)}/></div><span>{ordered.length} matching</span></div>
@@ -156,7 +161,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
     <label>Data structure / concept<select aria-label="Filter by data structure or concept" value={concept} onChange={e=>chooseFilter(setConcept,e.target.value)}><option value="all">All data structures and patterns</option>{Object.entries(CONCEPT_GROUPS).map(([group,values])=><optgroup label={group} key={group}>{values.map(value=><option value={value} key={value}>{value}</option>)}</optgroup>)}</select></label>
     <label>Language<select aria-label="Filter by question language" value={language} onChange={e=>chooseFilter(setLanguage,e.target.value)}><option value="all">Java + SQL</option><option value="Java">Java / DSA</option><option value="SQL">SQL</option></select></label>
     <label>Difficulty<select aria-label="Filter by difficulty" value={difficulty} onChange={e=>chooseFilter(setDifficulty,e.target.value)}>{LEVELS.map(([value,label])=><option value={value} key={value}>{label}</option>)}</select></label>
-    <label>Sort<select aria-label="Sort LeetCode problems" value={sort} onChange={e=>setSort(e.target.value)}><option value="curriculum">Curriculum order</option><option value="last">Latest attempt first</option><option value="due">Next review date</option><option value="id">Problem number</option></select></label>
+    <label>Sort<select aria-label="Sort LeetCode problems" value={sort} onChange={e=>setSort(e.target.value)}><option value="priority">Interview priority + due reviews</option><option value="curriculum">Curriculum order</option><option value="last">Latest attempt first</option><option value="due">Next review date</option><option value="id">Problem number</option></select></label>
    </div>
    {status==='due'&&<p className="sld-filter-explain">Shows scheduled reattempts that are due <strong>plus your 3 first-try suggestions for this week</strong>. Use Not attempted for the complete unattempted library.</p>}
    {status==='prior'&&<p className="sld-filter-explain">Only questions with at least one RED / YELLOW / GREEN / MOCK attempt you actually saved appear here. Your earlier discussed questions aren't automatically marked attempted.</p>}
@@ -165,7 +170,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
     const badges=conceptsForProblem(p,r);
     return <button type="button" key={p.id} className={'sld-problem '+(selectedId===p.id?'selected':'')} onClick={()=>choose(p)}>
      <span className="sld-problem-num">#{p.id}</span><span className="sld-problem-details"><strong>{p.title}</strong><small>{badges.slice(0,2).join(' · ')||p.pattern}</small><span>{has?'Last attempt '+displayDate(r.lastReviewed||r.history?.at(-1)?.date):isDue?'Due':'Not attempted'}</span></span>
-     <span className="sld-row-right"><GradePill grade={has?r.grade:null}/><small>{r.difficulty||p.difficulty||'Unrated'} · {p.language||'Java'}</small></span>
+     <span className="sld-row-right"><GradePill grade={has?r.grade:null}/><small>{priorityForProblem(p,r)} · {r.difficulty||p.difficulty||'Unrated'} · {p.language||'Java'}</small></span>
     </button>;
    })}{!ordered.length&&<div className="sld-no-results"><Filter size={20}/><strong>No problems match</strong><p>Try clearing the concept, difficulty or status filter.</p><button onClick={()=>{setSearch('');setConcept('all');setDifficulty('all');setLanguage('all');setPhase('all');setStatus('all')}}>Clear filters</button></div>}</div>
    <div className="sld-new-problem">
@@ -175,7 +180,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
   </aside>
   <main className="swe-paper sld-detail">
    {chosen?<>
-    <div className="sld-detail-top"><span className="sld-overline">LEETCODE #{chosen.id} · {chosen.phase||'PERSONAL'} · {chosenLanguage}</span><GradePill grade={currentGrade}/></div>
+    <div className="sld-detail-top"><span className="sld-overline">{priorityForProblem(chosen,record)} · LEETCODE #{chosen.id} · {chosen.phase||'PERSONAL'} · {chosenLanguage}</span><GradePill grade={currentGrade}/></div>
     <h3>{chosen.title}</h3><div className="sld-subtitle">{chosen.pattern} · {hasAttempt?history.length+' actual attempt'+(history.length===1?'':'s'):'not attempted yet'}</div>
     <a className="sld-open" href={linkFor(chosen)} target="_blank" rel="noopener noreferrer"><ExternalLink size={15}/> Open in LeetCode</a>
     {chosen.prior&&!hasAttempt&&<p className="sld-prior-note">✎ This problem appeared in our earlier practice notes, but you haven't logged a dated attempt here yet. It stays under Not attempted until you record one.</p>}
