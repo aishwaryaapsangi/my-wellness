@@ -218,3 +218,112 @@ body{
   width:57%;max-width:210px;height:auto;
  }
 }
+
+/* REAL PAINTED ART ASSETS — one high-resolution transparent WebP per section.
+   The hand-painted texture is in the image itself. No artificial grain filters,
+   CSS SVG facsimiles, duplicate art, or enlarged tiny thumbnails. */
+.app-shell .hero.editorial-cover img.pastel-hero-art {
+ display:block;
+ position:relative;
+ justify-self:center;
+ align-self:center;
+ width:min(32vw,365px);
+ height:auto;
+ max-height:355px;
+ object-fit:contain;
+ object-position:center;
+ margin:10px 24px 0 0;
+ opacity:1;
+ transform:rotate(-2deg);
+ filter:none;
+ mix-blend-mode:normal;
+ z-index:2;
+}
+.app-shell .hero.editorial-cover .hero-sticker {
+ top:auto;
+ right:auto;
+ left:clamp(22px,5vw,80px);
+ bottom:13px;
+ width:67px;
+ height:67px;
+ padding:7px;
+ border:1px solid #d9b7b7;
+ box-shadow:none;
+ transform:rotate(-7deg);
+ font-size:11px;
+ line-height:1.08;
+ z-index:4;
+}
+.app-shell .studio-tile img.pastel-studio-art {
+ display:block;
+ object-fit:contain;
+ object-position:center;
+ position:absolute;
+ z-index:1;
+ opacity:1;
+ filter:none;
+ mix-blend-mode:normal;
+ transition:transform .2s ease;
+}
+.app-shell .studio-tile--pink img.pastel-studio-art {
+ width:min(61%,275px);
+ height:auto;
+ max-height:292px;
+ right:3%;
+ bottom:26px;
+ transform:rotate(-3deg);
+}
+.app-shell .studio-tile--blue img.pastel-studio-art {
+ width:min(53%,228px);
+ height:auto;
+ max-height:168px;
+ right:2%;
+ bottom:24px;
+ transform:rotate(3deg);
+}
+.app-shell .studio-tile:hover img.pastel-studio-art {
+ transform:translateY(-3px) rotate(0deg);
+}
+.app-shell[data-section="swe"] img.swe-cover-laptop.pastel-swe-art {
+ display:block;
+ width:min(100%,355px);
+ height:auto;
+ max-height:260px;
+ object-fit:contain;
+ filter:none;
+ opacity:1;
+}
+.app-shell .daily-heading::after,
+.app-shell[data-section="swe"] .sip-panel-top::after { content:none!important;display:none!important; }
+@media(max-width:800px) {
+ .app-shell .hero.editorial-cover img.pastel-hero-art {
+  width:min(34vw,285px);max-height:300px;margin-right:6px;
+ }
+}
+@media(max-width:620px) {
+ .app-shell .hero.editorial-cover img.pastel-hero-art {
+  position:absolute;
+  right:1%;
+  bottom:12px;
+  width:235px;
+  height:auto;
+  max-height:225px;
+  margin:0;
+  transform:rotate(-2deg);
+ }
+ .app-shell .hero.editorial-cover .hero-sticker {
+  left:16px;bottom:22px;right:auto;top:auto;width:59px;height:59px;font-size:9px;
+ }
+ .app-shell .studio-tile--pink img.pastel-studio-art {
+  width:min(65%,253px);right:2%;bottom:17px;
+ }
+ .app-shell .studio-tile--blue img.pastel-studio-art {
+  width:min(52%,208px);right:3%;bottom:13px;
+ }
+ .app-shell[data-section="swe"] img.swe-cover-laptop.pastel-swe-art {
+  width:min(100%,310px);max-height:220px;
+ }
+}
+@media(prefers-reduced-motion:reduce) {
+ .app-shell .studio-tile img.pastel-studio-art{transition:none!important}
+}
