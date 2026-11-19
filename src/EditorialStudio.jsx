@@ -36,6 +36,18 @@ export function RetroLaptopArt({className=''}) {
  <path d="M38 47l5-18 7 18 18 5-18 7-7 19-5-19-17-7Z" fill="#34A853"/>
  </svg>;
 }
+export function StudioRibbon({variant='rose'}) {
+ const google=variant==='google';
+ return <div className={'studio-ribbon studio-ribbon--'+variant} aria-hidden="true">
+  <svg viewBox="0 0 1160 115" preserveAspectRatio="none" focusable="false">
+   <defs><path id={'studio-ribbon-path-'+variant} d="M-40 68C120 10 220 15 370 67S650 112 800 55S1050 7 1200 58"/></defs>
+   <path d="M-40 68C120 10 220 15 370 67S650 112 800 55S1050 7 1200 58" stroke={google?'#FBBC05':'#F2D88F'} strokeWidth="56" strokeLinecap="round" fill="none"/>
+   <text fill={google?'#315E83':'#9C3E53'} fontSize="16" fontWeight="900" letterSpacing="3.5" fontFamily="DM Sans, sans-serif">
+    <textPath href={'#studio-ribbon-path-'+variant} startOffset="1%">{google?'CODE • CREATE • LEARN • GROW • GOOGLE SWE STUDIO • CODE • CREATE •':'LITTLE RITUALS • BIG BLOOMS • MAKE IT YOURS • LITTLE RITUALS • BIG BLOOMS •'}</textPath>
+   </text>
+  </svg>
+ </div>;
+}
 export function EditorialStudioStrip({onNavigate}) {
  return <section className="studio-strip" aria-label="Explore your personal studio">
   <div className="studio-strip-heading"><div><span className="studio-eyebrow">✳ THE LITTLE STUDIO INDEX</span><h2>your world, <em>in full color.</em></h2></div><p>A little joy in the everyday. Pick a chapter and make it your own.</p></div>
