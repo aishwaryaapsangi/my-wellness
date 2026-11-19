@@ -488,3 +488,56 @@
  .app-shell[data-section="today"] .studio-tile--pink svg.studio-vector-teacups {width:42%;max-width:175px;right:5%;bottom:23px}
  .app-shell[data-section="today"] .studio-tile--blue svg.studio-vector-dino {width:30%;max-width:120px;right:6%;bottom:19px}
 }
+
+
+/* Pixel-art Home triptych: same crisp grid, same blush/cream/butter palette. */
+.app-shell[data-section="today"] .studio-tile svg.studio-vector-art {
+ shape-rendering:crispEdges;
+ overflow:visible;
+ image-rendering:pixelated;
+}
+.app-shell[data-section="today"] .studio-tile--pink svg.studio-vector-teacups {
+ width:min(47%,172px);
+ max-width:172px;
+ height:auto;
+ right:7%;
+ bottom:28px;
+}
+.app-shell[data-section="today"] .studio-tile--blue svg.studio-vector-dino {
+ width:min(35%,135px);
+ max-width:135px;
+ height:auto;
+ right:7%;
+ bottom:25px;
+}
+.app-shell[data-section="today"] .studio-tile--butter svg.studio-vector-calendar {
+ width:108px;
+ max-width:34%;
+ height:auto;
+ right:6%;
+ top:22px;
+ bottom:auto;
+ transform:rotate(4deg)!important;
+}
+/* The top line is a bold editorial headline; preserve the softer italic second line. */
+.app-shell[data-section="today"] .hero.editorial-cover h1 {
+ font-family:var(--art-display,'Bricolage Grotesque',sans-serif);
+ font-weight:800;
+ letter-spacing:-.075em;
+}
+.app-shell[data-section="today"] .hero.editorial-cover h1 em {
+ font-family:var(--art-editorial,'Young Serif',Georgia,serif);
+ font-weight:400;
+ letter-spacing:-.065em;
+}
+@media(max-width:620px){
+ .app-shell[data-section="today"] .studio-tile--pink svg.studio-vector-teacups {
+  width:37%;max-width:144px;bottom:20px;right:7%;
+ }
+ .app-shell[data-section="today"] .studio-tile--blue svg.studio-vector-dino {
+  width:32%;max-width:116px;bottom:18px;right:6%;
+ }
+ .app-shell[data-section="today"] .studio-tile--butter svg.studio-vector-calendar {
+  width:98px;max-width:32%;right:7%;top:35px;
+ }
+}
