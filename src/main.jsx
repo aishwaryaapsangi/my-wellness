@@ -6,4 +6,5 @@ import './editorial-theme.css';
 import './retro-refresh.css';
 import './editorial-composition.css';
 import './art-direction-2026.css';
+import './pastel-artwork.css';
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
