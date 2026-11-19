@@ -73,3 +73,63 @@ export function JavaStudySketch({className=''}) {
   <path d="m347 118 6-18 7 18 16 5-17 7-7 17-6-17-17-7Z" fill="#EAC983" opacity=".75"/>
  </svg>;
 }
+
+export function JournalMorningSketch({className=''}) {
+ const id='journal-';
+ return <svg className={className} viewBox="0 0 420 340" role="img" aria-label="Soft pencil-style sketch of a pink journal, tea, and little flowers">
+  <Filters id={id}/>
+  <g filter={'url(#'+id+'paper)'} strokeLinecap="round" strokeLinejoin="round" stroke="#B18A83" strokeWidth="2">
+   <ellipse cx="206" cy="301" rx="157" ry="16" fill="#DDBBBB" opacity=".22" stroke="none"/>
+   <path d="M62 193q-3-12 13-16l115-21q14-2 26 6l28 19 95-12q15 0 16 15l7 105q-2 11-13 13l-118-4q-12-1-19-8l-116 12q-10 0-14-11Z" fill="#E4AEBB"/>
+   <path d="M73 180q57-22 129-18l11 18 24-12q50-14 110 5l6 109q-66-14-126 5-70-10-142 9Z" fill={'url(#'+id+'cream)'}/>
+   <path d="M215 180q-3 55 12 107" fill="none" stroke="#BD9996" strokeWidth="3"/>
+   <path d="M104 212l79-17m-73 36 69-13m-62 30 58-16m-46 30 52-12M260 210l67-9m-61 23 61-10m-53 29 50-9" fill="none" stroke="#C6ADB5" strokeWidth="2.2" opacity=".8"/>
+   <path d="M135 275q12-16 22-2 8-15 22-8" fill="none" stroke="#D18DAB" strokeWidth="3"/>
+   <path d="M278 264q10-16 20-3 15-17 24 1" fill="none" stroke="#B6C59E" strokeWidth="3"/>
+   <path d="M84 86q-12-15 6-23l93-2q23 3 20 21l-5 46q-4 20-53 20-42 1-53-17Z" fill={'url(#'+id+'blue)'}/>
+   <ellipse cx="144" cy="73" rx="61" ry="17" fill="#FFF2D5"/>
+   <ellipse cx="144" cy="73" rx="51" ry="10" fill="#AD8167"/>
+   <path d="M197 91q30-14 34 10 3 21-33 21" stroke="#AAC2D0" strokeWidth="14" fill="none"/>
+   <path d="M197 91q27-10 28 9 1 14-27 14" stroke="#F3F5E9" strokeWidth="8" fill="none"/>
+   <path d="M126 51q-7-11 2-21m25 22q13-13 4-25" fill="none" stroke="#C8B1A0" strokeWidth="3.5"/>
+   <path d="M316 80l11 91 45-4-8-92Z" fill="#EFD4BC"/>
+   <ellipse cx="344" cy="78" rx="26" ry="10" fill="#F7DECB"/>
+   <path d="M341 74q-22-15-22-35m22 35q18-20 17-43" fill="none" stroke="#98AC88" strokeWidth="5"/>
+   <path d="M324 44q-11-9-23-2 0 18 19 16m31-25q19-8 23 1-5 18-22 15" fill="#D8A9B9"/>
+   <path d="M330 59q-19-10-29 1 5 18 22 14" fill="#E6C1CC"/>
+  </g>
+  <path d="m263 43 5-10 5 10 13 3-13 5-5 12-5-12-13-5Z" fill="#EBCF8A"/>
+  <path d="m48 145 5-10 5 10 12 4-12 5-5 11-5-11-12-5Z" fill="#E5B1C3"/>
+ </svg>;
+}
+
+export function CozyCodingCoverSketch({className=''}) {
+ const id='cover-';
+ return <svg className={className} viewBox="0 0 480 355" role="img" aria-label="Pastel sketch of a laptop showing Java code beside a notebook, mug, and desk flowers">
+  <Filters id={id}/>
+  <g filter={'url(#'+id+'paper)'} stroke="#9F8584" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+   <path d="M70 281q65-20 170-7 131 7 180-2l5 32q-166 28-342 3Z" fill="#E9CCB7" stroke="none"/>
+   <g transform="rotate(-5 217 161)">
+    <rect x="104" y="76" width="250" height="160" rx="15" fill="#DAB0C1" stroke="#AA849B" strokeWidth="4"/>
+    <rect x="117" y="88" width="223" height="134" rx="6" fill="#FFF7E7" stroke="none"/>
+    <path d="M119 91h220v27H119Z" fill="#BED3E2" stroke="none"/>
+    <circle cx="133" cy="105" r="4" fill="#D697A7" stroke="none"/><circle cx="147" cy="105" r="4" fill="#EDD18E" stroke="none"/><circle cx="161" cy="105" r="4" fill="#AFBD9B" stroke="none"/>
+    <path d="M170 152l-18 16 18 16m60-32 18 16-18 16" fill="none" stroke="#A97F91" strokeWidth="8"/>
+    <path d="M208 145l-17 47" fill="none" stroke="#DBB773" strokeWidth="5"/>
+    <path d="M269 156h47m-47 15h37m-37 15h44" fill="none" stroke="#9CAFA4" strokeWidth="4" opacity=".9"/>
+    <path d="M89 238h278l24 19q-151 19-322 0Z" fill="#BFD0DE" stroke="#96A9B5" strokeWidth="3"/>
+    <path d="M211 240h50l7 6h-63Z" fill="#FFF7EB" stroke="none"/>
+   </g>
+   <path d="M45 216q5-10 13-9h62q10 1 12 12l-4 51q-17 24-70 11Z" fill={'url(#'+id+'yellow)'}/>
+   <ellipse cx="90" cy="213" rx="44" ry="11" fill="#FFF2DA"/>
+   <path d="M126 233q32-7 32 15 0 20-29 15" fill="none" stroke="#D1B084" strokeWidth="11"/>
+   <path d="M74 253q10-14 20-4 8-9 18 0" fill="none" stroke="#D99EA7" strokeWidth="4"/>
+   <path d="M376 212q12-14 26-1l25 56-78 3Z" fill="#F7E6D5"/>
+   <path d="M366 212q25-16 49 0" fill="none" stroke="#EAB8BF" strokeWidth="7"/>
+   <path d="M365 208q-2-25-16-42m18 43q18-32 27-49m-25 49q0-32 5-55" fill="none" stroke="#94AC87" strokeWidth="4.5"/>
+   <path d="M347 161q-20-15-29-1 7 22 29 14m34-20q19-17 30-4-3 23-27 21m-11-22q-3-19 12-18 17 7 1 22" fill="#E4ADBC" stroke="#B78D9B" strokeWidth="1.2"/>
+   <path d="M346 277q-25 2-36 17l93 3q8-8 2-14Z" fill="#9EAD92" stroke="none"/>
+  </g>
+  <path d="m76 128 6-14 6 14 13 5-13 6-6 14-6-14-13-6Z" fill="#E6BE81" opacity=".8"/>
+ </svg>;
+}
