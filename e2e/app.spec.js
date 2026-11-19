@@ -75,11 +75,13 @@ test('four unique high resolution watercolor WebP assets load on their matching 
  await expect(page.locator('.daily-heading')).toBeVisible();
  const floating=await page.locator('.daily-heading').evaluate(el=>getComputedStyle(el,'::after').content);
  expect(floating).toBe('none');
- // The little hero sticker must never obscure the painting.
+ // The small "a little every day" sticker must never cover the working Today button or title.
  const overlap=await page.evaluate(()=>{
   const a=document.querySelector('.hero .hero-sticker').getBoundingClientRect();
-  const b=document.querySelector('.hero img.pastel-hero-art').getBoundingClientRect();
-  return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
+  return [...document.querySelectorAll('.hero .btn-hero,.hero h1')].some(el=>{
+   const b=el.getBoundingClientRect();
+   return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
+  });
  });
  expect(overlap).toBe(false);
  await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
@@ -88,4 +90,29 @@ test('four unique high resolution watercolor WebP assets load on their matching 
  await expect.poll(()=>code.evaluate(el=>el.complete&&el.naturalWidth>=1100)).toBe(true);
  expect(srcs).not.toContain(await code.evaluate(el=>el.currentSrc));
  await expect(page.locator('.swe-tabs')).toBeVisible();
+});
+
+test('wellness hero and little rituals ribbon are Home-only; finance and Google keep own banners',async({page})=>{
+ await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('.hero.editorial-cover')).toBeVisible();
+ const scene=page.locator('img.wellness-home-scene');
+ await expect(scene).toBeVisible();
+ await expect.poll(()=>scene.evaluate(el=>el.complete&&el.naturalWidth>=1400)).toBe(true);
+ const flowers=page.locator('img.wellness-hero-flower');
+ await expect(flowers).toHaveCount(1);
+ await expect.poll(()=>flowers.evaluate(el=>el.complete&&el.naturalWidth>100)).toBe(true);
+ await page.locator('.nav-links').getByRole('button',{name:'Calendar'}).click();
+ await expect(page.locator('.app-shell')).toHaveAttribute('data-section','calendar');
+ await expect(page.locator('.hero.editorial-cover')).toHaveCount(0);
+ await expect(page.locator('.studio-ribbon--rose')).toHaveCount(0);
+ await page.locator('.nav-links').getByRole('button',{name:'Mind & social'}).click();
+ await expect(page.locator('.app-shell')).toHaveAttribute('data-section','social');
+ await expect(page.locator('.hero.editorial-cover')).toHaveCount(0);
+ await page.locator('.nav-links').getByRole('button',{name:/Money Garden/}).click();
+ await expect(page.locator('.app-shell')).toHaveAttribute('data-section','money');
+ await expect(page.locator('.hero.editorial-cover')).toHaveCount(0);
+ await page.locator('.nav-links').getByRole('button',{name:/SWE Glow-Up/}).click();
+ await expect(page.locator('.app-shell')).toHaveAttribute('data-section','swe');
+ await expect(page.locator('.swe-hero')).toBeVisible();
+ await expect(page.locator('.hero.editorial-cover')).toHaveCount(0);
 });
