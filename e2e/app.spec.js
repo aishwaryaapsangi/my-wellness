@@ -60,3 +60,15 @@ test('editorial studio cards navigate without replacing existing app tools',asyn
  await page.locator('.google-shelf-card--yellow').click();
  await expect(page.locator('.sip-task-list')).toBeVisible();
 });
+
+test('pastel sketch assets load on their matching pages',async({page})=>{
+ await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
+ const wellness=page.locator('img.pastel-hero-art');
+ await expect(wellness).toBeVisible();
+ await expect.poll(()=>wellness.evaluate(el=>el.complete&&el.naturalWidth>0)).toBe(true);
+ await expect(page.locator('img.pastel-studio-art')).toHaveCount(2);
+ await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
+ const swe=page.locator('img.pastel-swe-art');
+ await expect(swe).toBeVisible();
+ await expect.poll(()=>swe.evaluate(el=>el.complete&&el.naturalWidth>0)).toBe(true);
+});
