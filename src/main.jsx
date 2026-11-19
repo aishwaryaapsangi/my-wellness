@@ -4,4 +4,5 @@ import App from './App.jsx';
 import './styles.css';
 import './editorial-theme.css';
 import './retro-refresh.css';
+import './editorial-composition.css';
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
