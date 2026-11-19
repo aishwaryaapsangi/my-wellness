@@ -61,21 +61,18 @@ test('editorial studio cards navigate without replacing existing app tools',asyn
  await expect(page.locator('.sip-task-list')).toBeVisible();
 });
 
-test('four unique high resolution watercolor WebP assets load on their matching pages',async({page})=>{
+test('Home uses one painted hero and three code-built minimal card illustrations',async({page})=>{
  await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
  const hero=page.locator('img.pastel-hero-art');
  await expect(hero).toBeVisible();
  await expect.poll(()=>hero.evaluate(el=>el.complete&&el.naturalWidth>=900)).toBe(true);
- const studio=page.locator('img.pastel-studio-art');
- await expect(studio).toHaveCount(2);
- const srcs=await page.locator('img.pastel-hero-art, img.pastel-studio-art').evaluateAll(nodes=>nodes.map(el=>el.currentSrc));
- expect(new Set(srcs).size).toBe(3);
- for(const src of srcs){expect(src).toContain('.webp')}
- await expect.poll(()=>studio.evaluateAll(nodes=>nodes.every(el=>el.complete&&el.naturalWidth>=780))).toBe(true);
+ await expect(page.locator('.studio-tile--pink svg.studio-vector-teacups')).toBeVisible();
+ await expect(page.locator('.studio-tile--blue svg.studio-vector-dino')).toBeVisible();
+ await expect(page.locator('.studio-tile--butter .studio-date-art--minimal')).toBeVisible();
+ await expect(page.locator('.studio-tile img')).toHaveCount(0);
  await expect(page.locator('.daily-heading')).toBeVisible();
  const floating=await page.locator('.daily-heading').evaluate(el=>getComputedStyle(el,'::after').content);
  expect(floating).toBe('none');
- // The small "a little every day" sticker must never cover the working Today button or title.
  const overlap=await page.evaluate(()=>{
   const a=document.querySelector('.hero .hero-sticker').getBoundingClientRect();
   return [...document.querySelectorAll('.hero .btn-hero,.hero h1')].some(el=>{
@@ -88,7 +85,6 @@ test('four unique high resolution watercolor WebP assets load on their matching 
  const code=page.locator('img.pastel-swe-art');
  await expect(code).toBeVisible();
  await expect.poll(()=>code.evaluate(el=>el.complete&&el.naturalWidth>=1100)).toBe(true);
- expect(srcs).not.toContain(await code.evaluate(el=>el.currentSrc));
  await expect(page.locator('.swe-tabs')).toBeVisible();
 });
 
