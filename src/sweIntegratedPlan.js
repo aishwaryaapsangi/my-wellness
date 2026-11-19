@@ -124,7 +124,7 @@ function withFreshProblem(tasks,date,options){
  if(!Object.prototype.hasOwnProperty.call(options,'newProblem'))return tasks;
  const fresh=options.newProblem;
  const filtered=tasks.filter(t=>!(t.category==='leetcode'&&t.type!=='sql-practice'&&t.type!=='sql-drill'&&t.type!=='leet-due'))
-  .map(t=>t.category==='review'?{...t,problemId:null,detail:'Self-review due micro-topics from the to-do list. LeetCode reattempts are separately scheduled only when genuinely due.'}:t);
+  .map(t=>t.category==='review'?{...t,problemId:null,detail:'Self-review due micro-topics from the to-do list. LeetCode reattempts are separately scheduled only when genuinely due.'}:t.category!=='leetcode'&&t.problemId?{...t,problemId:null}:t);
  if(fresh){filtered.unshift({id:date+':fresh-leetcode',type:'fresh-leetcode',category:'leetcode',
   label:'★ NEW LeetCode #'+fresh.id+' · '+fresh.title,
   detail:'First attempt · '+(fresh.difficulty||'unrated')+' · '+(fresh.pattern||'current DSA family')+'. Code independently in Java, test edge cases and log the actual effort in Dojo.',
