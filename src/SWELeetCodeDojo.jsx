@@ -5,6 +5,8 @@ import {sql,PostgreSQL} from '@codemirror/lang-sql';
 import {CalendarDays,Check,ChevronDown,ChevronRight,ClipboardCheck,Code2,ExternalLink,FileCode2,Filter,History,NotebookPen,Plus,RefreshCcw,RotateCcw,Search,Tag,Trash2} from 'lucide-react';
 import {dateKey} from './sweStudyLogic.js';
 import {sprintForDate,sprintDates,getDailyTasks} from './sweIntegratedPlan.js';
+import {selectNewLeetCode} from './sweLeetCodeCurriculum.js';
+import {isLeetCodeDue,leetCodeDueDate} from './leetcodeStudyModel.js';
 import {priorityForProblem,INTERVIEW_PRIORITIES} from './sweInterviewPriorities.js';
 import {ALL_CONCEPTS,CONCEPT_GROUPS,DIFFICULTIES,problemRecallGap,attempted,conceptsForProblem,logProblemAttempt,editProblemAttempt,deleteProblemAttempt,filterLeetCodeProblems,recalcProblem,validStudyDate} from './leetcodeStudyModel.js';
 import './swe-leetcode-dojo.css';
@@ -51,19 +53,19 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
  const [historyExpanded,setHistoryExpanded]=useState(false);
  const [sort,setSort]=useState('priority');
  const currentSprint=sprintForDate(today);
- const firstAttempts=[...new Set(sprintDates(currentSprint).flatMap(day=>getDailyTasks(day).filter(t=>t.problemId).map(t=>t.problemId)))].filter(id=>!attempted(db.problems?.[id]));
+ const firstAttempts=[...new Set(sprintDates(currentSprint).map(day=>selectNewLeetCode(day,allProblems,db.problems||{})?.id).filter(Boolean))].filter(id=>!attempted(db.problems?.[id]));
  const records=db.problems||{};
  const filtered=useMemo(()=>filterLeetCodeProblems(allProblems,records,{search,phase,status,concept,difficulty,language,today,firstAttempts}),[allProblems,records,search,phase,status,concept,difficulty,language,today,firstAttempts.join(',')]);
  const ordered=useMemo(()=>{
   const arr=[...filtered];
   if(sort==='priority')arr.sort((a,b)=>{
-   const rank=p=>{const r=records[p.id]||{};const due=attempted(r)&&r.dueDate<=today;return (due?0:attempted(r)?2:1)+(r.grade==='red'?-0.3:r.grade==='yellow'?-0.1:0)+(priorityForProblem(p,r)==='P0'?0:0.5)};
-   return rank(a)-rank(b)||String(records[a.id]?.dueDate||'9999').localeCompare(String(records[b.id]?.dueDate||'9999'));
+   const rank=p=>{const r=records[p.id]||{};const due=isLeetCodeDue(r,today);return (due?0:attempted(r)?2:1)+(r.grade==='red'?-0.3:r.grade==='yellow'?-0.1:0)+(priorityForProblem(p,r)==='P0'?0:0.5)};
+   return rank(a)-rank(b)||String(leetCodeDueDate(records[a.id])||'9999').localeCompare(String(leetCodeDueDate(records[b.id])||'9999'));
   });
   if(sort==='last')arr.sort((a,b)=>(records[b.id]?.lastReviewed||'').localeCompare(records[a.id]?.lastReviewed||''));
   if(sort==='id')arr.sort((a,b)=>a.id-b.id);
   if(sort==='due')arr.sort((a,b)=>{
-   const aDate=records[a.id]?.dueDate||'9999-12-31',bDate=records[b.id]?.dueDate||'9999-12-31';
+   const aDate=leetCodeDueDate(records[a.id])||'9999-12-31',bDate=leetCodeDueDate(records[b.id])||'9999-12-31';
    return aDate.localeCompare(bDate);
   });
   return arr;
@@ -73,11 +75,11 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
  const history=recalcProblem(record).history;
  const tags=chosen?conceptsForProblem(chosen,record):[];
  const hasAttempt=attempted(record);
- const due=hasAttempt&&!!record.dueDate&&record.dueDate<=today;
+ const due=hasAttempt&&isLeetCodeDue(record,today);
  const suggestedFirst=chosen&&!hasAttempt&&firstAttempts.includes(chosen.id);
  const countAttempted=allProblems.filter(p=>attempted(records[p.id])).length;
  const countNotAttempted=allProblems.length-countAttempted;
- const countDue=allProblems.filter(p=>attempted(records[p.id])&&records[p.id]?.dueDate<=today).length;
+ const countDue=allProblems.filter(p=>isLeetCodeDue(records[p.id],today)).length;
  const selectedId=chosen?.id;
  useEffect(()=>{
   if(initialProblemId!==null&&initialProblemId!==undefined){
@@ -149,7 +151,8 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
  }
  const currentGrade=hasAttempt?record.grade:null;
  const chosenLanguage=chosen?.language||'Java';
- const dueLabel=due?'Due now'+(record.dueDate?' (since '+displayDate(record.dueDate)+')':''):suggestedFirst?'Planned first attempt this week':record.dueDate?'Next recall '+displayDate(record.dueDate):'No scheduled review yet';
+ const effectiveDue=leetCodeDueDate(record);
+ const dueLabel=due?'Due now'+(effectiveDue?' (since '+displayDate(effectiveDue)+')':''):suggestedFirst?'Planned first attempt this week':effectiveDue?'Next recall '+displayDate(effectiveDue):'No scheduled review yet';
  return <div className="sld-wrap">
   <header className="sld-page-heading"><div><span className="sld-kicker">✿ A REAL CODING LAB · MEMORY OVER STREAKS</span><h3>your LeetCode <em>study archive.</em></h3><p>Highest interview priority: independent Java coding, fresh variations, edge cases, and RED/struggled reattempts. Difficulty and your personal effort separately control what comes back. P0/P1 are evidence-informed planning tiers, not actual Google question frequencies.</p></div><div className="sld-counters"><span><strong>{countAttempted}</strong> attempted</span><span><strong>{countNotAttempted}</strong> not yet</span><span><strong>{countDue}</strong> due reviews</span></div></header>
   {message&&<div role="status" className="sld-notice">{message}<button onClick={()=>setMessage('')} aria-label="Dismiss message">×</button></div>}
@@ -166,7 +169,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
    {status==='due'&&<p className="sld-filter-explain">Shows scheduled reattempts that are due <strong>plus your 3 first-try suggestions for this week</strong>. Use Not attempted for the complete unattempted library.</p>}
    {status==='prior'&&<p className="sld-filter-explain">Only questions with at least one RED / YELLOW / GREEN / MOCK attempt you actually saved appear here. Your earlier discussed questions aren't automatically marked attempted.</p>}
    <div className="sld-problems">{ordered.map(p=>{
-    const r=records[p.id]||{},has=attempted(r),isDue=has&&r.dueDate<=today;
+    const r=records[p.id]||{},has=attempted(r),isDue=isLeetCodeDue(r,today);
     const badges=conceptsForProblem(p,r);
     return <button type="button" key={p.id} className={'sld-problem '+(selectedId===p.id?'selected':'')} onClick={()=>choose(p)}>
      <span className="sld-problem-num">#{p.id}</span><span className="sld-problem-details"><strong>{p.title}</strong><small>{badges.slice(0,2).join(' · ')||p.pattern}</small><span>{has?'Last attempt '+displayDate(r.lastReviewed||r.history?.at(-1)?.date):isDue?'Due':'Not attempted'}</span></span>
@@ -197,7 +200,7 @@ export default function SWELeetCodeDojo({db,update,allProblems,today=dateKey(),i
     <div className="sld-difficulty"><label>How difficult was this attempt for YOU?<select aria-label="My effort on this attempt" value={attemptEffort} onChange={e=>setAttemptEffort(e.target.value)}><option value="struggled">Struggled · review sooner</option><option value="normal">Some effort · standard review</option><option value="easy">Felt easy · review later</option></select></label><span className="sld-meta-help">This is different from LeetCode's official Easy / Medium / Hard rating. Each attempt saves its own effort, so improvements automatically change future review spacing.</span></div>
     <div className="sld-rating-title"><strong>How did THIS attempt go?</strong><span>Click once to record the grade + chosen date + current code.</span></div>
     <div className="sld-ratings">{Object.entries(GRADE_DESCRIPTIONS).map(([grade,caption])=><button type="button" key={grade} className={'sld-rating '+grade} onClick={()=>saveAttempt(grade)}><strong>{grade.toUpperCase()}</strong><small>{caption}</small></button>)}</div>
-    <div className="sld-next-review"><RefreshCcw size={17}/><div><strong>{dueLabel}</strong><small>{history.length} logged attempt{history.length===1?'':'s'} · {hasAttempt?'most recent '+displayDate(record.lastReviewed):'first try not yet logged'}. Your own effort changes review timing: struggled returns earlier, independent easy solves return later. RED and YELLOW remain urgent; successful recall advances through 1, 3, 7, 14, 30 and 60 days.</small></div></div>
+    <div className="sld-next-review"><RefreshCcw size={17}/><div><strong>{dueLabel}</strong><small>{history.length} logged attempt{history.length===1?'':'s'} · {hasAttempt?'most recent '+displayDate(record.lastReviewed):'first try not yet logged'}. Your own effort changes review timing: struggled returns earlier, independent easy solves return later. No question is scheduled sooner than five days; struggling attempts return around 5–8 days, while confident solves spread to longer intervals.</small></div></div>
     <section className="sld-history"><div className="sld-history-title"><div><History size={17}/><h4>Every attempt, every date</h4></div><span>{history.length} saved</span></div>
      {!history.length?<div className="sld-empty-history">Your first entry will appear here. Dates, grades, old code and reflections stay attached to each attempt so you can see improvement over time.</div>:
      [...history].reverse().map((event,i)=><div className="sld-history-item" key={event.id||i}><div className="sld-history-top"><div><GradePill grade={event.grade}/><strong>{displayDate(event.date)}</strong><small>{i===0?'Latest attempt':'Earlier attempt'}</small></div><button className="sld-delete" title="Delete this attempt" aria-label={'Delete attempt on '+event.date} onClick={()=>removeAttempt(event.id)}><Trash2 size={15}/></button></div>
