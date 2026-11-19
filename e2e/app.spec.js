@@ -52,6 +52,14 @@ test('editorial studio cards navigate without replacing existing app tools',asyn
  await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
  await expect(page.locator('.studio-strip')).toBeVisible();
  await expect(page.locator('.studio-tile')).toHaveCount(3);
+ const layout=await page.locator('.studio-strip-grid').evaluate(el=>({
+   columns:getComputedStyle(el).gridTemplateColumns.split(' ').length,
+   backgrounds:[...el.children].map(node=>getComputedStyle(node).backgroundColor),
+   positions:[...el.querySelectorAll('svg.studio-vector-art')].map(node=>getComputedStyle(node).position)
+ }));
+ expect(layout.columns).toBe(3);
+ expect(layout.positions).toEqual(['relative','relative','relative']);
+ expect(new Set(layout.backgrounds).size).toBe(1);
  await page.locator('.studio-tile--blue').click();
  await expect(page.locator('.swe-prep')).toBeVisible();
  await expect(page.locator('.google-editorial-shelf')).toBeVisible();
