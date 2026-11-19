@@ -740,3 +740,92 @@
   margin-top:4px;font-size:9px;
  }
 }
+
+
+/* Google SWE banner only — keep real Google lettering and working copy on
+   the left; replace the old framed laptop card with separate transparent art. */
+.app-shell[data-section="swe"] .swe-hero.retro-swe-cover {
+  display:grid;
+  grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
+  align-items:center;
+  gap:clamp(12px,2.5vw,42px);
+  overflow:hidden;
+  min-height:480px;
+  padding:clamp(22px,3vw,42px);
+  background:linear-gradient(112deg,#FFF9F0 0%,#FCE9E5 55%,#E9E9F2 100%);
+  border-color:#E3BBC0;
+}
+.app-shell[data-section="swe"] .swe-hero.retro-swe-cover .swe-hero-copy {
+  min-width:0;
+  position:relative;
+  z-index:2;
+}
+.app-shell[data-section="swe"] .swe-hero.retro-swe-cover .swe-nyc-visual {
+  position:relative;
+  min-width:0;
+  width:100%;
+  align-self:stretch;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  isolation:isolate;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  transform:none;
+}
+.app-shell[data-section="swe"] .swe-nyc-scene {
+  display:block;
+  width:110%;
+  max-width:none;
+  height:auto;
+  max-height:560px;
+  object-fit:contain;
+  position:relative;
+  z-index:1;
+  filter:none;
+}
+.app-shell[data-section="swe"] .swe-nyc-clouds {
+  position:absolute;
+  z-index:2;
+  bottom:-30px;
+  right:-6%;
+  width:88%;
+  max-height:145px;
+  height:auto;
+  object-fit:contain;
+  pointer-events:none;
+  opacity:.75;
+}
+.app-shell[data-section="swe"] .swe-journey-map {
+  display:block;
+  position:relative;
+  z-index:2;
+  width:min(100%,500px);
+  max-height:175px;
+  height:auto;
+  object-fit:contain;
+  margin:8px 0 -17px;
+  filter:none;
+}
+@media(max-width:900px){
+ .app-shell[data-section="swe"] .swe-hero.retro-swe-cover {
+   grid-template-columns:1fr;
+   padding:26px 24px 15px;
+   min-height:0;
+ }
+ .app-shell[data-section="swe"] .swe-hero.retro-swe-cover .swe-nyc-visual {
+   width:min(100%,570px);
+   min-height:0;
+   margin:auto;
+ }
+ .app-shell[data-section="swe"] .swe-nyc-scene {width:100%;max-height:430px}
+ .app-shell[data-section="swe"] .swe-nyc-clouds {bottom:-14px}
+ .app-shell[data-section="swe"] .swe-journey-map {max-width:500px;margin:12px auto 0}
+}
+@media(max-width:530px){
+ .app-shell[data-section="swe"] .swe-hero.retro-swe-cover {padding:21px 15px 10px;gap:4px}
+ .app-shell[data-section="swe"] .swe-nyc-scene {width:100%;max-height:350px}
+ .app-shell[data-section="swe"] .swe-nyc-clouds {bottom:-12px;max-height:90px}
+ .app-shell[data-section="swe"] .swe-journey-map {max-height:135px}
+}
