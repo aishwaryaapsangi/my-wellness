@@ -61,14 +61,18 @@ test('editorial studio cards navigate without replacing existing app tools',asyn
  await expect(page.locator('.sip-task-list')).toBeVisible();
 });
 
-test('pastel sketch assets load on their matching pages',async({page})=>{
+test('four distinct sharp pastel sketches render in the proper website sections',async({page})=>{
  await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
- const wellness=page.locator('img.pastel-hero-art');
- await expect(wellness).toBeVisible();
- await expect.poll(()=>wellness.evaluate(el=>el.complete&&el.naturalWidth>0)).toBe(true);
- await expect(page.locator('img.pastel-studio-art')).toHaveCount(2);
+ await expect(page.locator('svg.pastel-hero-art')).toHaveCount(1);
+ await expect(page.locator('svg.pastel-studio-art')).toHaveCount(2);
+ const artDescriptions=await page.locator('svg.pastel-hero-art, svg.pastel-studio-art').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('aria-label')));
+ expect(new Set(artDescriptions).size).toBe(3);
+ await expect(page.locator('.daily-heading')).toBeVisible();
+ const hasFloatingArt=await page.locator('.daily-heading').evaluate(el=>getComputedStyle(el,'::after').content);
+ expect(hasFloatingArt).toBe('none');
  await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
- const swe=page.locator('img.pastel-swe-art');
- await expect(swe).toBeVisible();
- await expect.poll(()=>swe.evaluate(el=>el.complete&&el.naturalWidth>0)).toBe(true);
+ await expect(page.locator('svg.pastel-swe-art')).toHaveCount(1);
+ const codeAlt=await page.locator('svg.pastel-swe-art').getAttribute('aria-label');
+ expect(artDescriptions).not.toContain(codeAlt);
+ await expect(page.locator('.swe-tabs')).toBeVisible();
 });
