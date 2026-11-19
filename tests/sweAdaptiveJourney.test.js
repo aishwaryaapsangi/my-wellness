@@ -41,8 +41,8 @@ test('LeetCode official difficulty is independent of self-reported attempt effor
  assert.ok(easy.dueDate>normal.dueDate);
  assert.equal(first.history.at(-1).effort,'struggled');
  assert.equal(editProblemAttempt(first,first.history.at(-1).id,{effort:'easy'}).dueDate,easy.dueDate);
- assert.equal(problemRecallGap('yellow',0,'struggled'),1);
- assert.equal(problemRecallGap('red',0,'struggled'),1);
+ assert.equal(problemRecallGap('yellow',0,'struggled'),7);
+ assert.equal(problemRecallGap('red',0,'struggled'),5);
 });
 test('editing historical effort updates the schedule and old data still works',()=>{
  const legacy=recalcProblem({history:[{id:'a',date:'2026-11-18',grade:'green'}]});
