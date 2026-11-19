@@ -68,11 +68,17 @@ const FOUNDATION=[
 ];
 export const LEETCODE_PHASES=FOUNDATION.map(([starts,ends,title,ids])=>({starts,ends,title,ids}));
 const EARLY_UNLOCK=new Map(FOUNDATION.flatMap(([starts,,title,ids])=>ids.map((id,index)=>[id,{date:starts,phase:title,order:index}])));
+// Individual topics must actually be introduced before a mixed-family problem appears.
+const PREREQUISITE_UNLOCK={
+ 104:'2026-12-28',102:'2026-12-28',98:'2026-12-28',235:'2026-12-28',
+ 215:'2027-01-11',347:'2027-01-11',
+ 200:'2027-01-18',994:'2027-01-18',207:'2027-01-18',684:'2027-01-18',79:'2027-01-18'
+};
 export function isNewProblemEligible(problem,date,records={}){
  if(!problem||problem.language==='SQL'||problem.prior)return false;
  if(records[problem.id]?.history?.length)return false;
  const early=EARLY_UNLOCK.get(Number(problem.id));
- if(early)return early.date<=date;
+ if(early)return (PREREQUISITE_UNLOCK[Number(problem.id)]||early.date)<=date;
  const top=TOP_GOOGLE_50.find(x=>x[0]===Number(problem.id));
  if(top)return date>=top[4];
  // Other catalog questions can be studied voluntarily in Dojo but aren't
