@@ -61,18 +61,31 @@ test('editorial studio cards navigate without replacing existing app tools',asyn
  await expect(page.locator('.sip-task-list')).toBeVisible();
 });
 
-test('four distinct sharp pastel sketches render in the proper website sections',async({page})=>{
+test('four unique high resolution watercolor WebP assets load on their matching pages',async({page})=>{
  await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
- await expect(page.locator('svg.pastel-hero-art')).toHaveCount(1);
- await expect(page.locator('svg.pastel-studio-art')).toHaveCount(2);
- const artDescriptions=await page.locator('svg.pastel-hero-art, svg.pastel-studio-art').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('aria-label')));
- expect(new Set(artDescriptions).size).toBe(3);
+ const hero=page.locator('img.pastel-hero-art');
+ await expect(hero).toBeVisible();
+ await expect.poll(()=>hero.evaluate(el=>el.complete&&el.naturalWidth>=900)).toBe(true);
+ const studio=page.locator('img.pastel-studio-art');
+ await expect(studio).toHaveCount(2);
+ const srcs=await page.locator('img.pastel-hero-art, img.pastel-studio-art').evaluateAll(nodes=>nodes.map(el=>el.currentSrc));
+ expect(new Set(srcs).size).toBe(3);
+ for(const src of srcs){expect(src).toContain('.webp')}
+ await expect.poll(()=>studio.evaluateAll(nodes=>nodes.every(el=>el.complete&&el.naturalWidth>=780))).toBe(true);
  await expect(page.locator('.daily-heading')).toBeVisible();
- const hasFloatingArt=await page.locator('.daily-heading').evaluate(el=>getComputedStyle(el,'::after').content);
- expect(hasFloatingArt).toBe('none');
+ const floating=await page.locator('.daily-heading').evaluate(el=>getComputedStyle(el,'::after').content);
+ expect(floating).toBe('none');
+ // The little hero sticker must never obscure the painting.
+ const overlap=await page.evaluate(()=>{
+  const a=document.querySelector('.hero .hero-sticker').getBoundingClientRect();
+  const b=document.querySelector('.hero img.pastel-hero-art').getBoundingClientRect();
+  return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
+ });
+ expect(overlap).toBe(false);
  await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
- await expect(page.locator('svg.pastel-swe-art')).toHaveCount(1);
- const codeAlt=await page.locator('svg.pastel-swe-art').getAttribute('aria-label');
- expect(artDescriptions).not.toContain(codeAlt);
+ const code=page.locator('img.pastel-swe-art');
+ await expect(code).toBeVisible();
+ await expect.poll(()=>code.evaluate(el=>el.complete&&el.naturalWidth>=1100)).toBe(true);
+ expect(srcs).not.toContain(await code.evaluate(el=>el.currentSrc));
  await expect(page.locator('.swe-tabs')).toBeVisible();
 });
