@@ -38,16 +38,16 @@ test('user-edited tags override suggestions including an intentional empty tag s
 });
 test('due queue includes scheduled retakes AND this week first-time assignments, not every unread problem',()=>{
  const records={27:logProblemAttempt({},'red','2026-11-16','','','old')};
- const due=filterLeetCodeProblems(bank,records,{status:'due',today:'2026-11-17',firstAttempts:[1,206]});
+ const due=filterLeetCodeProblems(bank,records,{status:'due',today:'2026-11-21',firstAttempts:[1,206]});
  assert.deepEqual(due.map(p=>p.id),[27,1,206]);
  assert.deepEqual(filterLeetCodeProblems(bank,records,{status:'due',today:'2026-11-16',firstAttempts:[]}),[]);
 });
 test('dated retakes preserve code snapshots and compute correct SRS from chronological history',()=>{
  let r={difficulty:'Easy',concepts:['Arrays','Two Pointers'],referenceCode:'// Verified expected solution',workingCode:'// My latest code'};
  r=logProblemAttempt(r,'red','2026-11-10','int a=0;','My first pointer bug','one');
- assert.equal(r.dueDate,'2026-11-11');
+ assert.equal(r.dueDate,'2026-11-16');
  r=logProblemAttempt(r,'yellow','2026-11-12','int count=1;','Fixed bug with hint','two');
- assert.equal(r.dueDate,'2026-11-15');
+ assert.equal(r.dueDate,'2026-12-01');
  r=logProblemAttempt(r,'green','2026-11-17','int write=0;','Independent!','three');
  assert.equal(r.dueDate,'2026-11-20');
  assert.equal(r.lastReviewed,'2026-11-17');
@@ -65,7 +65,7 @@ test('backdated attempts sort chronologically, change next review, and can be ed
  assert.equal(r.dueDate,'2026-11-20');
  r=logProblemAttempt(r,'mock','2026-11-15','c','', 'c');
  assert.deepEqual(r.history.map(h=>h.id),['a','c','b']);
- assert.equal(r.dueDate,'2026-11-24'); // Backdated MOCK adds a stage before the latest GREEN
+ assert.equal(r.dueDate,'2026-12-08'); // Backdated MOCK adds a stage before the latest GREEN
  r=editProblemAttempt(r,'c',{date:'2026-11-16',grade:'yellow'});
  assert.equal(r.history[1].date,'2026-11-16');
  assert.equal(r.history[1].grade,'yellow');
@@ -83,7 +83,7 @@ test('duplicate clicks do not invent attempts and legacy IDs can be edited witho
  assert.equal(legacy.history[0].id,'legacy-0-2026-11-16-red');
  assert.equal(legacy.notes,'existing reflection');
  const fixed=editProblemAttempt(legacy,legacy.history[0].id,{date:'2026-11-15'});
- assert.equal(fixed.dueDate,'2026-11-16');
+ assert.equal(fixed.dueDate,'2026-11-21');
 });
 test('invalid or future attempt dates are never silently inserted',()=>{
  assert.equal(validStudyDate('2026-02-30','2026-11-17'),false);
