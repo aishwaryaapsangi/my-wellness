@@ -10,6 +10,8 @@ import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
 import SWELeetCodeDojo from './SWELeetCodeDojo.jsx';
 import SWEMicroLab from './SWEMicroLab.jsx';
 import {EXTRA_QUESTIONS} from './sweQuestionBank.js';
+import {GOOGLE_TOP_50_PROBLEMS,selectNewLeetCode} from './sweLeetCodeCurriculum.js';
+import {isLeetCodeDue,leetCodeDueDate} from './leetcodeStudyModel.js';
 
 const STORAGE='bloom-google-swe-prep-v1';
 const REVIEWS=['red','yellow','green','mock'];
@@ -58,13 +60,14 @@ export default function GoogleSWE(){
  const allProblems=useMemo(()=>{
    const map=new Map(handbook.problems.map(p=>[String(p.id),{...p,prior:false,suggestedReview:!!p.review}]));
    for(const p of EXTRA_QUESTIONS){if(!map.has(String(p.id)))map.set(String(p.id),{...p,prior:false})}
+   for(const p of GOOGLE_TOP_50_PROBLEMS){if(!map.has(String(p.id)))map.set(String(p.id),{...p,prior:false});}
    for(const p of EARLIER_PRACTICE){if(!map.has(String(p.id)))map.set(String(p.id),{...p,page:0,phase:'PRIOR',prior:true});
     else map.set(String(p.id),{...map.get(String(p.id)),prior:true})}
    for(const p of db.customProblems||[])map.set(String(p.id),{...p,phase:p.phase||'PRIOR',page:0,prior:false});
    return [...map.values()];
  },[db.customProblems]);
  const pRecords=Object.values(db.problems),sRecords=Object.values(db.skills);
- const dueProblems=allProblems.filter(p=>reviewDue(db.problems[p.id],today)).sort((a,b)=>reviewOverdue(db.problems[b.id],today)-reviewOverdue(db.problems[a.id],today));
+ const dueProblems=allProblems.filter(p=>isLeetCodeDue(db.problems[p.id],today)).sort((a,b)=>String(leetCodeDueDate(db.problems[a.id])).localeCompare(String(leetCodeDueDate(db.problems[b.id]))));
  const dueSkills=SECTIONS.flatMap(s=>s.skills.map(sk=>({...sk,section:s.title,page:s.page,sectionId:s.id}))).filter(sk=>reviewDue(db.skills[sk.id],today));
  const dueCount=dueProblems.length+dueSkills.length;
  const skillStats=completionStats(SECTIONS,db.skills);
@@ -83,7 +86,7 @@ export default function GoogleSWE(){
    const q=search.toLowerCase();
    const inPhase=phase==='all'||p.phase===phase||(phase==='PRIOR'&&p.prior);
    const grade=db.problems[p.id]?.grade||'new';
-   const ok=problemFilter==='all'||(problemFilter==='due'?reviewDue(db.problems[p.id],today):problemFilter==='prior'?p.prior:problemFilter===grade);
+   const ok=problemFilter==='all'||(problemFilter==='due'?isLeetCodeDue(db.problems[p.id],today):problemFilter==='prior'?p.prior:problemFilter===grade);
    return inPhase&&ok&&(!q||String(p.id).includes(q)||p.title.toLowerCase().includes(q)||p.pattern.toLowerCase().includes(q));
  });
  const charts=GROUPS.map(g=>{const relevant=SECTIONS.filter(s=>s.group===g);const total=relevant.reduce((n,s)=>n+s.skills.length,0);const mastered=relevant.reduce((n,s)=>n+s.skills.filter(sk=>(db.skills[sk.id]?.level||0)>=3).length,0);return {group:g==='Algorithms & data structures'?'DSA':g.replace(' fundamentals','').replace(' technologies',''),mastered,total}});
@@ -125,7 +128,7 @@ export default function GoogleSWE(){
     setDb({...INITIAL(),...val});setNotice('Your backup has been restored.');
    }catch(e){setNotice('Import failed: '+e.message)}
  }
- const reviewSuggestion=dueProblems[0]||allProblems.find(p=>p.prior&&!db.problems[p.id])||allProblems.find(p=>!db.problems[p.id])||allProblems[0];
+ const reviewSuggestion=selectNewLeetCode(today,allProblems,db.problems)||dueProblems[0]||allProblems[0];
  const setProblemNote=()=>{if(!currentlySelected)return;update(old=>({problems:{...old.problems,[currentlySelected.id]:{...(old.problems[currentlySelected.id]||{}),notes:noteDraft.slice(0,2000)}}}));setSavedNoteId(String(currentlySelected.id));setNotice('Your reflection has been saved locally.')};
  const activeSectionProgress=sectionCompletion(chosenSection,db);
  const daysToTarget=daysUntil(db.targetDate,today);
