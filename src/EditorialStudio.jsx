@@ -59,7 +59,7 @@ export function EditorialStudioStrip({onNavigate}) {
     <span className="studio-tile-eyebrow">02 / THE BIG DREAM</span><strong>code. create.<br/><i>go further!</i></strong><img className="studio-tile-art pastel-studio-art" src={`${import.meta.env.BASE_URL}art/pastel-dino-cloud-code.webp`} width="825" height="854" alt="Pastel pink pixel dinosaur with a coding speech bubble and soft clouds" loading="lazy" decoding="async" /><span className="studio-tile-footer">OPEN THE SWE STUDIO <span aria-hidden="true">↗</span></span>
    </button>
    <button type="button" className="studio-tile studio-tile--butter" onClick={()=>onNavigate('calendar')}>
-    <span className="studio-tile-eyebrow">03 / YOUR LITTLE PLANS</span><strong>make space<br/><i>for magic.</i></strong><img className="studio-magic-art" src={`${import.meta.env.BASE_URL}art/pastel-kodak-film-clouds.webp`} width="949" height="886" alt="Watercolor vintage film roll with a pink cloud-filled film strip" loading="lazy" decoding="async" /><span className="studio-tile-footer">FLIP TO YOUR CALENDAR <span aria-hidden="true">↗</span></span>
+    <span className="studio-tile-eyebrow">03 / YOUR LITTLE PLANS</span><strong>make space<br/><i>for magic.</i></strong><div className="studio-date-art studio-date-art--minimal" aria-hidden="true"><span className="studio-date-ring"/><span className="studio-date-number">{new Date().getDate()}</span><span className="studio-date-month">{new Date().toLocaleString("en-US",{month:"short"}).toUpperCase()}</span></div><span className="studio-tile-footer">FLIP TO YOUR CALENDAR <span aria-hidden="true">↗</span></span>
    </button>
   </div>
  </section>;
