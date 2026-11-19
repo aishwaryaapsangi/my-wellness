@@ -110,14 +110,10 @@ test('wellness hero and little rituals ribbon are Home-only; finance and Google 
  await expect(scene).toBeVisible();
  await expect.poll(()=>scene.evaluate(el=>el.complete&&el.naturalWidth>=1400)).toBe(true);
  await expect(page.locator('img.wellness-hero-flower')).toHaveCount(0);
- const dino=page.locator('.studio-tile--blue img.pastel-studio-art');
- const film=page.locator('.studio-tile--butter img.studio-magic-art');
- await expect(dino).toBeVisible();
- await expect(film).toBeVisible();
- await expect.poll(()=>dino.evaluate(el=>el.complete&&el.naturalWidth>=800)).toBe(true);
- await expect.poll(()=>film.evaluate(el=>el.complete&&el.naturalWidth>=900)).toBe(true);
- expect(await dino.getAttribute('src')).toContain('pastel-dino-cloud-code.webp');
- expect(await film.getAttribute('src')).toContain('pastel-kodak-film-clouds.webp');
+ await expect(page.locator('.studio-tile--pink svg.studio-vector-teacups')).toBeVisible();
+ await expect(page.locator('.studio-tile--blue svg.studio-vector-dino')).toBeVisible();
+ await expect(page.locator('.studio-tile--butter svg.studio-vector-calendar')).toBeVisible();
+ await expect(page.locator('.studio-strip-grid .studio-tile img')).toHaveCount(0);
  expect(await page.locator('.studio-strip').evaluate(el=>getComputedStyle(el,'::after').backgroundImage)).toContain('watercolor-cloud-pink.webp');
  await page.locator('.nav-links').getByRole('button',{name:'Calendar'}).click();
  await expect(page.locator('.app-shell')).toHaveAttribute('data-section','calendar');
