@@ -91,9 +91,15 @@ test('Home uses one painted hero and three code-built minimal card illustrations
  });
  expect(overlap).toBe(false);
  await page.goto('/my-wellness/#google-swe',{waitUntil:'domcontentloaded'});
- const code=page.locator('img.pastel-swe-art');
- await expect(code).toBeVisible();
- await expect.poll(()=>code.evaluate(el=>el.complete&&el.naturalWidth>=1100)).toBe(true);
+ const scene=page.locator('.swe-hero img.swe-nyc-scene');
+ const roadmap=page.locator('.swe-hero img.swe-journey-map');
+ const clouds=page.locator('.swe-hero img.swe-nyc-clouds');
+ await expect(scene).toBeVisible();
+ await expect(roadmap).toBeVisible();
+ await expect(clouds).toBeVisible();
+ await expect(page.locator('.swe-hero img.pastel-swe-art')).toHaveCount(0);
+ await expect.poll(()=>scene.evaluate(el=>el.complete&&el.naturalWidth>=1100)).toBe(true);
+ await expect.poll(()=>roadmap.evaluate(el=>el.complete&&el.naturalWidth>=1100)).toBe(true);
  await expect(page.locator('.swe-tabs')).toBeVisible();
 });
 
