@@ -47,3 +47,16 @@ test('daily recall stays a plain to-do while the optional concept library remain
  await expect(page.locator('.sml-library-detail .sml-schedule')).toContainText('next due');
  expect(errors,'Uncaught browser exceptions').toEqual([]);
 });
+
+test('editorial studio cards navigate without replacing existing app tools',async({page})=>{
+ await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
+ await expect(page.locator('.studio-strip')).toBeVisible();
+ await expect(page.locator('.studio-tile')).toHaveCount(3);
+ await page.locator('.studio-tile--blue').click();
+ await expect(page.locator('.swe-prep')).toBeVisible();
+ await expect(page.locator('.google-editorial-shelf')).toBeVisible();
+ await page.locator('.google-shelf-card--blue').click();
+ await expect(page.locator('.sld-problem').first()).toBeVisible();
+ await page.locator('.google-shelf-card--yellow').click();
+ await expect(page.locator('.sip-task-list')).toBeVisible();
+});
