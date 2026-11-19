@@ -81,7 +81,9 @@ test('all study dates map to one new lesson until the source-backed curriculum e
  for(let i=0;i<MICRO_CONCEPTS.length;i++)ids.push(microLessonForDate(addStudyDays(MICRO_START,i))?.id);
  assert.deepEqual(ids,MICRO_DAILY_SEQUENCE.map(c=>c.id));
  assert.equal(new Set(ids).size,MICRO_CONCEPTS.length);
- assert.equal(new Set(MICRO_DAILY_SEQUENCE.slice(7,35).map(c=>c.family)).size,14);
+ assert.ok(new Set(MICRO_DAILY_SEQUENCE.slice(7,35).map(c=>c.family)).size>=4);
+ assert.ok(MICRO_DAILY_SEQUENCE.slice(7,25).every(c=>!['Linked lists','Trees & BST','Graphs & grids'].includes(c.family)));
+ assert.ok(MICRO_DAILY_SEQUENCE.slice(60,130).some(c=>c.family==='Graphs & grids'));
  assert.equal(microLessonForDate(addStudyDays(MICRO_START,MICRO_CONCEPTS.length)),null);
 });
 
