@@ -7,6 +7,7 @@ import {dateKey,addStudyDays,gradeStudy,reviewDue,reviewOverdue,daysUntil,dailyS
 import './google-swe.css';
 import FlowerBouquet from './ThemeDoodles.jsx';
 import {RetroDecor,RetroGoogleWordmark} from './RetroDecor.jsx';
+import {GoogleEditorialShelf} from './EditorialStudio.jsx';
 import SWEIntegratedPlanner from './SWEIntegratedPlanner.jsx';
 import SWELeetCodeDojo from './SWELeetCodeDojo.jsx';
 import SWEMicroLab from './SWEMicroLab.jsx';
@@ -166,7 +167,7 @@ export default function GoogleSWE(){
    </div>
  };
  return <section className="swe-prep" aria-label="Google SWE preparation studio">
-  <div className="swe-hero retro-swe-cover"><div className="swe-hero-art" aria-hidden="true">✿ <span>✧</span> ♡</div><RetroDecor variant="google"/><div className="swe-hero-copy"><span className="swe-kicker">✳ THE GOOGLE SWE GLOW-UP · YOUR ENGINEERING ERA</span><RetroGoogleWordmark/><h2>from learning <em>to leading.</em> <span>✦</span></h2><p>A thoughtful little command center for Java, LeetCode, full-stack engineering and your Google SWE II / L3 journey. Small, independent wins count.</p><div className="swe-hero-bottom"><Pill tone="dark"><Target size={13}/> GOOGLE SWE II / L3</Pill><Pill>Goal: May 31, 2027 readiness gate</Pill><Pill>Java first · no copying</Pill></div></div><div className="swe-hero-sticker" aria-hidden="true"><FlowerBouquet variant="google"/><strong>learn · build · bloom</strong><span>✦</span></div></div><div className="retro-swe-ticker" aria-hidden="true"><span>CODE ✳ CREATE ✳ GROW</span><span>JAVA · DSA · LEETCODE · FULL STACK</span><span>ONE LITTLE WIN AT A TIME ✳</span></div>
+  <div className="swe-hero retro-swe-cover"><div className="swe-hero-art" aria-hidden="true">✿ <span>✧</span> ♡</div><RetroDecor variant="google"/><div className="swe-hero-copy"><span className="swe-kicker">✳ THE GOOGLE SWE GLOW-UP · YOUR ENGINEERING ERA</span><RetroGoogleWordmark/><h2>from learning <em>to leading.</em> <span>✦</span></h2><p>A thoughtful little command center for Java, LeetCode, full-stack engineering and your Google SWE II / L3 journey. Small, independent wins count.</p><div className="swe-hero-bottom"><Pill tone="dark"><Target size={13}/> GOOGLE SWE II / L3</Pill><Pill>Goal: May 31, 2027 readiness gate</Pill><Pill>Java first · no copying</Pill></div></div><div className="swe-hero-sticker" aria-hidden="true"><FlowerBouquet variant="google"/><strong>learn · build · bloom</strong><span>✦</span></div></div><div className="retro-swe-ticker" aria-hidden="true"><span>CODE ✳ CREATE ✳ GROW</span><span>JAVA · DSA · LEETCODE · FULL STACK</span><span>ONE LITTLE WIN AT A TIME ✳</span></div><GoogleEditorialShelf onTab={next=>{setTab(next);setNotice("")}}/>
   <nav className="swe-tabs" aria-label="Google SWE study sections">{tabList.map(({key,label,icon:Icon})=><button key={key} type="button" className={tab===key?'active':''} onClick={()=>{setTab(key);setNotice('')}}><Icon size={15}/>{label}</button>)}<button className="swe-settings-link" onClick={()=>setShowSettings(v=>!v)} title="Preferences and backup"><Settings2 size={16}/><span>Settings</span></button></nav>
   {notice&&<div className="swe-toast" role="status">{notice}<button onClick={()=>setNotice('')} aria-label="Dismiss message"><X size={14}/></button></div>}
   {showSettings&&<div className="swe-paper swe-settings">
