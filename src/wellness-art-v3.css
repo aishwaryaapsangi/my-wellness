@@ -541,3 +541,202 @@
   width:98px;max-width:32%;right:7%;top:35px;
  }
 }
+
+
+/* Editorial navigation strip: use the quiet little illustrated links from the
+   reference's section below its hero, not three competing feature banners.
+   Home only; the watercolor hero, Today/to-dos and other routes are unchanged. */
+.app-shell[data-section="today"] .studio-strip-grid {
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ grid-template-rows:auto;
+ gap:0;
+ align-items:stretch;
+ padding:30px 16px 28px;
+ border-radius:20px;
+ background:#F9EAE0;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile--pink,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile--blue,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile--butter {
+ grid-column:auto;
+ grid-row:auto;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:flex-start;
+ text-align:center;
+ width:100%;
+ min-width:0;
+ min-height:280px;
+ height:auto;
+ padding:14px 20px 15px;
+ margin:0;
+ background:transparent;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ color:#755363;
+ transform:none;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile + .studio-tile {
+ border-left:1px solid rgba(151,112,118,.17);
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile:hover {
+ background:rgba(255,255,255,.28);
+ box-shadow:none;
+ transform:none;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile:focus-visible {
+ outline:3px solid #96769A;
+ outline-offset:-4px;
+ border-radius:10px;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile .studio-tile-eyebrow {
+ order:0;
+ font-size:9px;
+ letter-spacing:.13em;
+ font-weight:700;
+ color:#A27D83;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-art,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-teacups,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-dino,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-calendar {
+ position:relative;
+ inset:auto;
+ top:auto;
+ bottom:auto;
+ left:auto;
+ right:auto;
+ order:1;
+ display:block;
+ width:auto;
+ max-width:130px;
+ max-height:125px;
+ height:125px;
+ margin:15px auto 5px;
+ flex:none;
+ overflow:visible;
+ transform:none!important;
+ filter:none!important;
+ object-fit:contain;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-teacups {
+ height:125px;
+ max-width:98px;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-dino {
+ width:116px;
+ height:125px;
+ max-width:116px;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-calendar {
+ height:125px;
+ max-width:98px;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile > strong,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile--pink > strong,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile--blue > strong,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile--butter > strong {
+ order:2;
+ width:100%;
+ max-width:none;
+ margin:7px 0 12px;
+ color:#755363;
+ font-family:var(--art-editorial,'Young Serif',Georgia,serif);
+ font-size:clamp(18px,2vw,25px);
+ font-weight:500;
+ line-height:1.2;
+ letter-spacing:-.035em;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile > strong i {
+ color:#B7828B;
+ font-weight:400;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile .studio-tile-footer {
+ order:3;
+ margin:auto auto 0;
+ padding:7px 1px 3px;
+ gap:6px;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ max-width:100%;
+ width:auto;
+ background:transparent;
+ border:0;
+ border-bottom:1px solid #BD9696;
+ border-radius:0;
+ color:#8B6971;
+ font-size:9px;
+ line-height:1.4;
+ letter-spacing:.055em;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile .studio-tile-footer span {
+ font-size:13px;
+ line-height:1;
+}
+@media(max-width:760px){
+ .app-shell[data-section="today"] .studio-strip-grid {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:auto;
+  padding:20px 7px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile--pink,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile--blue,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile--butter {
+  min-height:235px;
+  padding:10px 7px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-art {
+  height:92px;
+  max-height:92px;
+  max-width:80px;
+  margin:12px auto 5px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-dino {
+  width:82px;max-width:82px;height:92px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile > strong {
+  font-size:clamp(15px,2.6vw,19px);
+  margin:9px 0 12px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile .studio-tile-eyebrow {
+  font-size:7px;letter-spacing:.045em;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile .studio-tile-footer {
+  font-size:7px;letter-spacing:0;
+ }
+}
+@media(max-width:430px){
+ .app-shell[data-section="today"] .studio-strip-grid {
+  grid-template-columns:1fr;
+  grid-template-rows:none;
+  padding:7px 14px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile--pink,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile--blue,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile--butter {
+  min-height:0;
+  padding:18px 10px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile + .studio-tile {
+  border-left:0;
+  border-top:1px solid rgba(151,112,118,.17);
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-art,
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile svg.studio-vector-dino {
+  height:100px;max-height:100px;max-width:110px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile > strong {
+  font-size:21px;
+ }
+ .app-shell[data-section="today"] .studio-strip-grid .studio-tile .studio-tile-footer {
+  margin-top:4px;font-size:9px;
+ }
+}
