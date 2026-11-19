@@ -25,7 +25,7 @@ test('SWE tabs, daily calendar, and LeetCode problem render',async({page})=>{
  await expect(page.locator('.swe-prep')).toBeVisible();
  await page.getByRole('button',{name:/Hawk-eye roadmap/}).click();
  await expect(page.getByText('what matters each month')).toBeVisible();
- await page.getByRole('button',{name:/LeetCode dojo/}).click();
+ await page.locator('.swe-tabs').getByRole('button',{name:'LeetCode dojo',exact:true}).click();
  await expect(page.getByText('your LeetCode')).toBeVisible();
  await expect(page.locator('.sld-problem').first()).toBeVisible();
  expect(errors,'Uncaught browser exceptions:\n'+errors.join('\n\n')).toEqual([]);
