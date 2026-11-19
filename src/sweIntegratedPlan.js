@@ -118,6 +118,19 @@ export const DAY_ROLE=[
  ['Project build + coding','75–120 min · concrete artifact'],
  ['Review + plan','50–85 min · long-term retention']
 ];
+// In the real planner new problems are selected from attempted history and
+// prerequisite-gated topic stages. Old static IDs remain for legacy tests/exports.
+function withFreshProblem(tasks,date,options){
+ if(!Object.prototype.hasOwnProperty.call(options,'newProblem'))return tasks;
+ const fresh=options.newProblem;
+ const filtered=tasks.filter(t=>!(t.category==='leetcode'&&t.type!=='sql-practice'&&t.type!=='sql-drill'&&t.type!=='leet-due'))
+  .map(t=>t.category==='review'?{...t,problemId:null,detail:'Self-review due micro-topics from the to-do list. LeetCode reattempts are separately scheduled only when genuinely due.'}:t);
+ if(fresh){filtered.unshift({id:date+':fresh-leetcode',type:'fresh-leetcode',category:'leetcode',
+  label:'★ NEW LeetCode #'+fresh.id+' · '+fresh.title,
+  detail:'First attempt · '+(fresh.difficulty||'unrated')+' · '+(fresh.pattern||'current DSA family')+'. Code independently in Java, test edge cases and log the actual effort in Dojo.',
+  minutes:38,problemId:fresh.id,optional:false});}
+ return filtered;
+}
 export function getDailyTasks(date,options={}){
  const accelerated=novemberTasks(date,options)||decemberTasks(date,options);
  const techMicros=engineeringLessonsForDate(date);
@@ -125,7 +138,7 @@ export function getDailyTasks(date,options={}){
   category:'engineering',label:(lesson.priority==='core'?'P0 · Core · ':'P1 · Supporting · ')+lesson.title,
   detail:lesson.goal+' · Review on your own; future recall appears as a simple to-do.',
   minutes:18,engineeringMicroId:lesson.id,optional:false}));
- if(accelerated)return options.light?accelerated:[...accelerated,...technicalToDos];
+ if(accelerated)return withFreshProblem(options.light?accelerated:[...accelerated,...technicalToDos],date,options);
  const sprint={...sprintForDate(date),...(options.sprintOverride||{})},weekday=Math.round((Date.parse(date+'T12:00:00Z')-Date.parse(sprint.monday+'T12:00:00Z'))/86400000);
  const ids=sprint.problemIds,primary=ids[Math.min(ids.length-1,weekday===3?1:weekday===5?2:0)],second=ids[1]||ids[0];
  const clean=(type,label,detail,minutes,extra={})=>({id:date+':'+type,type,label,detail,minutes,...extra});
@@ -147,8 +160,8 @@ export function getDailyTasks(date,options={}){
  const list=tasks[weekday]||tasks[0];
  const micro=microLessonForDate(date);
  const daily=micro?[clean('micro-focus','Learn ONE concept · '+micro.title, micro.goal+' Recall: '+micro.recall,24,{category:'dsa',sectionPage:micro.page,microId:micro.id,problemId:micro.problemId}),...list.filter(t=>t.type!=='concept')]:list;
- if(options.light) return daily.filter(t=>['dsa','review'].includes(t.category)).slice(0,2).map(t=>({...t,minutes:Math.min(t.minutes,12)})).concat([clean('light-note','Light-day win',sprint.engineering+' or '+sprint.dsa+': say one takeaway out loud and move on.',5,{category:'optional',optional:true})]);
- return [...daily,...technicalToDos];
+ if(options.light) return withFreshProblem(daily.filter(t=>['dsa','review'].includes(t.category)).slice(0,2).map(t=>({...t,minutes:Math.min(t.minutes,12)})).concat([clean('light-note','Light-day win',sprint.engineering+' or '+sprint.dsa+': say one takeaway out loud and move on.',5,{category:'optional',optional:true})]),date,options);
+ return withFreshProblem([...daily,...technicalToDos],date,options);
 }
 export function dueCounts(records,asOf){
  return Object.values(records||{}).filter(item=>reviewDue(item,asOf)).length;
