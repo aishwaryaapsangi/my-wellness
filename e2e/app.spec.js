@@ -68,7 +68,8 @@ test('Home uses one painted hero and three code-built minimal card illustrations
  await expect.poll(()=>hero.evaluate(el=>el.complete&&el.naturalWidth>=900)).toBe(true);
  await expect(page.locator('.studio-tile--pink svg.studio-vector-teacups')).toBeVisible();
  await expect(page.locator('.studio-tile--blue svg.studio-vector-dino')).toBeVisible();
- await expect(page.locator('.studio-tile--butter .studio-date-art--minimal')).toBeVisible();
+ await expect(page.locator('.studio-tile--butter svg.studio-vector-calendar')).toBeVisible();
+ await expect(page.locator('.studio-tile svg[shape-rendering="crispEdges"]')).toHaveCount(3);
  await expect(page.locator('.studio-tile img')).toHaveCount(0);
  await expect(page.locator('.daily-heading')).toBeVisible();
  const floating=await page.locator('.daily-heading').evaluate(el=>getComputedStyle(el,'::after').content);
