@@ -154,17 +154,67 @@ body{
 .app-shell[data-section="swe"] .retro-decor{display:none}
 .app-shell[data-section="swe"] .google-shelf-symbol{display:none}
 .app-shell .daily-heading{position:relative}
-.app-shell .daily-heading::after{
- content:"";display:block;position:absolute;right:15%;top:-20px;width:88px;height:88px;
- background:url("/my-wellness/art/pastel-journal-table.webp") center / contain no-repeat;
- opacity:.45;transform:rotate(12deg);pointer-events:none;
-}
+/* Removed accidental floating illustration beside Today heading. */
 .app-shell[data-section="swe"] .sip-panel-top{position:relative}
-.app-shell[data-section="swe"] .sip-panel-top::after{
- content:"";flex:none;width:55px;height:55px;opacity:.58;
- background:url("/my-wellness/art/pastel-code-desk.webp") center / contain no-repeat;
- pointer-events:none;
-}
+/* Removed repeated floating art in study panel headings. */
 @media(max-width:750px){
  .app-shell .daily-heading::after,.app-shell[data-section="swe"] .sip-panel-top::after{display:none}
+}
+
+/* Art v3 — unique resolution-independent pastel sketches; no duplicated low-res raster. */
+.app-shell .daily-heading::after,
+.app-shell[data-section="swe"] .sip-panel-top::after {
+ content:none!important;
+ display:none!important;
+ background:none!important;
+}
+.app-shell .pastel-hero-art,
+.app-shell .pastel-studio-art,
+.app-shell[data-section="swe"] .pastel-swe-art{
+ image-rendering:auto;
+ display:block;
+ filter:none;
+ opacity:1;
+}
+.app-shell .hero.editorial-cover svg.garden-art.pastel-hero-art {
+ width:min(34vw,355px);
+ height:auto;
+ max-height:310px;
+ transform:rotate(-3deg);
+}
+.app-shell .studio-tile--pink svg.pastel-studio-art {
+ width:min(70%,270px);
+ height:auto;
+ max-height:275px;
+ bottom:29px;
+ right:3%;
+}
+.app-shell .studio-tile--blue svg.pastel-studio-art {
+ width:min(57%,215px);
+ height:auto;
+ max-height:175px;
+ bottom:16px;
+ right:3%;
+}
+.app-shell[data-section="swe"] svg.swe-cover-laptop.pastel-swe-art {
+ width:min(100%,345px);
+ height:auto;
+ max-height:265px;
+ filter:none;
+}
+@media(max-width:800px){
+ .app-shell .hero.editorial-cover svg.garden-art.pastel-hero-art{
+  width:min(37vw,300px);max-height:255px;
+ }
+}
+@media(max-width:620px){
+ .app-shell .hero.editorial-cover svg.garden-art.pastel-hero-art{
+  position:absolute;right:1%;bottom:10px;width:245px;height:auto;max-height:212px;
+ }
+ .app-shell .studio-tile--pink svg.pastel-studio-art{
+  width:74%;max-width:280px;height:auto;bottom:14px;
+ }
+ .app-shell .studio-tile--blue svg.pastel-studio-art{
+  width:57%;max-width:210px;height:auto;
+ }
 }
