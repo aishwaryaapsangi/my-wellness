@@ -1,4 +1,3 @@
-import {TeaCupSketch,JavaStudySketch} from './PastelSketches.jsx';
 import React from 'react';
 
 /* Small original vector compositions. These are purposeful editorial artwork,
@@ -54,10 +53,10 @@ export function EditorialStudioStrip({onNavigate}) {
   <div className="studio-strip-heading"><div><span className="studio-eyebrow">✳ THE LITTLE STUDIO INDEX</span><h2>your world, <em>in full color.</em></h2></div><p>A little joy in the everyday. Pick a chapter and make it your own.</p></div>
   <div className="studio-strip-grid">
    <button type="button" className="studio-tile studio-tile--pink" onClick={()=>onNavigate('studio')}>
-    <span className="studio-tile-eyebrow">01 / THE RITUALS</span><strong>a soft place<br/><i>to bloom.</i></strong><TeaCupSketch className="studio-tile-art pastel-studio-art" /><span className="studio-tile-footer">VISIT THE RITUAL STUDIO <span aria-hidden="true">↗</span></span>
+    <span className="studio-tile-eyebrow">01 / THE RITUALS</span><strong>a soft place<br/><i>to bloom.</i></strong><img className="studio-tile-art pastel-studio-art" src={`${import.meta.env.BASE_URL}art/ritual-teacups-v2.webp`} width="788" height="920" alt="" loading="lazy" decoding="async" /><span className="studio-tile-footer">VISIT THE RITUAL STUDIO <span aria-hidden="true">↗</span></span>
    </button>
    <button type="button" className="studio-tile studio-tile--blue" onClick={()=>onNavigate('swe')}>
-    <span className="studio-tile-eyebrow">02 / THE BIG DREAM</span><strong>code. create.<br/><i>go further!</i></strong><JavaStudySketch className="studio-tile-art pastel-studio-art" /><span className="studio-tile-footer">OPEN THE SWE STUDIO <span aria-hidden="true">↗</span></span>
+    <span className="studio-tile-eyebrow">02 / THE BIG DREAM</span><strong>code. create.<br/><i>go further!</i></strong><img className="studio-tile-art pastel-studio-art" src={`${import.meta.env.BASE_URL}art/studio-java-v2.webp`} width="1024" height="692" alt="" loading="lazy" decoding="async" /><span className="studio-tile-footer">OPEN THE SWE STUDIO <span aria-hidden="true">↗</span></span>
    </button>
    <button type="button" className="studio-tile studio-tile--butter" onClick={()=>onNavigate('calendar')}>
     <span className="studio-tile-eyebrow">03 / YOUR LITTLE PLANS</span><strong>make space<br/><i>for magic.</i></strong><div className="studio-date-art" aria-hidden="true"><span>✿</span><span>19</span><span>NOV</span></div><span className="studio-tile-footer">FLIP TO YOUR CALENDAR <span aria-hidden="true">↗</span></span>
