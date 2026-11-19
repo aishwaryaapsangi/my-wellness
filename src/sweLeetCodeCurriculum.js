@@ -88,6 +88,7 @@ export function selectNewLeetCode(date,problems=[],records={},excludeIds=[]){
  const currentEligible=eligible.filter(p=>phaseIds.includes(Number(p.id)));
  const candidates=currentEligible.length?currentEligible:eligible;
  if(!candidates.length)return null;
+ const phaseDay=Math.max(0,Math.floor((Date.parse(date+'T12:00:00Z')-Date.parse(current[0]+'T12:00:00Z'))/86400000));
  const rank=p=>{
   const id=Number(p.id),index=phaseIds.indexOf(id);
   const easyBonus=p.difficulty==='Easy'?0:p.difficulty==='Medium'?3:8;
@@ -95,7 +96,7 @@ export function selectNewLeetCode(date,problems=[],records={},excludeIds=[]){
   const familiarity=phaseIds.filter(x=>records[x]?.history?.some(h=>['green','mock'].includes(h.grade))).length;
   // When confidence builds, prefer Mediums, but Hard remains gated until later stages.
   const diffPenalty=easyBonus+(date<'2027-01-01'&&p.difficulty==='Hard'?25:0)+(familiarity<3&&p.difficulty==='Medium'?5:0);
-  return (index<0?50:index*1.5)+diffPenalty+(earlier?0:20);
+  return (index<0?50:Math.abs(index-phaseDay)*2.5)+diffPenalty+(earlier?0:20);
  };
  return [...candidates].sort((a,b)=>rank(a)-rank(b)||Number(a.id)-Number(b.id))[0];
 }
