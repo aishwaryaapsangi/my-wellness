@@ -260,3 +260,42 @@
   transition:none!important;animation:none!important;
  }
 }
+
+/* Small independent motifs around the meditation illustration, never over CTAs. */
+.app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-journal,
+.app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-cat{
+ position:absolute;
+ z-index:3;
+ height:auto;
+ margin:0;
+ object-fit:contain;
+ pointer-events:none;
+ filter:none;
+}
+.app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-journal{
+ width:102px;
+ right:33%;
+ bottom:11px;
+ transform:rotate(-10deg);
+ opacity:.88;
+}
+.app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-cat{
+ width:116px;
+ right:2%;
+ bottom:13px;
+ opacity:.95;
+}
+@media(max-width:950px){
+ .app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-journal{
+  width:78px;right:30%;
+ }
+ .app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-cat{
+  width:92px;right:2%;
+ }
+}
+@media(max-width:650px){
+ .app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-journal,
+ .app-shell[data-section="today"] .hero.editorial-cover img.wellness-hero-cat{
+  display:none;
+ }
+}
