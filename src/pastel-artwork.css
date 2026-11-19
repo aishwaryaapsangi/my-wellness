@@ -142,3 +142,29 @@ body{
 @media(prefers-reduced-motion:reduce){
  .app-shell .pastel-studio-art{transition:none!important;transform:none!important}
 }
+
+/* Keep watercolor prints close to their native sharpness; these are little
+   corner illustrations rather than oversized vector posters. */
+@media(min-width:801px){
+ .app-shell .hero.editorial-cover .garden-art.pastel-hero-art{width:min(29vw,270px);max-height:290px}
+ .app-shell .studio-tile--pink .pastel-studio-art{width:min(65%,260px);height:230px}
+ .app-shell .studio-tile--blue .pastel-studio-art{width:min(55%,200px);height:145px}
+ .app-shell[data-section="swe"] .swe-cover-laptop.pastel-swe-art{max-width:260px;height:200px}
+}
+.app-shell[data-section="swe"] .retro-decor{display:none}
+.app-shell[data-section="swe"] .google-shelf-symbol{display:none}
+.app-shell .daily-heading{position:relative}
+.app-shell .daily-heading::after{
+ content:"";display:block;position:absolute;right:15%;top:-20px;width:88px;height:88px;
+ background:url("/my-wellness/art/pastel-journal-table.webp") center / contain no-repeat;
+ opacity:.45;transform:rotate(12deg);pointer-events:none;
+}
+.app-shell[data-section="swe"] .sip-panel-top{position:relative}
+.app-shell[data-section="swe"] .sip-panel-top::after{
+ content:"";flex:none;width:55px;height:55px;opacity:.58;
+ background:url("/my-wellness/art/pastel-code-desk.webp") center / contain no-repeat;
+ pointer-events:none;
+}
+@media(max-width:750px){
+ .app-shell .daily-heading::after,.app-shell[data-section="swe"] .sip-panel-top::after{display:none}
+}
