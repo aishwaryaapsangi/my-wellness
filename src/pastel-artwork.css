@@ -1,0 +1,144 @@
+/* Pastel sketch artwork integration.
+   Transparent watercolor WebP assets replace the previous outlined cartoons.
+   Editorial structure and interaction remain unchanged. */
+:root {
+ --retro-tangerine:#E4A869;
+ --retro-butter:#F4DA9A;
+ --retro-blush:#DB9EAA;
+ --retro-sea:#9CB8D3;
+ --retro-matcha:#A8B48C;
+ --retro-cream:#FFF9EC;
+ --retro-tomato:#BC6B62;
+ --retro-ink:#544344;
+ --art-cream:#FFF9ED;
+ --art-pink:#EFC4CD;
+ --art-softpink:#F7E4E5;
+ --art-burgundy:#794052;
+ --art-red:#BA6864;
+ --art-butter:#F5E3AB;
+ --art-blue:#CDDDE9;
+ --art-olive:#CBD2A5;
+}
+.app-shell{
+ --cream:#FFF9ED;
+ --ink:#544344;
+ --pink:#EFC4CD;
+ --blush:#F8E7E8;
+ --border:#E3CCC7;
+}
+body{
+ background:#FFF9ED;
+ background-image:radial-gradient(circle at 1px 1px,#CDBFAD27 1px,transparent 1.5px);
+ background-size:30px 30px;
+}
+.app-shell .top-ribbon{background:#B76C7A}
+.app-shell .site-header{background:#FFF9ED;border-bottom-color:#E8D6D0}
+.app-shell .nav-links button.active{background:#C67F91;border-color:#C67F91;box-shadow:none}
+.app-shell .brand-mark{background:#F5D8DE;border-color:#D4A1AC;box-shadow:none}
+.app-shell .hero.editorial-cover{
+ background:linear-gradient(110deg,#F8E5E0 0%,#ECC7D0 70%,#E9B6C5);
+ border-color:#E5BCC6;
+ border-radius:23px;
+}
+.app-shell .hero.editorial-cover .hero-grid{opacity:.13}
+.app-shell .hero.editorial-cover h1{color:#805067}
+.app-shell .hero.editorial-cover h1 em{color:#A35D66;text-shadow:none}
+.app-shell .hero.editorial-cover .hero-copy>p{color:#70545B}
+.app-shell .hero.editorial-cover .btn-hero{background:#A96D7C}
+.app-shell .hero.editorial-cover .garden-art.pastel-hero-art{
+ display:block;object-fit:contain;
+ width:min(37vw,370px);max-height:340px;min-height:0;
+ margin:0 12px 0 0;position:relative;z-index:3;
+ transform:rotate(-4deg);filter:drop-shadow(0 12px 13px #AA728229);
+ image-rendering:auto;
+}
+.app-shell .hero.editorial-cover .hero-sticker{
+ background:#FFF8EC;border:1px solid #DDAAB6;color:#975F6B;
+ box-shadow:none;transform:rotate(9deg);
+}
+.app-shell .hero.editorial-cover .hero-heart{color:#CE899B}
+.app-shell .hero.editorial-cover::after{background:radial-gradient(circle at 12px -4px,#FFF9ED 12px,transparent 13px) repeat-x;background-size:24px 20px}
+.app-shell .studio-strip-heading h2{color:#7C4D5C}
+.app-shell .studio-strip-heading h2 em{color:#BB7976}
+.app-shell .studio-tile{border:1px solid #E3C7C0;box-shadow:none}
+.app-shell .studio-tile--pink{background:#F5D4DB;color:#8B586B}
+.app-shell .studio-tile--blue{background:#D9E4ED;color:#657C99;border-color:#CCD7E0}
+.app-shell .studio-tile--butter{background:#F4E4B5;color:#936D62;border-color:#E5D4A3}
+.app-shell .studio-tile--pink>strong i{color:#A8657C}
+.app-shell .studio-tile--blue>strong i{color:#9A6878}
+.app-shell .studio-tile--butter>strong i{color:#C5858C}
+.app-shell .studio-tile .pastel-studio-art{
+ display:block;object-fit:contain;
+ filter:drop-shadow(0 8px 9px #7D56621E);
+ image-rendering:auto;opacity:.98;
+}
+.app-shell .studio-tile--pink .pastel-studio-art{
+ width:min(83%,340px);height:245px;right:2%;bottom:24px;transform:rotate(-5deg);
+}
+.app-shell .studio-tile--blue .pastel-studio-art{
+ width:min(61%,225px);height:163px;right:3%;bottom:21px;transform:rotate(4deg);
+}
+.app-shell .studio-tile:hover .pastel-studio-art{transform:translateY(-4px) rotate(0deg)}
+.app-shell .studio-tile .studio-tile-footer{background:#FFF9EDDD;color:#79575C}
+.app-shell .studio-tile .studio-date-art{
+ background:#FFF8E9;border-color:#D3A5A9;
+ box-shadow:4px 5px 0 #E9CDD0;color:#A96B72;
+}
+.app-shell .studio-tile--butter .studio-date-art span:first-child{color:#9CB8D3}
+/* Delicate artwork on other relevant study/journal surfaces, not every task card. */
+.app-shell[data-section="swe"]{
+ --sw-paper:#FFF9ED;--sw-ink:#594C4E;
+ background-color:#FFF9ED;
+ background-image:radial-gradient(circle at 1px 1px,#AABBC431 1px,transparent 1.5px);
+}
+.app-shell[data-section="swe"] .swe-hero.retro-swe-cover{
+ background:#FFF9ED;border:1px solid #E2CAC4;
+}
+.app-shell[data-section="swe"] .retro-decor{opacity:.18}
+.app-shell[data-section="swe"] .swe-kicker{background:#EFD1D8;color:#805A64}
+.app-shell[data-section="swe"] .swe-cover-visual{
+ background:#F2D7D8;border:6px solid #C99AA4;
+ box-shadow:none;transform:rotate(1deg);border-radius:18px;
+}
+.app-shell[data-section="swe"] .swe-cover-visual::before{background:#FFF9ED}
+.app-shell[data-section="swe"] .swe-cover-visual-label,
+.app-shell[data-section="swe"] .swe-cover-visual-foot{color:#957078}
+.app-shell[data-section="swe"] .swe-cover-laptop.pastel-swe-art{
+ width:min(100%,345px);height:235px;object-fit:contain;
+ filter:drop-shadow(0 10px 10px #9F7E7826);
+}
+.app-shell[data-section="swe"] .swe-hero h2{color:#775768}
+.app-shell[data-section="swe"] .swe-hero h2 em{color:#B37979}
+.app-shell[data-section="swe"] .google-shelf-card{box-shadow:none}
+.app-shell[data-section="swe"] .google-shelf-card--blue{background:#D8E5ED;color:#627F9C}
+.app-shell[data-section="swe"] .google-shelf-card--yellow{background:#F4E4BB;color:#8C6D57}
+.app-shell[data-section="swe"] .google-shelf-card--green{background:#DDE5CB;color:#6B836B}
+.app-shell[data-section="swe"] .google-shelf-symbol{opacity:.38}
+.app-shell[data-section="swe"] .google-shelf-flower{color:#BA8799}
+.app-shell[data-section="swe"] .google-shelf-card strong i{color:#B37C82}
+.app-shell[data-section="swe"] .swe-tabs{background:#FFF9ED;border-color:#E8D8CC}
+.app-shell[data-section="swe"] .swe-tabs button{background:#FDF4EE;border-color:#E7D9CF}
+.app-shell[data-section="swe"] .sip-banner{background:#F0D5DC;border-color:#E7C1CB}
+.app-shell[data-section="swe"] .sip-hero-row h3{color:#80536A}
+.app-shell[data-section="swe"] .sip-hero-row h3 em{color:#B17B84}
+.app-shell[data-section="swe"] .sip-summary:nth-child(1){background:#E8F0F5;border-color:#D9E5EF}
+.app-shell[data-section="swe"] .sip-summary:nth-child(2){background:#F5E3E2;border-color:#EACED1}
+.app-shell[data-section="swe"] .sip-summary:nth-child(3){background:#F7ECCB;border-color:#E8DDB8}
+.app-shell[data-section="swe"] .sip-summary:nth-child(4){background:#E7EEDB;border-color:#D1DDC7}
+/* Discard intrusive heavy shadows and thick cartoon outlines on decorative areas. */
+.app-shell .studio-tile:hover,.app-shell[data-section="swe"] .google-shelf-card:hover{box-shadow:0 8px 19px #8D73711A}
+@media(max-width:800px){
+ .app-shell .hero.editorial-cover .garden-art.pastel-hero-art{width:min(35vw,300px);max-height:270px}
+ .app-shell .studio-tile--pink .pastel-studio-art{height:220px}
+}
+@media(max-width:620px){
+ .app-shell .hero.editorial-cover .garden-art.pastel-hero-art{
+  position:absolute;right:4px;bottom:13px;width:236px;height:215px;margin:0;transform:rotate(-3deg);
+ }
+ .app-shell .studio-tile--pink .pastel-studio-art{height:230px;width:78%;right:0}
+ .app-shell .studio-tile--blue .pastel-studio-art{height:167px;width:59%}
+ .app-shell[data-section="swe"] .swe-cover-laptop.pastel-swe-art{height:180px}
+}
+@media(prefers-reduced-motion:reduce){
+ .app-shell .pastel-studio-art{transition:none!important;transform:none!important}
+}
