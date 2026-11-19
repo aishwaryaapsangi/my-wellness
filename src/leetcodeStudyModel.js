@@ -6,11 +6,21 @@ export const DIFFICULTIES=['Unrated','Easy','Medium','Hard'];
 export const EFFORTS=['struggled','normal','easy'];
 // Difficulty is the official problem level; effort is how THIS attempt felt.
 export function problemRecallGap(grade,stage,effort='normal'){
- const base=grade==='red'?1:grade==='yellow'?3:REVIEW_GAPS[Math.max(0,Math.min(REVIEW_GAPS.length-1,stage))];
- if(effort==='struggled')return grade==='red'?1:Math.max(1,Math.floor(base/2));
- if(effort==='easy'&&['green','mock'].includes(grade))return Math.min(90,Math.max(2,Math.ceil(base*1.5)));
- return base;
+ // New target: no LeetCode recall less than five days after a real attempt.
+ // The learner's effort determines how far beyond that minimum to wait.
+ const ladder=[7,14,21,35,60,90];
+ const base=grade==='red'?6:grade==='yellow'?8:ladder[Math.max(0,Math.min(ladder.length-1,stage))];
+ if(effort==='struggled')return Math.max(5,Math.ceil(base*0.8));
+ if(effort==='easy'&&['green','mock'].includes(grade))return Math.min(120,Math.max(10,Math.ceil(base*1.7)));
+ return Math.max(6,base);
 }
+export function leetCodeDueDate(record){
+ if(!record?.lastReviewed)return record?.dueDate||null;
+ // Old browser records may have next-day intervals: honor the new minimum.
+ const floor=addStudyDays(record.lastReviewed,5);
+ return record.dueDate&&record.dueDate>floor?record.dueDate:floor;
+}
+export function isLeetCodeDue(record,date){const due=leetCodeDueDate(record);return attempted(record)&&!!due&&due<=date;}
 export const CONCEPT_GROUPS={
  'Data structures':['Arrays','2D Arrays / Matrix','Strings','HashMap / HashSet','Linked List','Stack','Queue / Deque','Trees / BST','Heap / Priority Queue','Graphs','Trie'],
  'Algorithms & patterns':['Two Pointers','Sliding Window','Prefix Sum','Binary Search','Sorting','Recursion','Backtracking','Greedy','Dynamic Programming','Intervals','Union Find','Bit Manipulation','Math / Digits'],
@@ -124,7 +134,7 @@ export function filterLeetCodeProblems(list,records,{search='',phase='all',statu
   const inStatus=status==='all'||
    (status==='prior'&&has)||
    (status==='unattempted'&&!has)||
-   (status==='due'&&((has&&!!r.dueDate&&r.dueDate<=today)||(!has&&first.has(Number(p.id)))))||
+   (status==='due'&&((has&&isLeetCodeDue(r,today))||(!has&&first.has(Number(p.id)))))||
    (status===grade);
   const level=r.difficulty||p.difficulty||'Unrated';
   const inDifficulty=difficulty==='all'||level===difficulty;
