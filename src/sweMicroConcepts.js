@@ -6931,16 +6931,29 @@ export const MICRO_CONCEPTS=[
 export const MICRO_FAMILIES=[...new Set(MICRO_CONCEPTS.map(x=>x.family))];
 // Keep the first seven foundation days fixed, then interleave every DSA family.
 // Every record keeps its original stable ID: changing the calendar never deletes grades.
+// Staged prerequisites: new lessons start with arrays; linked lists, trees and graphs
+// unlock only after their earlier foundational micro-lessons. Reviews never lose history.
 export const MICRO_DAILY_SEQUENCE=(()=>{
  const opening=MICRO_CONCEPTS.slice(0,7);
- const groups=new Map(MICRO_FAMILIES.map(f=>[f,[]]));
- MICRO_CONCEPTS.slice(7).forEach(c=>groups.get(c.family).push(c));
+ const queues=new Map(MICRO_FAMILIES.map(f=>[f,MICRO_CONCEPTS.slice(7).filter(c=>c.family===f)]));
+ const unlock={
+  'Arrays & ArrayList':0,'Complexity & correctness':7,'Strings & characters':10,
+  'HashMap / HashSet':12,'Sorting & binary search':21,'Linked lists':25,
+  'Stacks & queues':29,'Recursion & backtracking':35,'Trees & BST':42,
+  'Heaps & tries':56,'Graphs & grids':63,'Greedy & intervals':77,
+  'Dynamic programming':91,'Math & bits':105
+ };
  const result=[...opening];
  while(result.length<MICRO_CONCEPTS.length){
-  for(const family of MICRO_FAMILIES){
-   const next=groups.get(family).shift();
-   if(next)result.push(next);
-  }
+  const offset=result.length;
+  const available=MICRO_FAMILIES.filter(f=>(unlock[f]??0)<=offset&&queues.get(f).length);
+  // New unlocks get deliberate attention while foundations keep returning.
+  const latest=available.slice(-3);
+  const ranked=[...latest,...available];
+  let chosen=ranked[offset%Math.max(1,ranked.length)];
+  if(!chosen||!queues.get(chosen)?.length)chosen=available[0];
+  if(!chosen)throw Error('Unscheduled micro concept');
+  result.push(queues.get(chosen).shift());
  }
  return result;
 })();
