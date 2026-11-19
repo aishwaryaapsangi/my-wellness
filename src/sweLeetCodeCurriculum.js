@@ -69,7 +69,7 @@ const FOUNDATION=[
 export const LEETCODE_PHASES=FOUNDATION.map(([starts,ends,title,ids])=>({starts,ends,title,ids}));
 const EARLY_UNLOCK=new Map(FOUNDATION.flatMap(([starts,,title,ids])=>ids.map((id,index)=>[id,{date:starts,phase:title,order:index}])));
 export function isNewProblemEligible(problem,date,records={}){
- if(!problem||problem.language==='SQL')return false;
+ if(!problem||problem.language==='SQL'||problem.prior)return false;
  if(records[problem.id]?.history?.length)return false;
  const early=EARLY_UNLOCK.get(Number(problem.id));
  if(early)return early.date<=date;
