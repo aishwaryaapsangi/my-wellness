@@ -370,3 +370,85 @@
  .app-shell .studio-tile--blue > strong,
  .app-shell .studio-tile--butter > strong{max-width:68%}
 }
+
+
+/* Quiet Home studio cards: coordinated teacup palette, one focal graphic per tile.
+   Do not affect the full watercolor hero or Google/Money pages. */
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile {
+  overflow:hidden;
+  border:1px solid rgba(139,94,105,.15);
+  box-shadow:none;
+  background-image:none;
+}
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile::before,
+.app-shell[data-section="today"] .studio-strip-grid .studio-tile::after {
+  display:none!important;
+}
+.app-shell[data-section="today"] .studio-tile--pink {background:#F3D9E0;color:#805567}
+.app-shell[data-section="today"] .studio-tile--blue {background:#DFE8EC;color:#62738D}
+.app-shell[data-section="today"] .studio-tile--butter {background:#F7E8C7;color:#936B69}
+.app-shell[data-section="today"] .studio-tile--pink img.pastel-studio-art {
+  width:clamp(160px,48%,250px);
+  max-height:240px;
+  height:auto;
+  bottom:34px;
+  right:5%;
+  transform:none!important;
+  filter:none!important;
+}
+.app-shell[data-section="today"] .studio-tile--blue img.pastel-studio-art {
+  width:clamp(105px,33%,155px);
+  height:auto;
+  max-height:130px;
+  bottom:17px;
+  right:5%;
+  transform:none!important;
+  filter:none!important;
+}
+.app-shell[data-section="today"] .studio-date-art--minimal {
+  width:106px;
+  height:120px;
+  top:46px;
+  right:33px;
+  background:#FFF9ED;
+  border:0;
+  border-radius:13px;
+  box-shadow:0 4px 0 rgba(182,121,134,.15);
+  transform:rotate(5deg);
+  color:#A97482;
+}
+.app-shell[data-section="today"] .studio-date-art--minimal .studio-date-ring {
+  position:absolute;
+  top:-9px;
+  left:50%;
+  right:auto;
+  width:30px;
+  height:13px;
+  transform:translateX(-50%);
+  border-top:3px solid #BF9199;
+  border-left:3px solid #BF9199;
+  border-right:3px solid #BF9199;
+  border-radius:14px 14px 0 0;
+}
+.app-shell[data-section="today"] .studio-date-art--minimal .studio-date-number {
+  font:600 59px/1 Georgia,serif;
+  letter-spacing:-.05em;
+}
+.app-shell[data-section="today"] .studio-date-art--minimal .studio-date-month {
+  font:700 11px/1.5 'DM Sans',sans-serif;
+  letter-spacing:.14em;
+}
+.app-shell[data-section="today"] .studio-tile:hover {
+  box-shadow:0 5px 12px rgba(116,73,78,.08);
+}
+@media(max-width:620px){
+  .app-shell[data-section="today"] .studio-tile--pink img.pastel-studio-art{
+    width:47%;max-height:210px;right:5%;bottom:25px;
+  }
+  .app-shell[data-section="today"] .studio-tile--blue img.pastel-studio-art{
+    width:34%;height:auto;max-height:115px;right:5%;bottom:20px;
+  }
+  .app-shell[data-section="today"] .studio-date-art--minimal {
+    top:46px;right:24px;width:102px;height:116px;
+  }
+}
