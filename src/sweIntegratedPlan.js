@@ -116,7 +116,7 @@ export const DAY_ROLE=[
  ['DSA variation + Java','35–50 min · build transfer'],
  ['Revision + career','10–30 min · flexible evening'],
  ['Project build + coding','75–120 min · concrete artifact'],
- ['Review + plan','50–85 min · long-term retention']
+ ['Gentle Sunday recall','15–25 min · reset day']
 ];
 // In the real planner new problems are selected from attempted history and
 // prerequisite-gated topic stages. Old static IDs remain for legacy tests/exports.
@@ -132,6 +132,15 @@ function withFreshProblem(tasks,date,options){
  return filtered;
 }
 export function getDailyTasks(date,options={}){
+ // Sunday is deliberately a reset day, regardless of phase or sprint.
+ // Keep a small technical touchpoint without assigning unseen LeetCode or a long review queue.
+ if(new Date(date+'T12:00:00Z').getUTCDay()===0){
+   return [
+    {id:date+':recall',type:'recall',category:'review',label:'Sunday · recall ONE due concept',detail:'Spend a few minutes reviewing one due DSA/Java topic yourself. No questions or backlog marathon.',minutes:8,optional:false},
+    {id:date+':sunday-mini-code',type:'sunday-mini-code',category:'dsa',label:'Sunday mini coding · keep it light',detail:'One tiny Java drill or a familiar array-pattern example; finish after 10–15 minutes. No new LeetCode assignment today.',minutes:15,optional:false},
+    {id:date+':sunday-weekly-look',type:'sunday-weekly-look',category:'optional',label:'Optional: glance at next week',detail:'Choose your first priority for Monday, then enjoy your Sunday reset.',minutes:5,optional:true}
+   ];
+ }
  const accelerated=novemberTasks(date,options)||decemberTasks(date,options);
  const techMicros=engineeringLessonsForDate(date);
  const technicalToDos=techMicros.map((lesson,i)=>({id:date+':engineering-micro-'+lesson.id,type:'engineering-micro',
