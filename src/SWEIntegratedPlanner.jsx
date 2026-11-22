@@ -34,7 +34,8 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const chosen=sprintForDate(selectedDay),weekDates=sprintDates(chosen);
  const checks=db.planChecks||{},lightDays=db.lightDays||{},overrides=db.sprintOverrides||{};
  const userWeek={...chosen,...(overrides[chosen.id]||{})};
- const isLight=!!lightDays[selectedDay];
+ const isSunday=new Date(selectedDay+'T12:00:00Z').getUTCDay()===0;
+ const isLight=isSunday||!!lightDays[selectedDay];
  const dateDueProblems=prioritizeDueProblems(allProblems,db.problems||{},selectedDay);
  const sectionSkills=useMemo(()=>handbook.sections.flatMap(s=>s.skills.map(x=>({...x,section:s.title,sectionId:s.id,page:s.page}))),[]);
  const dateDueSkills=sectionSkills.filter(sk=>reviewDue(db.skills?.[sk.id],selectedDay)).sort((a,b)=>(db.skills[a.id]?.dueDate||'').localeCompare(db.skills[b.id]?.dueDate||''));
@@ -44,17 +45,17 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const lessons=[...MICRO_CONCEPTS,...ENGINEERING_MICROS];
  const reviewedToday=lessons.filter(l=>checks[selectedDay+':micro-review-'+l.id]).filter(l=>!microBacklog.some(d=>d.id===l.id)&&!engineeringBacklog.some(d=>d.id===l.id));
  const reviewed=Array.from(new Map([...microBacklog.slice(0,isLight?1:2),...engineeringBacklog.slice(0,isLight?1:2),...reviewedToday].map(l=>[l.id,l])).values());
- const recallTasks=reviewed.filter(l=>l.id!==todayMicro?.id).map(l=>({
+ const recallTasks=(isSunday?[]:reviewed.filter(l=>l.id!==todayMicro?.id)).map(l=>({
   id:selectedDay+':micro-review-'+l.id,type:'micro-review',microId:l.id,category:'review',minutes:8,
   label:'↻ Review '+l.title,detail:(l.family||'DSA')+' · Self-review only; tick when done.',optional:false
  }));
  const priorLeetReviewed=allProblems.filter(p=>checks[selectedDay+':leet-due-'+p.id]&&!dateDueProblems.some(x=>x.id===p.id));
- const leetcodeRecallTasks=[...new Map([...dateDueProblems.slice(0,isLight?1:2),...priorLeetReviewed].map(p=>[p.id,p])).values()].map(p=>({
+ const leetcodeRecallTasks=(isSunday?[]:[...new Map([...dateDueProblems.slice(0,isLight?1:2),...priorLeetReviewed].map(p=>[p.id,p])).values()]).map(p=>({
   id:selectedDay+':leet-due-'+p.id,type:'leet-due',problemId:p.id,category:'leetcode',minutes:25,
   label:'★ PRIORITY REATTEMPT · LeetCode #'+p.id+' '+p.title,
   detail:'From scratch, no hints. Record RED / YELLOW / GREEN and how hard it felt in the LeetCode Dojo to schedule the next review.',optional:false
  }));
- const newLeetCode=selectNewLeetCode(selectedDay,allProblems,db.problems||{});
+ const newLeetCode=isSunday?null:selectNewLeetCode(selectedDay,allProblems,db.problems||{});
  const dayTasks=[...getDailyTasks(selectedDay,{light:isLight,dueProblems:dateDueProblems,dueSkills:dateDueSkills,sprintOverride:overrides[chosen.id],newProblem:newLeetCode}),...leetcodeRecallTasks,...recallTasks];
  const dailyMicroReview=reviewed[0]||null;
  const dayDone=dayTasks.filter(t=>checks[t.id]&&!t.optional).length;
@@ -66,7 +67,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
  const monthStats=allMonthlyWeeks.map(w=>planProgress(checks,w,lightDays));
  const monthDone=monthStats.reduce((sum,s)=>sum+s.completed,0),monthTotal=monthStats.reduce((sum,s)=>sum+s.total,0);
  const index=chosen.index;
- const questions=[...new Map(weekDates.flatMap(date=>getDailyTasks(date,{sprintOverride:overrides[chosen.id],newProblem:selectNewLeetCode(date,allProblems,db.problems||{})}).filter(t=>t.problemId).map(t=>{const problem=allProblems.find(p=>p.id===t.problemId);return problem?[problem.id,{...problem,plannedDate:date}]:null})).filter(Boolean)).values()].slice(0,12);
+ const questions=[...new Map(weekDates.flatMap(date=>getDailyTasks(date,{sprintOverride:overrides[chosen.id],newProblem:new Date(date+'T12:00:00Z').getUTCDay()===0?null:selectNewLeetCode(date,allProblems,db.problems||{})}).filter(t=>t.problemId).map(t=>{const problem=allProblems.find(p=>p.id===t.problemId);return problem?[problem.id,{...problem,plannedDate:date}]:null})).filter(Boolean)).values()].slice(0,12);
  const applications=db.applications||[];
  const since30=addStudyDays(today,-29);
  const recentApps=applications.filter(a=>/google/i.test(a.company)&&a.appliedAt&&a.appliedAt>=since30&&a.appliedAt<=today);
@@ -133,7 +134,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
     <div className="sip-panel sip-main-day">
      <div className="sip-panel-top"><div><span className="sip-eyebrow">✦ YOUR DAY-TO-DAY PLAN</span><h3>{readable(selectedDay)}</h3><p>{todayMicro?.title||NOVEMBER_DAILY[selectedDay]?.title||DAY_ROLE[Math.round((Date.parse(selectedDay+'T12:00:00Z')-Date.parse(chosen.monday+'T12:00:00Z'))/86400000)]?.[0]||'Weekly focus'} · {dayMinutes} essential minutes</p></div><div className="sip-date-nav"><button aria-label="Previous day" onClick={()=>moveDay(-1)} disabled={selectedDay<=start}><ArrowLeft size={16}/></button><input aria-label="Choose a study date" type="date" min={start} value={selectedDay} onChange={e=>{if(isInRange(e.target.value))setSelectedDay(e.target.value)}}/><button aria-label="Next day" onClick={()=>moveDay(1)} ><ArrowRight size={16}/></button></div></div>
      <div className="sip-day-progress"><Progress done={dayDone} total={dayTotal}/><span>{dayDone}/{dayTotal} completed</span></div>
-     <div className="sip-light-row"><div><strong>Office-heavy day?</strong><small>Switch to a short concept + code checkpoint. Every family gets atomic lessons and ongoing recall.</small></div><button className={isLight?'active':''} onClick={()=>updateObj('lightDays',{[selectedDay]:!isLight})}>{isLight?'Light mode ON':'Use light mode'}</button></div>
+     <div className="sip-light-row"><div><strong>{isSunday?'Sunday · your reset day':'Office-heavy day?'}</strong><small>{isSunday?'Just one concept recall and a tiny coding drill. Save new problems and long sessions for other days.':'Switch to a short concept + code checkpoint. Every family gets atomic lessons and ongoing recall.'}</small></div>{!isSunday&&<button className={isLight?'active':''} onClick={()=>updateObj('lightDays',{[selectedDay]:!isLight})}>{isLight?'Light mode ON':'Use light mode'}</button>}</div>
      <div className="sip-task-list">{dayTasks.map(t=><div key={t.id} className={'sip-task '+(checks[t.id]?'is-done':'')}>
       <label><input type="checkbox" checked={!!checks[t.id]} onChange={e=>setCheck(t.id,e.target.checked)}/><span className={'sip-task-icon '+(DOMAIN_STYLES[t.category]||'')}>{t.category==='review'?<RefreshCcw size={16}/>:t.category==='leetcode'?<Code2 size={16}/>:t.category==='project'?<GitBranch size={16}/>:t.category==='career'?<Target size={16}/>:t.category==='engineering'?<Layers3 size={16}/>:<BookOpen size={16}/>}</span><span className="sip-task-detail"><strong>{t.label}{t.optional?' · optional':''}</strong><small>{t.detail}</small><span className="sip-task-meta"><Clock3 size={12}/> {t.minutes} min · {t.category}</span></span></label>
       {(t.problemId||t.sectionPage||t.skillId)&&<div className="sip-task-helpers">{t.problemId&&<button onClick={()=>onOpenProblem(t.problemId)}>Open problem #{t.problemId} <ChevronRight size={13}/></button>}{t.sectionPage&&<button onClick={()=>showSkill(t.sectionPage)}>Open tech lesson <ChevronRight size={13}/></button>}{t.skillId&&<button onClick={()=>{const s=handbook.sections.find(x=>x.skills.some(z=>z.id===t.skillId));onOpenSection(s?.id)}}>Review micro-skill <ChevronRight size={13}/></button>}</div>}
@@ -155,7 +156,7 @@ export default function SWEIntegratedPlanner({mode='daily',db,update,allProblems
    </div>
    <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">MONDAY TO SUNDAY</span><h3>See your whole week at once</h3></div><span className="sip-muted">A balanced mix every week · weekly tech focus rotates</span></div><div className="sip-week-strip">{weekDates.map((date,i)=>{const d=getDailyTasks(date,{light:lightDays[date],sprintOverride:overrides[chosen.id],newProblem:selectNewLeetCode(date,allProblems,db.problems||{})});const done=d.filter(t=>checks[t.id]&&!t.optional).length,total=d.filter(t=>!t.optional).length;return <button key={date} className={'sip-week-day '+(selectedDay===date?'is-selected':'')+(done===total?' is-complete':'')} onClick={()=>setSelectedDay(date)}><span>{weekdays[i]}</span><strong>{date.slice(-2)}</strong><small>{microLessonForDate(date)?.title||NOVEMBER_DAILY[date]?.title||DAY_ROLE[i][0]}</small><Progress done={done} total={total}/><i>{done}/{total}</i></button>})}</div>
    </div>
-   <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">PRACTICE ASSIGNMENTS</span><h3>This week's LeetCode ladder</h3></div><span className="sip-muted">Your week’s Java DSA + SQL question assignments</span></div><div className="sip-problem-grid">{questions.map((p,i)=><div key={p.id} className="sip-problem-card"><div><Flag tone={i===0?'pink':'sky'}>{short(p.plannedDate)+' · '+(p.language==='SQL'?'SQL':'JAVA')}</Flag><span>#{p.id}</span></div><strong>{p.title}</strong><small>{p.pattern}</small><button onClick={()=>onOpenProblem(p.id)}>Practice / review <ChevronRight size={14}/></button></div>)}</div><p className="sip-muted">On fourth-week consolidations, these are re-solves—not a requirement to learn three new patterns. Every second Sunday also explicitly asks for a two-week LeetCode replay.</p></div>
+   <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">PRACTICE ASSIGNMENTS</span><h3>This week's LeetCode ladder</h3></div><span className="sip-muted">Your week’s Java DSA + SQL question assignments</span></div><div className="sip-problem-grid">{questions.map((p,i)=><div key={p.id} className="sip-problem-card"><div><Flag tone={i===0?'pink':'sky'}>{short(p.plannedDate)+' · '+(p.language==='SQL'?'SQL':'JAVA')}</Flag><span>#{p.id}</span></div><strong>{p.title}</strong><small>{p.pattern}</small><button onClick={()=>onOpenProblem(p.id)}>Practice / review <ChevronRight size={14}/></button></div>)}</div><p className="sip-muted">On fourth-week consolidations, these are re-solves—not a requirement to learn three new patterns. Sundays stay light: due LeetCode reattempts remain visible in the Dojo but are not required on your reset day.</p></div>
   </div>:
   <div className="sip-column">
    <div className="sip-panel"><div className="sip-panel-top"><div><span className="sip-eyebrow">THE HAWK-EYE VIEW</span><h3>Nov 2026 → Google SWE offer · what matters each month</h3><p>DSA, Java, SQL/OOP/networking, your flagship project, and networking run <em>in parallel</em>. The emphasis changes each month; review never disappears.</p></div><Flag tone="sage">Monthly consolidation built in</Flag></div>
