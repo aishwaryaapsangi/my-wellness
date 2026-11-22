@@ -32,7 +32,7 @@ export const WEEKLY_RHYTHM=[
  {day:"Thu",focus:"Apply + API",minutes:"35–45 min",tasks:["Another pattern variation","10-minute Java API recall","Big-O explanation"]},
  {day:"Fri",focus:"Gentle reset",minutes:"Optional 15–25 min",tasks:["Review error log","Plan the next weak concept","Rest if work is heavy"]},
  {day:"Sat",focus:"Deep-focus studio",minutes:"75–120 min",tasks:["New challenge","Independent redo","Write 3 edge tests"]},
- {day:"Sun",focus:"Engineer hour",minutes:"60–90 min",tasks:["Full-stack project / CS","Career evidence journal","Adjust next week's plan"]}
+ {day:"Sun",focus:"Gentle reset + recall",minutes:"15–25 min",tasks:["Review one due concept","Tiny Java or familiar LeetCode drill","Reset your room and plan the week"]}
 ];
 export const PROJECT_PLAN=[
  {id:"scope",month:"Nov–Dec 2026",title:"CityCircle: scope and architecture",deliverables:["User stories + wireframes","Minimum feature list and boundaries","Repo skeleton and architecture sketch"]},
