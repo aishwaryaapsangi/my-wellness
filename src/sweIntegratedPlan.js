@@ -135,9 +135,11 @@ export function getDailyTasks(date,options={}){
  // Sunday is deliberately a reset day, regardless of phase or sprint.
  // Keep a small technical touchpoint without assigning unseen LeetCode or a long review queue.
  if(new Date(date+'T12:00:00Z').getUTCDay()===0){
+   const sundayMicro=microLessonForDate(date);
    return [
     {id:date+':recall',type:'recall',category:'review',label:'Sunday · recall ONE due concept',detail:'Spend a few minutes reviewing one due DSA/Java topic yourself. No questions or backlog marathon.',minutes:8,optional:false},
     {id:date+':sunday-mini-code',type:'sunday-mini-code',category:'dsa',label:'Sunday mini coding · keep it light',detail:'One tiny Java drill or a familiar array-pattern example; finish after 10–15 minutes. No new LeetCode assignment today.',minutes:15,optional:false},
+    ...(sundayMicro?[{id:date+':micro-focus',type:'micro-focus',category:'dsa',label:'Learn ONE concept · '+sundayMicro.title,detail:'Optional Sunday micro-lesson · '+sundayMicro.goal+'. Move this to a weekday if you prefer a full reset.',minutes:12,microId:sundayMicro.id,sectionPage:sundayMicro.page,optional:true}]:[]),
     {id:date+':sunday-weekly-look',type:'sunday-weekly-look',category:'optional',label:'Optional: glance at next week',detail:'Choose your first priority for Monday, then enjoy your Sunday reset.',minutes:5,optional:true}
    ];
  }
