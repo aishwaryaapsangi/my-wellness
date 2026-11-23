@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import './money-garden.css';
 import FlowerBouquet from './ThemeDoodles.jsx';
 import LiveBankPanel from './LiveBankPanel.jsx';
+import MoneyDeepDive from './MoneyDeepDive.jsx';
 
 const STORAGE = 'bloom-money-garden-v1';
 const CATEGORIES = ['Groceries','Gas & transport','Coffee & dining','Shopping','Health & beauty','Subscriptions','Housing','Utilities','Student loans','Travel & fun','Other','Transfer / exclude'];
@@ -174,8 +175,9 @@ export default function MoneyGarden(){
   <div className="mg-privacy"><strong>🔒 Your spending deserves privacy.</strong> When configured, live banking data is read from your authenticated account and not stored in this public GitHub repository. Manual entries and category corrections are saved locally in this browser. Bank credentials never belong in website source code.</div>
   <LiveBankPanel onChange={setBankFeed}/>
   {data.starterNotes?.coverage&&<div className="mg-data-snapshot"><strong>✿ Imported starting snapshot:</strong> {data.starterNotes.coverage} The data does not update automatically; import a newer CSV when you want current spending.</div>}
-  <div className="mg-controls"><nav className="mg-tabs" aria-label="Money Garden sections">{[['overview','Overview'],['activity','Spending diary'],['bills','Bill calendar'],['goals','Dream planner'],['settings','Setup & privacy']].map(([id,label])=><button key={id} type="button" className={pane===id?'mg-active':''} onClick={()=>setPane(id)}>{label}</button>)}</nav><label className="mg-month">Viewing <input type="month" value={month} onChange={e=>setMonth(e.target.value)} /></label></div>
+  <div className="mg-controls"><nav className="mg-tabs" aria-label="Money Garden sections">{[['overview','Overview'],['deep-dive','Spending & loan lab'],['activity','Spending diary'],['bills','Bill calendar'],['goals','Dream planner'],['settings','Setup & privacy']].map(([id,label])=><button key={id} type="button" className={pane===id?'mg-active':''} onClick={()=>setPane(id)}>{label}</button>)}</nav><label className="mg-month">Viewing <input type="month" value={month} onChange={e=>setMonth(e.target.value)} /></label></div>
   {notice&&<div className="mg-notice" role="status">{notice}<button aria-label="Dismiss notice" onClick={()=>setNotice('')}>×</button></div>}
+  {pane==='deep-dive'&&<MoneyDeepDive/>}
   {pane==='overview'&&(!hasFinancialData?<div className="mg-empty-live">
     <div className="mg-empty-icon">✿</div><h3>Your money, automatically—once your private bank is connected.</h3>
     <p>This dashboard no longer treats missing transactions as $0 spent. Complete the private bank connection above to populate your paychecks, purchases, and weekly spending. The existing ChatGPT Finances connection cannot be shared directly with this site.</p>
