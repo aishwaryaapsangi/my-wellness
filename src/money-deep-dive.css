@@ -79,3 +79,17 @@
 .mdd-budget-status.near{color:#a47735}
 .mdd-budget-status.over{color:#ab555d}
 @media(max-width:690px){.mdd-budget-grid{grid-template-columns:1fr}.mdd-budget-row{flex-wrap:wrap}}
+
+.mdd-cashflow{display:grid;grid-template-columns:minmax(220px,1fr) minmax(140px,.5fr);gap:14px;padding:19px;border:1px solid #d9d9ce;border-radius:14px;background:#f9f3e9}
+.mdd-cashflow strong{font-size:16px}
+.mdd-cashflow p{color:#6c7879;font-size:12px;line-height:1.7;margin:7px 0}
+.mdd-cashflow label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700}
+.mdd-cashflow input{padding:10px;border:1px solid #cdd8d1;border-radius:9px;background:#fff;font-size:14px;color:#314b54}
+.mdd-cashflow-values{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.mdd-cashflow-values span{border-radius:9px;background:#fffaf5;padding:12px;border:1px solid #e5ddd2;font-size:11px}
+.mdd-cashflow-values b{font:650 18px 'Fraunces',Georgia,serif;display:block;margin-top:6px}
+.mdd-cashflow-values .mdd-cashflow-negative{background:#fff0ed;color:#a34e58;border-color:#e8c0bd}
+.mdd-cashflow-values .mdd-cashflow-positive{background:#eef7ef;color:#3d7c65;border-color:#b7d9c1}
+.mdd-cashflow>small{grid-column:1/-1;color:#687b7d;font-size:11px;line-height:1.7}
+@media(max-width:800px){.mdd-cashflow-values{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.mdd-cashflow{grid-template-columns:1fr}.mdd-cashflow-values{grid-template-columns:1fr}}
