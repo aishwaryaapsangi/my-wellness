@@ -149,6 +149,9 @@ test('Money Garden deep dive loads a private snapshot and opens dated expenses a
   criExtra:150,otherExtra:0,monthlyElectronic:0
  };
  await page.locator('.mdd-upload input[type=file]').setInputFiles({name:'private-test.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(testData))});
+ await expect(page.locator('.mdd-budget-watch')).toContainText('Weekly spending guardrails');
+ await page.getByRole('spinbutton',{name:'Coffee monthly budget'}).fill('55');
+ await expect(page.locator('.mdd-budget-watch')).toContainText('$55.00');
  await expect(page.locator('.mdd-ledger-head')).toContainText('Every transaction');
  await expect(page.locator('.mdd-table-scroll')).toContainText('Demo Coffee Shop');
  await page.locator('.mdd-legend').getByRole('button',{name:/Coffee/}).click();
