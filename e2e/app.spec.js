@@ -130,3 +130,34 @@ test('wellness hero and little rituals ribbon are Home-only; finance and Google 
  await expect(page.locator('.swe-hero')).toBeVisible();
  await expect(page.locator('.hero.editorial-cover')).toHaveCount(0);
 });
+
+
+test('Money Garden deep dive loads a private snapshot and opens dated expenses and loan simulator',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/my-wellness/',{waitUntil:'domcontentloaded'});
+ await page.locator('.nav-links').getByRole('button',{name:/Money Garden/}).click();
+ await page.getByRole('button',{name:'Spending & loan lab'}).click();
+ await expect(page.locator('.mdd-empty')).toBeVisible();
+ const testData={
+  format:'money-garden-private-v1',transactions:[
+   {id:'t1',date:'2026-10-02',merchant:'Demo Coffee Shop',category:'Coffee',amount:7.25,account:'Checking'},
+   {id:'t2',date:'2026-10-03',merchant:'Demo Grocery',category:'Groceries',amount:35.5,account:'Checking'}],
+  loans:[
+   {id:'cri-ab',name:'CRI AB',balance:1000,apr:8.08,minimum:100,category:'CRI'},
+   {id:'cri-aa',name:'CRI AA',balance:1000,apr:5.28,minimum:100,category:'CRI'},
+   {id:'aid',name:'Aidvantage',balance:1500,apr:null,minimum:80,category:'Aidvantage'}],
+  criExtra:150,otherExtra:0,monthlyElectronic:0
+ };
+ await page.locator('.mdd-upload input[type=file]').setInputFiles({name:'private-test.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(testData))});
+ await expect(page.locator('.mdd-ledger-head')).toContainText('Every transaction');
+ await expect(page.locator('.mdd-table-scroll')).toContainText('Demo Coffee Shop');
+ await page.locator('.mdd-legend').getByRole('button',{name:/Coffee/}).click();
+ await expect(page.locator('.mdd-table-scroll')).toContainText('Demo Coffee Shop');
+ await expect(page.locator('.mdd-table-scroll')).not.toContainText('Demo Grocery');
+ await page.getByRole('button',{name:'Loan payoff lab'}).click();
+ await expect(page.locator('.mdd-loan-warning')).toContainText('$2,176.59');
+ await expect(page.locator('.mdd-empty')).toContainText('CRI estimate');
+ await page.getByRole('spinbutton',{name:'Aidvantage APR'}).fill('4.5');
+ await expect(page.locator('.mdd-stats')).toContainText('Estimated paid off');
+ expect(errors,'Uncaught browser exceptions').toEqual([]);
+});
