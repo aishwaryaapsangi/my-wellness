@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {DEFAULT_TASKS,due,weekday,offset,monthGrid,WORKOUTS,mergedTasks} from '../src/planner.js';
+import {DEFAULT_TASKS,due,weekday,offset,monthGrid,WORKOUTS,mergedTasks,optionalForDate} from '../src/planner.js';
 const t=id=>DEFAULT_TASKS.find(t=>t.id===id);
 test('Monday hair wash shows on Mondays but not Tuesdays',()=>{assert.equal(due(t('hair-keto'),'2026-11-16'),true);assert.equal(due(t('hair-keto'),'2026-11-17'),false)});
 test('every two days recurs from editable anchor',()=>{const e=t('eyedrops');assert.equal(due(e,'2026-11-16'),true);assert.equal(due(e,'2026-11-17'),false);assert.equal(due(e,'2026-11-18'),true);const changed=mergedTasks({'eyedrops':{schedule:{type:'interval',every:3,anchor:'2026-11-17'}}}).find(t=>t.id==='eyedrops');assert.equal(due(changed,'2026-11-20'),true);assert.equal(due(changed,'2026-11-19'),false)});
@@ -169,4 +169,21 @@ test('skincare rotation and nighttime eyedrops follow each day',()=>{
  assert.equal(tuesday.some(x=>x.id==='eyedrops'),false);
  assert.notEqual(WATER_ROTATION[1].name,WATER_ROTATION[2].name);
  assert.notDeepEqual(MEALS[1],MEALS[2]);
+});
+
+
+test('American accent practice is scheduled Sunday through Thursday and optional on Friday and Saturday',()=>{
+ for(const d of ['2026-11-22','2026-11-23','2026-11-24','2026-11-25','2026-11-26']){
+  const task=all(d).find(x=>x.id==='accent-practice');
+  assert.equal(task?.phase,'sunset',d);
+  assert.equal(task?.time,'9:48 PM',d);
+  assert.equal(all(d).some(x=>x.id==='accent-weekend'),false,d);
+  assert.equal(optionalForDate(t('accent-weekend'),d),false,d);
+ }
+ for(const d of ['2026-11-27','2026-11-28']){
+  assert.equal(all(d).some(x=>x.id==='accent-practice'),false,d);
+  assert.equal(all(d).some(x=>x.id==='accent-weekend'),false,d);
+  assert.equal(optionalForDate(t('accent-weekend'),d),true,d);
+  assert.ok(all(d,{optional:{[d]:['accent-weekend']}}).some(x=>x.id==='accent-weekend'),d);
+ }
 });
