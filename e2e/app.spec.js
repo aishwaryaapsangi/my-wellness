@@ -152,7 +152,7 @@ test('Money Garden deep dive loads a private snapshot and opens dated expenses a
  await expect(page.locator('.mdd-budget-watch')).toContainText('Weekly spending guardrails');
  await page.getByRole('spinbutton',{name:'Coffee monthly budget'}).fill('55');
  await expect(page.locator('.mdd-budget-watch')).toContainText('$55.00');
- await expect(page.locator('.mdd-ledger-head')).toContainText('Every transaction');
+ await expect(page.locator('.mdd-ledger-head').last()).toContainText('Every transaction');
  await expect(page.locator('.mdd-table-scroll')).toContainText('Demo Coffee Shop');
  await page.locator('.mdd-legend').getByRole('button',{name:/Coffee/}).click();
  await expect(page.locator('.mdd-table-scroll')).toContainText('Demo Coffee Shop');
