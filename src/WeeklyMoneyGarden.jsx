@@ -52,15 +52,16 @@ const STORAGE='bloom-weekly-budgets-v2';
 const initial=()=>{try{const x=JSON.parse(localStorage.getItem(STORAGE));if(x&&Array.isArray(x.rows))return x}catch(e){}return {rows:WEEK_CATS.map(x=>({id:x.id,limit:x.limit})),overrides:{},entries:[]}};
 export default function WeeklyMoneyGarden({month,transactions=[]}){
  const [state,setState]=useState(initial);
- const [weekIndex,setWeekIndex]=useState(0);
+ const [weekIndex,setWeekIndex]=useState(null);
  const [entry,setEntry]=useState({date:fmt(new Date()),name:'',amount:'',category:'coffee'});
  const [expanded,setExpanded]=useState(null);
  const [notice,setNotice]=useState('');
  const currentMonth=month||fmt(new Date()).slice(0,7);
  const weeks=useMemo(()=>monthWeeks(currentMonth),[currentMonth]);
- const validIndex=Math.min(weekIndex,weeks.length-1);
- const week=weeks[validIndex];
  const today=fmt(new Date());
+ const autoIndex=weeks.findIndex(w=>today>=w.start&&today<=w.end);
+ const validIndex=weekIndex===null?Math.max(0,autoIndex):Math.min(weekIndex,weeks.length-1);
+ const week=weeks[validIndex];
  const persist=next=>{setState(next);try{localStorage.setItem(STORAGE,JSON.stringify(next))}catch(e){setNotice('Could not save locally. Check browser storage settings.')}};
  const budget=cat=>{
   if(cat.everyOther && (+currentMonth.slice(0,4)*12 + +currentMonth.slice(5) - (2026*12+11))%2!==0)return 0;
