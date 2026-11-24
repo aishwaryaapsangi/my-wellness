@@ -110,3 +110,4 @@ export default function WeeklyMoneyGarden({month,transactions=[]}){
   <div className="week-goals"><div><span>🛡️</span><b>Emergency Fund</b><small>Goal: $10,000 · first milestone $1,000</small></div><div><span>🚗</span><b>Tesla Fund</b><small>Goal: $50,000 · saving for the full cash purchase</small></div></div>
   <p className="week-caption">Safety note: a positive budget remainder is not proof of money available for savings. Confirm bank cash and upcoming bills before moving money. This public website stores manual entries in this browser only, not in GitHub.</p>
  </section>;
+}
