@@ -18,6 +18,6 @@ test('body recomp banner uses dedicated art, not a coding scene',()=>{
  const banner=readFileSync(join('src','BodyRecompBanner.jsx'),'utf8');
  const page=readFileSync(join('src','BodyRecomp.jsx'),'utf8');
  assert.match(page,/<BodyRecompBanner\/>/);
- for(const name of artNames)assert.ok(banner.includes("'"+name+"'"),'missing '+name);
+ for(const name of artNames)assert.ok(banner.includes('name="'+name+'"'),'missing '+name);
  assert.doesNotMatch(banner,/laptop|coding|code editor|SWE\b/i);
 });
