@@ -208,7 +208,7 @@ RECOMP_EXERCISES.push({id:'controlled-leg-rainbow-with-ball',session:'Abs + Core
 // Source-informed updates: short-girl lifting clips show upper-body splits,
 // lower-body strength work and a dedicated core + cardio day. Their exact loads
 // and nutrition figures are not personal prescriptions.
-RECOMP_EXERCISES.push({id:'weighted-dead-bug',session:'Upper A + Core',name:'Weighted dead bug (alternating legs)',sets:3,low:8,high:12,startingWeight:20,cue:'One dumbbell held above chest with BOTH hands; alternate 8–12 slow leg lowers PER SIDE, ribs down and lower back controlled. You reported up to 30 lb, so 20 lb is a technique-first trial; edit upward if clean.'});
+RECOMP_EXERCISES.push({id:'weighted-dead-bug',session:'Upper A + Core',name:'Weighted dead bug (alternating legs)',sets:3,low:8,high:12,startingWeight:30,cue:'30 lb single dumbbell above chest held with BOTH hands is your reported prior workload for alternating leg lowers. Keep ribs down and lower back steady. Decrease if it pulls you out of position. Count 8–12 PER SIDE.'});
 RECOMP_EXERCISES.push({id:'cable-crunch',session:'Upper B + Core',name:'Kneeling cable crunch',sets:3,low:10,high:15,cue:'Light/moderate cable stack, move ribs toward pelvis without yanking the arms. The stack number varies by machine. Pause at the shortened position.'});
 export const RECOMP_RECIPES=[
   {
