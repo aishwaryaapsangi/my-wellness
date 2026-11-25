@@ -12,7 +12,7 @@ test('known strength starts at actually reported resistance; unknowns require ca
  const p=getPrescription(raised,'2026-11-27',{});
  assert.equal(p.weight,5);
  assert.equal(p.sets,3);
- assert.deepEqual(p.reps,[8,8,8]);
+ assert.deepEqual(p.reps,[10,10,10]);
  assert.equal(p.calibration,false);
  assert.equal(getPrescription(curl,'2026-11-27',{}).weight,null);
  assert.equal(getPrescription(curl,'2026-11-27',{}).calibration,true);
