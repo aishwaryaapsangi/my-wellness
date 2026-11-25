@@ -1,7 +1,7 @@
 import React,{useMemo,useState} from 'react';
 import {RECOMP_START,RECOMP_END,RECOMP_REVIEWS,WEEK_FOCUS,buildRecompDay,allRecompDays,exercisesForSession} from './bodyRecompData.js';
 import {RICH_RECIPES,recipeById,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates} from './bodyRecompMeals.js';
-import {getPrescription,getCardioPrescription,nextMatchingDates,incrementFor} from './bodyRecompProgress.js';
+import {getPrescription,getCardioPrescription,nextMatchingDates,incrementFor,weightUnit} from './bodyRecompProgress.js';
 import BodyRecompBanner from './BodyRecompBanner.jsx';
 import './bodyRecomp.css';
 
@@ -12,6 +12,7 @@ const moveDate=(s,days)=>new Date(dateTime(s)+days*86400000).toISOString().slice
 const pretty=s=>new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const isTraining=session=>['Lower A','Lower B','Upper A + Core','Upper B + Core'].includes(session);
 const renderLb=value=>value===null||value===undefined?'set your baseline':String(value)+' lb';
+const renderWeight=(value,ex)=>value===null||value===undefined?'choose a trial load':String(value)+' '+weightUnit(ex);
 const emojiFor=type=>type.includes('Breakfast')?'🫐':type.includes('Snack')?'🍓':type.includes('Morning')?'🥬':type.includes('Dinner')?'🍲':'🥗';
 const sections=[['today','Daily plan'],['train','My workouts'],['meals','Meals'],['recipes','Recipe book'],['prep','Weekly groceries'],['health','Healthy rituals'],['checkins','Check-ins'],['calendar','8-week calendar']];
 
@@ -31,25 +32,37 @@ function ExercisePlan({ex,date,fitness,onChange}){
  const editBaseline=(value)=>onChange(old=>({...old,baselines:{...old.baselines,[ex.id]:value}}));
  const editIncrement=value=>onChange(old=>({...old,increments:{...old.increments,[ex.id]:value}}));
  const reps=Array.from({length:ex.sets},(_,i)=>log.reps?.[i]??'');
- const note=p.calibration?'This movement needs its first measured load. Pick a resistance you already handle with control.':'Based on '+(p.sourceDate?'your actual session on '+pretty(p.sourceDate):'your reported baseline');
+ const note=p.calibration?'Select your normal load for this movement.':p.trial?'Draft trial load — please check this equipment-specific starting setting before trying it.':p.source==='plan edit'||p.source==='rep-plan edit'?'Following your edited plan from '+pretty(p.sourceDate):'Based on '+(p.sourceDate?'your completed session on '+pretty(p.sourceDate):'your reported baseline');
  return <article className="rg-exercise">
    <div className="rg-exercise-top"><div><h4>{ex.name}</h4><p>{ex.cue}</p></div><span className="rg-badge">{ex.sets} sets · {ex.low}–{ex.high} reps</span></div>
    <div className="rg-target">
-     <div><span className="rg-label">Today's suggested load</span><strong>{renderLb(planWeight)}</strong></div>
+     <div><span className="rg-label">Today's suggested load</span><strong>{renderWeight(planWeight,ex)}</strong></div>
      <div><span className="rg-label">Target reps by set</span><strong>{planReps.join(' / ')}</strong></div>
      <div><span className="rg-label">Rest</span><strong>{p.rest}</strong></div>
    </div>
    <p className="rg-count">{note}. {p.reason}</p>
+   <div className="rg-quick-edit">
+    <NumberField label="Edit today's planned weight (lb)" step=".5" value={override.weight??p.weight??''}
+       onChange={v=>editOverride({weight:v})} placeholder="Select a comfortable starting load"/>
+    <button type="button" className="rg-button rg-small" onClick={()=>editOverride({weight:'',reps:null,repsText:''})}>Reset this day's edit</button>
+    <span className="rg-soft">Changes cascade to future sessions unless you later enter a different plan or actual lift.</span>
+   </div>
+   <div className="rg-actions" style={{margin:'12px 0'}}>
+    <button className="rg-button primary" type="button" disabled={planWeight===null}
+     onClick={()=>editLog({weight:String(planWeight),reps:planReps.map(String),rir:'2',pain:'no',form:'yes'})}>
+      ✓ I completed this plan with good form and ~2 reps left
+    </button>
+   </div>
    <details className="rg-details"><summary>Customize today's plan / equipment increment</summary>
     <div className="rg-form-grid">
      <NumberField label="My baseline for this movement (lb)" step=".5" value={fitness.baselines?.[ex.id]??ex.startingWeight??''} onChange={editBaseline} placeholder="Measure first"/>
      <NumberField label="Smallest available weight step (lb)" step=".5" value={fitness.increments?.[ex.id]??incrementFor(ex,fitness)} onChange={editIncrement}/>
-     <NumberField label="Today's planned weight (lb)" step=".5" value={override.weight??p.weight??''} onChange={v=>editOverride({weight:v})} placeholder="Calibrate first"/>
+     
      <label className="rg-field"><span className="rg-label">Today's planned reps (one per set)</span><input className="rg-input" value={override.repsText??''} placeholder={p.reps.join(', ')} onChange={e=>{
        const t=e.target.value;const v=t.split(',').map(s=>Number(s.trim()));
        editOverride({repsText:t,reps:v.length===ex.sets&&v.every(n=>Number.isFinite(n)&&n>=0)?v.map(n=>Math.round(n)):null});
       }}/></label>
-    </div><p className="rg-soft">Changing the plan alone doesn't count as lifting it. Future sessions adapt from the actual completed sets below.</p>
+    </div><p className="rg-soft">The plan change carries forward even before you complete a session. Confirm completed sets above or edit your actuals below to trigger performance-based increases.</p>
    </details>
    <div className="rg-log-heading"><b>What I actually did</b><span>Editable anytime — this drives future suggestions</span></div>
    <div className="rg-log-grid">
@@ -63,7 +76,7 @@ function ExercisePlan({ex,date,fitness,onChange}){
     <label className="rg-field"><span className="rg-label">Notes</span><input className="rg-input" value={log.notes||''} placeholder="Machine, form, recovery..." onChange={e=>editLog({notes:e.target.value})}/></label>
    </div>
    {future.length>0&&<div className="rg-hint ready">
-    <b>Next matching session: {pretty(future[0])}</b> · {renderLb(getPrescription(ex,future[0],fitness).weight)} · {getPrescription(ex,future[0],fitness).reps.join(' / ')} reps.
+    <b>Next matching session: {pretty(future[0])}</b> · {renderWeight(getPrescription(ex,future[0],fitness).weight,ex)} · {getPrescription(ex,future[0],fitness).reps.join(' / ')} reps.
     {log.pain==='yes'?' Pain logged — no increase recommended.':''}
    </div>}
   </article>;
@@ -130,7 +143,7 @@ function RecompGarden({fitness={},onChange}){
     <Card tone="blush"><p className="rg-eyebrow">AM · first little ritual</p><h3>{menu.morning.title}</h3><p>{menu.morning.detail}</p><label className="rg-check"><input type="checkbox" checked={!!marks.morning} onChange={e=>changeMark('morning',e.target.checked)}/><span>Done / enjoyed</span></label><p className="rg-soft">Gentle cleanse or water, moisturizer, broad-spectrum SPF 30+ when outdoors, and lip balm—especially during isotretinoin treatment.</p></Card>
     <Card><p className="rg-eyebrow">Breakfast · lunch · snack · dinner</p><h3>Food I look forward to ♡</h3>{kinds.map(kind=><div className="rg-meal-line" key={kind}><span>{kind}</span><strong>{maybeName(kind)}</strong></div>)}<button className="rg-button" style={{marginTop:11}} onClick={()=>setView('meals')}>Swap any meal ↗</button></Card>
     <Card tone="sage"><p className="rg-eyebrow">Today's movement</p><h3>{plan.session}</h3><p>{isTraining(plan.session)?'Your plan has specific sets, rep targets, and load suggestions for each exercise. Enter your actual lifts to update future dates.':plan.prep}</p>
-     {isTraining(plan.session)?<>{workout.map(ex=>{const p=getPrescription(ex,date,fitness);return <div className="rg-mini-lift" key={ex.id}><span>{ex.name}</span><strong>{p.sets} × {p.reps.join('/')} · {renderLb(p.weight)}</strong></div>})}<p className="rg-soft">Cardio: {getCardioPrescription(date,fitness).minutes} min · {getCardioPrescription(date,fitness).speed} mph · {getCardioPrescription(date,fitness).incline}% incline (editable).</p><button className="rg-button primary" onClick={()=>setView('train')}>Open workout + log actual sets ↗</button></>:<button className="rg-button" onClick={markDay}>{fitness.dayDone?.[date]?'✓ Done':'Mark recovery/activity day done'}</button>}</Card>
+     {isTraining(plan.session)?<>{workout.map(ex=>{const p=getPrescription(ex,date,fitness);return <div className="rg-mini-lift" key={ex.id}><span>{ex.name}</span><strong>{p.sets} × {p.reps.join('/')} · {renderWeight(p.weight,ex)}</strong></div>})}<p className="rg-soft">Cardio: {getCardioPrescription(date,fitness).minutes} min · {getCardioPrescription(date,fitness).speed} mph · {getCardioPrescription(date,fitness).incline}% incline (editable).</p><button className="rg-button primary" onClick={()=>setView('train')}>Open workout + log actual sets ↗</button></>:<button className="rg-button" onClick={markDay}>{fitness.dayDone?.[date]?'✓ Done':'Mark recovery/activity day done'}</button>}</Card>
     <Card><p className="rg-eyebrow">Sleep, digestion and energy</p><h3>How my body feels</h3><div className="rg-form-grid">
       <NumberField label="Sleep (hours)" step=".5" max="24" value={daily.sleep} onChange={v=>changeDaily('sleep',v)}/>
       <NumberField label="Water (glasses of your size)" value={daily.water} onChange={v=>changeDaily('water',v)}/>
