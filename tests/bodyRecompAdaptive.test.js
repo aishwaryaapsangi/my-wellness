@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {getPrescription,getCardioPrescription,incrementFor} from '../src/bodyRecompProgress.js';
+import {getPrescription,getCardioPrescription,incrementFor,STARTER_TRIALS,weightUnit} from '../src/bodyRecompProgress.js';
 import {RICH_RECIPES,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates} from '../src/bodyRecompMeals.js';
 import {RECOMP_EXERCISES} from '../src/bodyRecompData.js';
 
@@ -47,10 +47,10 @@ test('minimum increment is user editable to match available equipment',()=>{
 });
 test('cardio default and actual history are editable, no compulsory increases',()=>{
  const p=getCardioPrescription('2026-11-27',{});
- assert.deepEqual([p.minutes,p.speed,p.incline],[20,2.8,2]);
+ assert.deepEqual([p.minutes,p.speed,p.incline],[25,3,12]);
  const q=getCardioPrescription('2026-12-04',{cardio:{'2026-11-27':{completed:true,minutes:30,speed:3,incline:4,effort:7}}});
  assert.deepEqual([q.minutes,q.speed,q.incline],[30,3,4]);
- assert.match(q.note,/difficult/);
+ assert.match(q.note,/hard/);
 });
 test('eight weekly meal plans change mains and do not default to tofu',()=>{
  assert.ok(RICH_RECIPES.length>=20);
@@ -74,4 +74,63 @@ test('morning ritual is a nonmandatory daily rotation',()=>{
  const values=Array.from({length:7},(_,i)=>mealIdsForDate(weeklyMealDates(1)[i]).morning.title);
  assert.equal(new Set(values).size,7);
  assert.ok(values.some(x=>x.includes('Green smoothie')));
+});
+
+test('every named exercise has a distinct editable trial prescription with correct load units',()=>{
+ for(const exercise of RECOMP_EXERCISES){
+  const trial=STARTER_TRIALS[exercise.id];
+  assert.ok(trial,exercise.id+' missing suggested trial weight');
+  assert.ok(Number.isFinite(trial.weight)&&trial.weight>=0);
+  const p=getPrescription(exercise,'2026-11-25',{});
+  assert.ok(p.weight!==null,exercise.name+' should not demand manual initial entry');
+  assert.ok(weightUnit(exercise).includes('lb'));
+  assert.equal(p.reps.length,exercise.sets);
+ }
+ assert.equal(weightUnit(RECOMP_EXERCISES.find(x=>x.id==='dumbbell-shoulder-press')),'lb per dumbbell');
+ assert.equal(getPrescription(raised,'2026-11-27',{}).weight,5);
+});
+test('changing an editable planned weight cascades even before a workout is completed',()=>{
+ const hip=RECOMP_EXERCISES.find(x=>x.id==='machine-or-barbell-hip-thrust');
+ const initial=getPrescription(hip,'2026-12-03',{});
+ assert.equal(initial.weight,70);
+ const p={planOverrides:{'2026-11-26':{[hip.id]:{weight:'95',reps:[10,10,10]}}}};
+ assert.equal(getPrescription(hip,'2026-11-26',p).weight,95);
+ const future=getPrescription(hip,'2026-12-03',p);
+ assert.equal(future.weight,95);
+ assert.deepEqual(future.reps,[10,10,10]);
+ const lowered={planOverrides:{'2026-11-26':{[hip.id]:{weight:'65',reps:[8,8,8]}}}};
+ assert.equal(getPrescription(hip,'2026-12-03',lowered).weight,65);
+ assert.deepEqual(getPrescription(hip,'2026-12-03',lowered).reps,[8,8,8]);
+});
+test('performance updates override planned progression without forcing an increase',()=>{
+ const hip=RECOMP_EXERCISES.find(x=>x.id==='machine-or-barbell-hip-thrust');
+ const data={planOverrides:{'2026-11-26':{[hip.id]:{weight:'95'}}},
+  logs:{'2026-11-26':{[hip.id]:{weight:'85',reps:['10','10','8'],rir:'2',pain:'no',form:'yes'}}}};
+ let future=getPrescription(hip,'2026-12-03',data);
+ assert.equal(future.weight,85);
+ assert.deepEqual(future.reps,[11,10,8]);
+ data.logs['2026-11-26'][hip.id].reps=['12','12','12'];
+ future=getPrescription(hip,'2026-12-03',data);
+ assert.equal(future.weight,90);
+ assert.deepEqual(future.reps,[8,8,8]);
+ data.logs['2026-11-26'][hip.id].pain='yes';
+ assert.equal(getPrescription(hip,'2026-12-03',data).weight,85);
+});
+test('reported 12-3 incline treadmill and distinct StairMaster suggestions',()=>{
+ const treadmill=getCardioPrescription('2026-11-26',{},'Treadmill');
+ assert.equal(treadmill.speed,3);
+ assert.equal(treadmill.incline,12);
+ assert.equal(treadmill.minutes,25);
+ const stairs=getCardioPrescription('2026-11-27',{},'StairMaster');
+ assert.equal(stairs.minutes,25);
+ assert.equal(stairs.level,6);
+ assert.equal(stairs.trial,true);
+ const fitness={cardio:{
+  '2026-11-26':{completed:true,mode:'Treadmill',minutes:30,speed:3,incline:12},
+  '2026-11-27':{completed:true,mode:'StairMaster',minutes:22,level:8}
+ }};
+ assert.deepEqual([getCardioPrescription('2026-12-04',fitness,'Treadmill').speed,
+   getCardioPrescription('2026-12-04',fitness,'Treadmill').incline],[3,12]);
+ assert.deepEqual([getCardioPrescription('2026-12-04',fitness,'StairMaster').minutes,
+   getCardioPrescription('2026-12-04',fitness,'StairMaster').level],[22,8]);
 });
