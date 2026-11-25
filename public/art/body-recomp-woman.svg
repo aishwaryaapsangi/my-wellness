@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="990" viewBox="0 0 680 990" fill="none">
+<defs><linearGradient id="hair" x1="200" y1="100" x2="580" y2="820"><stop stop-color="#5B352E"/><stop offset=".35" stop-color="#261A20"/><stop offset=".78" stop-color="#452920"/><stop offset="1" stop-color="#211822"/></linearGradient>
+<linearGradient id="skin" x1="300" y1="200" x2="510" y2="440"><stop stop-color="#CE9972"/><stop offset=".55" stop-color="#B67751"/><stop offset="1" stop-color="#955937"/></linearGradient>
+<linearGradient id="wine" x1="180" y1="400" x2="560" y2="900"><stop stop-color="#743847"/><stop offset=".53" stop-color="#522631"/><stop offset="1" stop-color="#381F2C"/></linearGradient>
+<linearGradient id="pants" x1="250" y1="650" x2="530" y2="980"><stop stop-color="#8C505A"/><stop offset="1" stop-color="#56323E"/></linearGradient>
+<linearGradient id="mat" x1="510" y1="335" x2="660" y2="645"><stop stop-color="#EAB2BC"/><stop offset="1" stop-color="#AD687A"/></linearGradient>
+<linearGradient id="bottle" x1="55" y1="680" x2="110" y2="944"><stop stop-color="#EAC0C6"/><stop offset="1" stop-color="#B66D83"/></linearGradient>
+<filter id="shadow"><feDropShadow dx="1" dy="5" stdDeviation="6" flood-color="#491B30" flood-opacity=".18"/></filter></defs>
+<!-- legs -->
+<path d="M260 655Q248 735 262 830L286 992H475Q486 907 479 849L507 990H610Q597 830 562 695L440 625Z" fill="url(#pants)" stroke="#592C3E" stroke-width="5"/>
+<path d="M344 711Q360 826 352 959M470 727Q486 826 498 953M551 763Q565 843 565 953" stroke="#B57980" opacity=".52" stroke-width="4"/>
+<!-- flowing hair silhouette -->
+<path d="M192 420Q175 251 253 140Q317 32 445 63Q562 68 578 245Q599 390 527 547Q542 671 573 793Q513 810 482 748Q460 834 418 836Q385 850 360 796Q291 885 248 829Q151 852 126 790Q173 703 145 619Q113 509 192 420Z" fill="url(#hair)" stroke="#382324" stroke-width="9" filter="url(#shadow)"/>
+<path d="M187 287Q159 514 176 713Q187 769 147 809M238 202Q199 429 218 622Q228 765 203 820M520 243Q555 536 487 754" stroke="#A16E54" stroke-width="7" opacity=".5" stroke-linecap="round"/>
+<path d="M231 174Q209 367 230 585M260 122Q236 401 272 746M553 262Q550 521 507 728" stroke="#C08461" stroke-width="3" opacity=".37" stroke-linecap="round"/>
+<!-- torso -->
+<path d="M310 398Q271 376 233 412Q179 460 157 585L164 720Q215 772 278 751Q343 784 450 778Q548 741 548 648L534 509Q504 432 462 411L415 375Z" fill="url(#wine)" stroke="#46242E" stroke-width="7"/>
+<path d="M340 417Q351 486 361 554L377 711M245 450Q257 500 255 565M507 489Q491 596 488 713" stroke="#AD7175" stroke-width="3" opacity=".7"/>
+<path d="M346 421L400 402L427 443L377 505Z" fill="#6D3741" stroke="#7F4A53" stroke-width="4"/>
+<path d="M380 423L383 487" stroke="#D1A2A0" stroke-width="6" stroke-linecap="round"/>
+<rect x="375" y="459" width="15" height="24" rx="6" fill="#E7BE99"/>
+<!-- head neck -->
+<path d="M338 352L336 429Q386 461 431 423L410 338Z" fill="url(#skin)" stroke="#7A442F" stroke-width="4"/>
+<path d="M290 170Q366 128 455 176Q489 223 472 313Q469 382 423 406Q369 430 312 374Q279 326 276 265Z" fill="url(#skin)" stroke="#7B4C3B" stroke-width="6"/>
+<path d="M301 251Q338 237 354 251M394 253Q422 237 451 252" stroke="#42252B" stroke-width="7" stroke-linecap="round"/>
+<path d="M303 258Q333 278 354 261Q338 248 303 258ZM397 261Q423 278 447 257Q418 245 397 261Z" fill="#F7E9D4" stroke="#4C3028" stroke-width="4"/>
+<circle cx="333" cy="259" r="11" fill="#543C30"/><circle cx="423" cy="259" r="11" fill="#543C30"/>
+<circle cx="336" cy="254" r="4" fill="#FDF9F1"/><circle cx="426" cy="254" r="4" fill="#FDF9F1"/>
+<path d="M375 269Q368 306 384 310" stroke="#8D5941" stroke-width="4" stroke-linecap="round"/>
+<path d="M348 346Q377 331 400 343Q379 362 353 351Z" fill="#85474C" stroke="#682F3C" stroke-width="3"/>
+<path d="M304 317Q332 332 351 326M401 327Q434 334 451 312" stroke="#DC9C7C" stroke-width="9" opacity=".37" stroke-linecap="round"/>
+<!-- bangs -->
+<path d="M262 255Q253 159 302 117Q365 76 450 115Q497 139 510 223Q468 215 452 175Q438 226 412 232Q406 181 383 168Q386 240 354 241Q350 186 325 176Q308 219 285 237Z" fill="url(#hair)" stroke="#3C2824" stroke-width="5"/>
+<path d="M280 192Q304 113 362 108M330 144Q347 181 353 218M421 149Q443 189 439 214" stroke="#AD8067" stroke-width="5" opacity=".5" stroke-linecap="round"/>
+<!-- cardigan tied at waist -->
+<path d="M182 716Q260 691 338 720Q420 738 493 697L500 762Q425 789 382 772L339 919Q305 915 281 887L308 778Q235 820 197 841Q180 789 182 716Z" fill="#D99AA4" stroke="#9F6270" stroke-width="6"/>
+<path d="M320 750Q292 715 267 749Q295 792 331 779Q366 801 389 761Q356 713 320 750Z" fill="#E6B1B8" stroke="#B87C8A" stroke-width="5"/>
+<!-- yoga mat -->
+<g transform="rotate(12 575 510)"><rect x="532" y="356" width="93" height="310" rx="35" fill="url(#mat)" stroke="#9E6679" stroke-width="6"/><ellipse cx="579" cy="356" rx="46" ry="19" fill="#B87D87" stroke="#8D556C" stroke-width="5"/><ellipse cx="579" cy="357" rx="30" ry="11" fill="#6E4250"/><ellipse cx="579" cy="357" rx="18" ry="6" fill="#C28A99"/><path d="M531 486H625M531 502H625" stroke="#774452" stroke-width="13"/></g>
+<!-- hand hugging mat -->
+<path d="M480 560Q512 574 551 559Q574 544 589 565Q599 579 570 599L544 621Q531 629 511 623L466 609Z" fill="url(#skin)" stroke="#7C493D" stroke-width="5"/>
+<!-- left arm + hand -->
+<path d="M206 512Q169 579 175 684L139 816Q164 835 192 812L252 646Z" fill="url(#wine)" stroke="#572C39" stroke-width="7"/>
+<path d="M133 808Q149 787 181 813L175 879Q166 912 148 916Q123 907 125 890Z" fill="url(#skin)" stroke="#8A533C" stroke-width="5"/>
+<!-- water bottle -->
+<g transform="rotate(9 110 888)"><rect x="79" y="848" width="65" height="133" rx="20" fill="url(#bottle)" stroke="#A56C7F" stroke-width="5"/><rect x="97" y="821" width="30" height="36" rx="7" fill="#F3D1D0" stroke="#A56C7F" stroke-width="4"/><rect x="100" y="812" width="24" height="12" rx="5" fill="#7A3D50"/><path d="M103 865Q90 892 102 958" stroke="#FFF1EC" stroke-width="8" opacity=".5"/></g>
+<!-- airy shine -->
+<path d="M299 117Q361 77 431 107" stroke="#E5A77C" stroke-width="4" opacity=".5" stroke-linecap="round"/>
+</svg>

@@ -1,6 +1,7 @@
 import React,{useMemo,useState} from 'react';
 import {RECOMP_START,RECOMP_END,RECOMP_BASELINE,RECOMP_REVIEWS,WEEK_FOCUS,RECOMP_EXERCISES,RECOMP_RECIPES,RECOMP_GROCERIES,buildRecompDay,allRecompDays,exercisesForSession} from './bodyRecompData.js';
 import './bodyRecomp.css';
+import BodyRecompBanner from './BodyRecompBanner.jsx';
 
 const LIMIT=56;
 const dateToTime=s=>Date.parse(s+'T12:00:00Z');
@@ -66,10 +67,8 @@ function RecompGarden({fitness={},onChange}){
  const filteredRecipes=recipes.filter(r=>(recipeType==='All'||r.type.toLowerCase().includes(recipeType.toLowerCase()))&&(!recipeSearch||[r.name,r.ingredients].join(' ').toLowerCase().includes(recipeSearch.toLowerCase())));
  const completedReview=RECOMP_REVIEWS.filter(d=>fitness.reviews?.[d]?.notes?.trim()).length;
  return <div className="recomp-garden">
-  <section className="rg-cover">
-   <div><p className="rg-eyebrow">✿ BODY RECOMP · YOUR STRENGTH CHAPTER</p><h1>stronger, softly.</h1><p>56 little days of strength, food you actually enjoy, and sustainable progress. A plan to follow, not a body to punish.</p></div>
-   <div className="rg-date-nav"><button className="rg-button" aria-label="Previous date" disabled={date<=RECOMP_START} onClick={()=>setDate(moveDate(date,-1))}>‹</button><input aria-label="Selected fitness date" type="date" value={date} min={RECOMP_START} max={RECOMP_END} onChange={e=>validDate(e.target.value)&&setDate(e.target.value)}/><button className="rg-button" aria-label="Next date" disabled={date>=RECOMP_END} onClick={()=>setDate(moveDate(date,1))}>›</button></div>
-  </section>
+  <BodyRecompBanner/>
+  <div className="rg-date-line"><span className="rg-date-line-label">✿ YOUR EIGHT-WEEK STRENGTH CALENDAR · NOV 25, 2026 — JAN 19, 2027</span><div className="rg-date-nav"><button className="rg-button" aria-label="Previous date" disabled={date<=RECOMP_START} onClick={()=>setDate(moveDate(date,-1))}>‹</button><input aria-label="Selected fitness date" type="date" value={date} min={RECOMP_START} max={RECOMP_END} onChange={e=>validDate(e.target.value)&&setDate(e.target.value)}/><button className="rg-button" aria-label="Next date" disabled={date>=RECOMP_END} onClick={()=>setDate(moveDate(date,1))}>›</button></div></div>
   <nav aria-label="Body recomp sections" className="rg-tabbar">
    {[['today','Today'],['train','Workout log'],['meals','Meal plan'],['recipes','Recipe box'],['prep','Grocery + prep'],['checkins','Check-ins'],['calendar','56-day calendar']].map(([id,label])=><button key={id} className={'rg-tab '+(view===id?'active':'')} onClick={()=>setView(id)} aria-current={view===id?'page':undefined}>{label}</button>)}
   </nav>
