@@ -40,3 +40,12 @@
 .dot.blue{background:#7d9fbf}.calendar-switch button:disabled,.date-controls button:disabled{opacity:.24;cursor:not-allowed}.cal-grid .cal-empty{pointer-events:none}
 .cal-cell.heat-started{background:#fff3f0!important;border-color:#eed0c8!important}.cal-cell.heat-steady{background:#f9dde3!important;border-color:#dca7b7!important}.cal-cell.heat-strong{background:#edf1d7!important;border-color:#9daf8b!important}.cal-cell.chosen{outline:2px solid #a95470!important;outline-offset:1px}.cal-cell.heat-strong .cal-count{color:#506e40;font-weight:800}.cal-cell.heat-steady .cal-count{color:#8d4260;font-weight:800}
 @media(max-width:650px){.season-banner{font-size:10px;gap:7px;padding:10px 12px}.season-banner span:first-child{font-size:9px}.season-number{font-size:32px}.season-metric{padding:11px 9px}.season-coverage{font-size:10px}.week-gap{min-height:56px}.cal-empty{min-height:43px}.atlas-empty,.challenge-empty{min-height:100px}}
+
+/* Keep the additional Body Recomp tab in the same responsive main navigation. */
+@media(min-width:851px){.site-header{gap:15px}.nav-links{gap:2px}.nav-links button{padding:11px 10px;font-size:11px}}
+@media(min-width:851px) and (max-width:1170px){
+ .nav-links{display:none;position:absolute;top:82px;left:18px;right:18px;border:1px solid #e7c4cb;padding:13px;background:#fffdf6;border-radius:13px;box-shadow:0 14px 30px #603e4c27;z-index:8;flex-direction:column;align-items:stretch}
+ .nav-links.nav-open{display:flex}
+ .nav-links button{text-align:left;font-size:12px;padding:11px 16px}
+ .mobile-menu{display:grid;place-items:center}
+}
