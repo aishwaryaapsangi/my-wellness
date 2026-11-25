@@ -6,32 +6,37 @@ import {RECOMP_START} from './bodyRecompData.js';
 const numeric=value=>value!==''&&value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value):null;
 const round=value=>Math.round(value*100)/100;
 const upper=ex=>ex.session?.startsWith('Upper')??false;
+const isCore=ex=>['weighted-straight-leg-captain-s-chair-raise','weighted-russian-twist','pallof-press','weighted-dead-bug','cable-crunch','controlled-leg-rainbow-with-ball'].includes(ex.id);
+const restFor=ex=>isCore(ex)?'60–120 sec':upper(ex)?'90–120 sec':'120–180 sec';
 export const STARTER_TRIALS={
- 'machine-or-barbell-hip-thrust':{weight:70,unit:'lb total / machine setting',note:'Equipment resistance varies. Compare with the machine you use.'},
- 'romanian-deadlift':{weight:20,unit:'lb per dumbbell',note:'20 lb in each hand = 40 lb external total.'},
+ 'machine-or-barbell-hip-thrust':{weight:25,unit:'lb single dumbbell total',note:'Suggested one-dumbbell starting trial on a stable bench. No barbell. Edit to your comfortable working load.'},
+ 'romanian-deadlift':{weight:15,unit:'lb per dumbbell',note:'15 lb in each hand is an editable technique-first trial, not a measured maximum.'},
  'leg-press':{weight:90,unit:'lb on machine display',note:'Machine/sled starting resistance varies widely.'},
  'seated-hip-abduction':{weight:60,unit:'lb stack setting'},
  'lat-pulldown':{weight:50,unit:'lb stack setting'},
  'chest-press':{weight:35,unit:'lb machine setting'},
  'seated-row':{weight:45,unit:'lb stack setting'},
- 'dumbbell-shoulder-press':{weight:15,unit:'lb per dumbbell'},
+ 'dumbbell-shoulder-press':{weight:10,unit:'lb per dumbbell'},
  'weighted-straight-leg-captain-s-chair-raise':{weight:5,unit:'lb added',note:'This one is based on your reported +5 lb baseline.'},
- 'glute-bridge':{weight:70,unit:'lb external total'},
- 'supported-split-squat':{weight:15,unit:'lb per hand'},
+ 'glute-bridge':{weight:25,unit:'lb single dumbbell total'},
+ 'supported-split-squat':{weight:10,unit:'lb per hand'},
  'seated-or-lying-hamstring-curl':{weight:40,unit:'lb machine setting'},
- 'goblet-squat':{weight:30,unit:'lb single dumbbell'},
+ 'goblet-squat':{weight:25,unit:'lb single dumbbell'},
  'calf-raise':{weight:40,unit:'lb machine setting'},
  'seated-cable-row':{weight:50,unit:'lb cable setting'},
  'incline-chest-press':{weight:35,unit:'lb machine setting'},
  'lateral-raise':{weight:10,unit:'lb per dumbbell'},
- 'biceps-curl':{weight:15,unit:'lb per dumbbell'},
- 'triceps-pushdown':{weight:30,unit:'lb cable setting'},
- 'pallof-press':{weight:20,unit:'lb cable setting'},
+ 'biceps-curl':{weight:10,unit:'lb per dumbbell'},
+ 'triceps-pushdown':{weight:20,unit:'lb cable setting',note:'Cable stack trials are separate from the user-reported 10 lb dumbbells.'},
+ 'pallof-press':{weight:15,unit:'lb cable setting'},
  'controlled-leg-rainbow-with-ball':{weight:0,unit:'lb added (bodyweight + light ball)',note:'Bodyweight with a light ball between the feet. Add no extra weight by default.'},
+ 'weighted-dead-bug':{weight:30,unit:'lb single dumbbell held with both hands',note:'30 lb based on your reported held-weight dead-bug routine; edit down if form changes.'},
+ 'cable-crunch':{weight:25,unit:'lb cable stack setting',note:'Cable resistance varies. Choose a load that allows controlled spinal flexion, not momentum.'},
  'weighted-russian-twist':{weight:20,unit:'lb plate total',note:'This one is based on your reported 20 lb Russian twists.'}
 };
 export const weightUnit=ex=>STARTER_TRIALS[ex.id]?.unit||'lb (verify machine)';
-export const defaultIncrement=ex=>ex.id==='weighted-straight-leg-captain-s-chair-raise'?1:
+export const defaultIncrement=ex=>ex.id==='controlled-leg-rainbow-with-ball'?0:
+ ex.id==='weighted-straight-leg-captain-s-chair-raise'?1:
  weightUnit(ex).includes('per dumbbell')||weightUnit(ex).includes('per hand')?2.5:upper(ex)?2.5:5;
 export const incrementFor=(ex,fitness={})=>numeric(fitness.increments?.[ex.id])??defaultIncrement(ex);
 
@@ -49,10 +54,14 @@ export function lastActual(ex,date,fitness={}){
 const validReps=(reps,count)=>Array.isArray(reps)&&reps.length===count&&reps.every(v=>numeric(v)!==null&&Number(v)>=0);
 function afterActual(ex,log,fitness){
  const weight=Number(log.weight),reps=log.reps.map(Number);
- const base={sourceDate:log.date,calibration:false,source:'actual',rest:upper(ex)?'90–120 sec':'120–180 sec',
+ const base={sourceDate:log.date,calibration:false,source:'actual',rest:restFor(ex),
   sets:ex.sets,increment:incrementFor(ex,fitness),unit:weightUnit(ex),trial:false};
  if(log.pain||log.form==='no')return {...base,weight,reps:reps.map(v=>Math.max(ex.low,Math.min(ex.high,v))),increase:false,
    reason:'Pain or unstable technique reported. Do not increase; stop if pain persists and check your form or seek guidance.'};
+ if(ex.id==='controlled-leg-rainbow-with-ball'&&reps.every(v=>v>=ex.high)){
+  return {...base,weight:0,reps:Array(ex.sets).fill(ex.high),increase:false,
+   reason:'All top reps completed. Keep bodyweight; progress by slowing the lowering phase or a short pause, never by automatically adding a dumbbell to the feet.'};
+ }
  if(log.rir!==null&&log.rir>=1&&log.rir<=3&&reps.every(v=>v>=ex.high)){
    return {...base,weight:round(weight+incrementFor(ex,fitness)),reps:Array(ex.sets).fill(ex.low),increase:true,
     reason:'Last completed session met all top reps with control and 1–3 reps left. Try the smallest available increase if recovery is good.'};
@@ -70,7 +79,7 @@ export function getPrescription(ex,date,fitness={}){
  let state={sets:ex.sets,reps:Array(ex.sets).fill(ex.low),weight:initial,unit:weightUnit(ex),
   sourceDate:null,source:saved!==null?'personal baseline':reported!==null?'reported baseline':trial?'draft starting trial':'unmeasured',
   calibration:initial===null,increase:false,trial:saved===null&&reported===null&&!!trial,
-  increment:incrementFor(ex,fitness),rest:upper(ex)?'90–120 sec':'120–180 sec',
+  increment:incrementFor(ex,fitness),rest:restFor(ex),
   reason:saved!==null||reported!==null?'Starting from your saved/reported weight; editable anytime.':trial?'Suggested first-session trial, NOT a measured personal best. Check against your own machine and adjust before lifting.':'No equipment-specific weight known: enter your usual load.'};
  // The plan is prefilled for EVERY date, including days not yet completed.
  // Changing a dated plan anchors all later dates until superseded by another

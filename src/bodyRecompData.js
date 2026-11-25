@@ -18,11 +18,11 @@ export const RECOMP_EXERCISES=[
   {
     "id": "machine-or-barbell-hip-thrust",
     "session": "Lower A",
-    "name": "Machine or barbell hip thrust",
+    "name": "Dumbbell hip thrust (bench)",
     "sets": 3,
     "low": 8,
     "high": 12,
-    "cue": "Hold 1 second at top; shins nearly vertical; ribs neutral."
+    "cue": "Place ONE padded dumbbell securely across the hip crease with a stable bench behind shoulders. Chin tucked, ribs down, pause 2 sec at the top; no barbell required."
   },
   {
     "id": "romanian-deadlift",
@@ -85,26 +85,27 @@ export const RECOMP_EXERCISES=[
     "sets": 2,
     "low": 8,
     "high": 12,
-    "cue": "Avoid arching back; use movement-specific resistance."
+    "cue": "Use controlled dumbbell presses with your reported 10 lb per hand baseline; avoid arching and shorten range if shoulders hurt.",
+    "startingWeight": 10
   },
   {
     "id": "weighted-straight-leg-captain-s-chair-raise",
     "session": "Upper A + Core",
     "name": "Weighted straight-leg captain's-chair raise",
     "sets": 3,
-    "low": 8,
-    "high": 12,
-    "cue": "Legs extended; no swinging. Secure any added load safely.",
+    "low": 10,
+    "high": 15,
+    "cue": "Use your +5 lb ankle load only if securely attached. Legs stay straight, raise with pelvic control, lower slowly without swinging. 3 quality sets, not endless reps.",
     "startingWeight": 5
   },
   {
     "id": "glute-bridge",
     "session": "Lower B",
-    "name": "Glute bridge",
+    "name": "Dumbbell glute bridge (floor)",
     "sets": 3,
     "low": 8,
     "high": 12,
-    "cue": "Pause at top; lower with control."
+    "cue": "Set one padded dumbbell across hips; drive through heels, hold top for 2 seconds and lower slowly. No barbell needed."
   },
   {
     "id": "supported-split-squat",
@@ -167,7 +168,8 @@ export const RECOMP_EXERCISES=[
     "sets": 2,
     "low": 10,
     "high": 15,
-    "cue": "Soft elbows; avoid shrugging or swinging."
+    "cue": "Use 10 lb per hand as your reported baseline only if you can raise without swinging or shrugging; lower to 5–8 lb if form breaks.",
+    "startingWeight": 10
   },
   {
     "id": "biceps-curl",
@@ -176,16 +178,17 @@ export const RECOMP_EXERCISES=[
     "sets": 2,
     "low": 8,
     "high": 12,
-    "cue": "Find curl-specific weight; a reported 30 lb arm load is not automatically a curl load."
+    "cue": "Use your reported 10 lb dumbbell in each hand, elbows steady and wrists neutral. Avoid swinging; gradual rep progression.",
+    "startingWeight": 10
   },
   {
     "id": "triceps-pushdown",
     "session": "Upper B + Core",
-    "name": "Triceps pushdown",
+    "name": "Straight-bar cable triceps pushdown",
     "sets": 2,
     "low": 10,
     "high": 15,
-    "cue": "Upper arms steady; control return."
+    "cue": "Use the straight bar as shown in your reference. Elbows stay by ribs; extend arms and control the cable return. Stack resistance is not equal to dumbbell weight."
   },
   {
     "id": "pallof-press",
@@ -198,10 +201,15 @@ export const RECOMP_EXERCISES=[
   }
 ];
 // Preserve the user's reported weighted Russian-twist capability as an OPTIONAL core movement.
-RECOMP_EXERCISES.push({id:'weighted-russian-twist',session:'Upper B + Core',name:'Weighted Russian twist (optional)',sets:2,low:12,high:20,startingWeight:20,cue:'Count total slow, controlled touches. Keep your spine comfortable; skip if twisting hurts. This is optional alongside Pallof press.'});
+RECOMP_EXERCISES.push({id:'weighted-russian-twist',session:'Upper B + Core',name:'Weighted Russian twist',sets:3,low:18,high:24,startingWeight:20,cue:'20 lb plate (reported baseline), 18–24 TOTAL controlled touches per set, not per side. Keep spine comfortably neutral, rotate upper back slightly rather than wrenching low back; skip if uncomfortable.'});
 // Dedicated short abs-focused reunion-day workout. Reuses known core movements
 // so future progression can read the same training history.
-RECOMP_EXERCISES.push({id:'controlled-leg-rainbow-with-ball',session:'Abs + Core',name:'Controlled leg rainbows (ball between feet)',sets:2,low:8,high:12,startingWeight:0,cue:'Move extended legs in a small controlled arc with a light ball between your feet; no added weight. Keep lower back supported and stop if it strains.'});
+RECOMP_EXERCISES.push({id:'controlled-leg-rainbow-with-ball',session:'Abs + Core',name:'Controlled leg rainbows (optional finisher)',sets:2,low:10,high:14,startingWeight:0,cue:'Optional finisher: small controlled rainbow arcs with ball between feet, no added load. Keep your back supported. Progress with slower tempo, not heavier ankle weights.'});
+// Source-informed updates: short-girl lifting clips show upper-body splits,
+// lower-body strength work and a dedicated core + cardio day. Their exact loads
+// and nutrition figures are not personal prescriptions.
+RECOMP_EXERCISES.push({id:'weighted-dead-bug',session:'Upper A + Core',name:'Weighted dead bug (alternating legs)',sets:3,low:8,high:12,startingWeight:30,cue:'30 lb single dumbbell above chest held with BOTH hands is your reported prior workload for alternating leg lowers. Keep ribs down and lower back steady. Decrease if it pulls you out of position. Count 8–12 PER SIDE.'});
+RECOMP_EXERCISES.push({id:'cable-crunch',session:'Upper B + Core',name:'Kneeling cable crunch',sets:3,low:10,high:15,cue:'Light/moderate cable stack, move ribs toward pelvis without yanking the arms. The stack number varies by machine. Pause at the shortened position.'});
 export const RECOMP_RECIPES=[
   {
     "id": "blueberry-overnight-oats",
@@ -523,7 +531,7 @@ export function allRecompDays(){
 }
 export function exercisesForSession(session){
  if(session==='Abs + Core'){
-  const chosen=['weighted-straight-leg-captain-s-chair-raise','weighted-russian-twist','pallof-press','controlled-leg-rainbow-with-ball'];
+  const chosen=['weighted-straight-leg-captain-s-chair-raise','weighted-russian-twist','weighted-dead-bug','cable-crunch','controlled-leg-rainbow-with-ball'];
   return chosen.map(id=>RECOMP_EXERCISES.find(ex=>ex.id===id)).filter(Boolean);
  }
  return RECOMP_EXERCISES.filter(x=>x.session===session);
