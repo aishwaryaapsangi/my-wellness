@@ -8,7 +8,7 @@ const moveDate=(key,step)=>new Date(dateToTime(key)+step*86400000).toISOString()
 const dateLabel=key=>new Date(key+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const validDate=key=>key>=RECOMP_START&&key<=RECOMP_END;
 const sessions=['Lower A','Upper A + Core','Lower B','Upper B + Core'];
-const isLift=sessions.includes;
+const isLift=session=>sessions.includes(session);
 const statusName={love:'♡ love it',try:'✿ want to try',skip:'↷ skip'};
 const allDays=allRecompDays();
 
@@ -31,7 +31,8 @@ function progressionStatus(ex,log){
 }
 function mealName(plan,fitness,kind){return fitness?.mealOverrides?.[plan.date]?.[kind]||plan[kind]}
 function RecompGarden({fitness={},onChange}){
- const today=new Date().toLocaleDateString('en-CA');
+ const now=new Date();
+ const today=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
  const [date,setDate]=useState(validDate(today)?today:RECOMP_START);
  const [view,setView]=useState('today');
  const [recipeType,setRecipeType]=useState('All');
