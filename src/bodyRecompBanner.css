@@ -1,0 +1,23 @@
+/* Body Recomp editorial hero: five independent transparent art assets. */
+.recomp-editorial-hero{display:grid;grid-template-columns:1fr 1.05fr;isolation:isolate;position:relative;overflow:hidden;min-height:409px;background:linear-gradient(110deg,#fff9f2,#fce8e8 52%,#f3d6df);border:2px solid #9a4562;border-radius:20px 20px 30px 30px;box-shadow:6px 7px 0 #efc6cd;margin:0 0 8px}
+.reh-grid{position:absolute;inset:0;z-index:-1;background-image:linear-gradient(#a8697210 1px,transparent 1px),linear-gradient(90deg,#a8697210 1px,transparent 1px);background-size:27px 27px;mask-image:linear-gradient(90deg,black,transparent 79%)}
+.reh-copy{position:relative;z-index:7;align-self:center;padding:40px 14px 37px clamp(24px,4vw,60px);min-width:0}
+.reh-kicker{display:inline-block;font-size:10px;letter-spacing:.1em;font-weight:900;padding:9px 13px;color:#a4526f;background:#fffaf4;border:1px solid #e4bcc3;border-radius:30px}
+.reh-edition{display:block;margin:25px 0 0;font-size:9px;letter-spacing:.22em;font-weight:850;color:#a86c7c}
+.reh-copy h1{font-family:'Fraunces',Georgia,serif;font-weight:670;letter-spacing:-.06em;line-height:.98;color:#772945;font-size:clamp(47px,5.3vw,76px);margin:10px 0 18px}
+.reh-copy h1 em{font-style:normal;color:#b35a76}.reh-heart{font-family:'Patrick Hand',cursive;color:#c97691;font-size:.65em;position:relative;top:-.35em;left:.14em}
+.reh-copy p{font-size:14px;color:#76535e;line-height:1.7;max-width:410px;margin:0}
+.reh-ribbon{display:flex;flex-wrap:wrap;gap:8px;margin-top:21px}.reh-ribbon span{background:#fff7ee;border:1px solid #e6c3c6;border-radius:30px;font-size:10px;letter-spacing:.08em;color:#98516a;font-weight:830;padding:8px 11px}
+.reh-handwritten{font-family:'Patrick Hand',cursive;font-size:20px;color:#a6546c;display:inline-block;transform:rotate(-4deg);margin-top:19px}
+.reh-scene{position:relative;height:408px;min-width:0;align-self:stretch}.reh-scene img{position:absolute;object-fit:contain;width:auto;height:auto;pointer-events:none;user-select:none}
+.reh-window{width:68%!important;height:100%!important;right:0;top:7px;z-index:1;opacity:.85}
+.reh-clouds{width:66%!important;right:22%;top:-55px;z-index:2;opacity:.84;transform:rotate(3deg)}
+.reh-woman{width:65%!important;max-width:380px;left:0;bottom:-87px;z-index:4;filter:drop-shadow(0 6px 3px #67344d21)}
+.reh-drinks{width:37%!important;right:0;bottom:-4px;z-index:5;filter:drop-shadow(0 4px 3px #67344d15)}
+.reh-gear{width:39%!important;right:24%;bottom:-34px;z-index:3;opacity:.83}
+.reh-note{position:absolute;right:16px;top:20px;z-index:6;transform:rotate(7deg);background:#fff8eb;border:1px solid #d59aa8;border-radius:8px;padding:11px 16px;box-shadow:3px 4px 0 #dfa9ae;font-family:'Patrick Hand',cursive;color:#9c4a67;text-align:center}
+.reh-note span,.reh-note small{display:block;font-size:12px}.reh-note strong{display:block;font-size:19px;line-height:1.08;margin:4px 0}
+.reh-seal{position:absolute;right:13px;bottom:14px;z-index:8;border-radius:50%;width:74px;height:74px;display:grid;place-content:center;text-align:center;transform:rotate(-11deg);border:1px solid #b66a80;background:#ffe9ce;color:#98566b;font-family:'Patrick Hand',cursive;font-size:16px;line-height:1.06;box-shadow:3px 4px 0 #c9859680}
+@media(max-width:1080px){.reh-scene{height:385px}.reh-woman{width:74%!important;bottom:-75px}.reh-note{right:5px;top:12px}.reh-copy{padding-top:32px;padding-bottom:30px}}
+@media(max-width:750px){.recomp-editorial-hero{display:block;min-height:610px}.reh-copy{padding:29px 25px 0}.reh-edition{margin-top:15px}.reh-copy h1{font-size:55px;margin:8px 0 10px}.reh-copy p{font-size:12px;max-width:380px}.reh-ribbon{margin-top:11px}.reh-handwritten{margin-top:10px;font-size:17px}.reh-scene{height:350px;margin-top:-15px}.reh-window{width:56%!important;right:0}.reh-woman{width:57%!important;left:8%;bottom:-91px}.reh-drinks{width:36%!important;right:0}.reh-gear{width:42%!important;right:25%;bottom:-35px}.reh-clouds{width:50%!important;right:26%;top:-13px}.reh-note{top:37px;right:5px;padding:8px 10px}.reh-note strong{font-size:16px}.reh-seal{width:62px;height:62px;font-size:13px}}
+@media(max-width:430px){.recomp-editorial-hero{min-height:575px}.reh-kicker{font-size:9px;padding:8px 10px}.reh-copy h1{font-size:48px}.reh-scene{height:320px}.reh-woman{width:62%!important;left:0;bottom:-64px}.reh-drinks{width:38%!important}.reh-seal{width:56px;height:56px;font-size:12px}}
