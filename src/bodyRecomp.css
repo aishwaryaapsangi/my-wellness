@@ -1,0 +1,59 @@
+/* Body Recomp Garden · inherits Bloom & Balance's scrapbook palette and typography. */
+.recomp-garden{--rg-rose:var(--wine,#8b1d3c);--rg-paper:var(--paper,#fffdf8);--rg-sage:var(--sage,#a8bd83);color:var(--ink,#39242a);padding-bottom:32px}
+.rg-cover{background:linear-gradient(115deg,#fff0ec 0%,#fde4ea 55%,#f0f0db 100%);border:1px solid #e1b9c4;border-radius:20px;padding:28px 30px;box-shadow:4px 5px 0 #f1d7d9;display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;overflow:hidden}
+.rg-cover:after{content:'✿';position:absolute;font-size:138px;color:#d69bad35;right:-13px;bottom:-56px;pointer-events:none}
+.rg-eyebrow{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#a04a69;font-weight:850;margin:0 0 6px}
+.rg-cover h1,.rg-section-title,.rg-panel h3,.rg-metric strong{font-family:'Fraunces',Georgia,serif;letter-spacing:-.04em}
+.rg-cover h1{font-size:clamp(29px,4vw,49px);margin:2px 0 7px;line-height:1.1;color:#7b2943}
+.rg-cover p{margin:0;color:#765966;font-size:13px;line-height:1.7;max-width:590px}
+.rg-date-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;position:relative;z-index:1}
+.rg-button,.rg-tab,.rg-pill-button{border:1px solid #e6c4cd;background:#fffaf7;color:#83405c;border-radius:10px;font-size:12px;font-weight:750;padding:9px 12px}
+.rg-button:hover,.rg-tab:hover,.rg-pill-button:hover{background:#fce7ee}
+.rg-button.primary{background:#8b1d3c;color:#fff;border-color:#8b1d3c}
+.rg-button:disabled{opacity:.45}
+.rg-date-nav input{min-width:140px;border:1px solid #e6c4cd;border-radius:9px;padding:9px;background:white;color:#673748;font-size:12px}
+.rg-tabbar{display:flex;gap:7px;flex-wrap:wrap;margin:22px 0 18px}
+.rg-tab{border-radius:999px;padding:9px 14px}.rg-tab.active{background:var(--wine,#8b1d3c);border-color:var(--wine,#8b1d3c);color:white}
+.rg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.rg-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rg-panel{background:#fffdf8;border:1px solid #edd4d9;border-radius:16px;padding:21px;box-shadow:2px 3px 0 #f1e0e0;min-width:0}
+.rg-panel.sage{background:#f6f7ea;border-color:#dce2cf}.rg-panel.blush{background:#fff5f5}
+.rg-panel h3{font-size:23px;margin:0 0 8px;color:#6d354c}
+.rg-panel p{font-size:12px;color:#765f68;line-height:1.7}.rg-panel p:last-child{margin-bottom:0}
+.rg-lead{color:#775b68;font-size:12px;line-height:1.7;margin:0 0 17px}
+.rg-label{display:block;font-size:10px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:#875469;margin-bottom:6px}
+.rg-input,.rg-select,.rg-textarea{width:100%;border:1px solid #e8cfd4;background:white;color:#513640;border-radius:9px;padding:9px 11px;font-size:12px;min-width:0}.rg-textarea{min-height:70px;resize:vertical}
+.rg-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rg-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rg-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:16px 0}
+.rg-metric{padding:16px;background:#fff8f7;border:1px solid #ecd0d6;border-radius:12px}.rg-metric small{font-size:10px;display:block;color:#916c79;letter-spacing:.07em;text-transform:uppercase;font-weight:800}.rg-metric strong{font-size:27px;display:block;margin:5px 0 0;color:#9a4562}.rg-metric span{font-size:11px;color:#826b76}
+.rg-soft{border-top:1px dashed #e7cdd2;padding-top:10px;margin-top:12px;font-size:11px;color:#8a6e78}
+.rg-session-list{display:flex;flex-direction:column;gap:12px}
+.rg-exercise{padding:15px;border:1px solid #eed5d8;background:#fffbf7;border-radius:13px}
+.rg-exercise-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.rg-exercise h4{font-size:13px;margin:0 0 4px;color:#754052}
+.rg-badge{display:inline-flex;border:1px solid #e9c9d1;border-radius:99px;padding:5px 8px;background:#fff0f2;font-size:10px;font-weight:750;color:#8e4664;white-space:nowrap}
+.rg-exercise p{font-size:11px;color:#77656d;margin:5px 0 12px;line-height:1.6}
+.rg-log-grid{display:grid;grid-template-columns:100px repeat(3,minmax(62px,1fr)) 110px 90px;gap:8px;align-items:end}
+.rg-log-grid label{font-size:10px;font-weight:750;color:#886071}
+.rg-hint{background:#f7f4e8;border:1px solid #e1dfc9;padding:9px 11px;border-radius:9px;color:#687454;font-size:11px;line-height:1.6;margin-top:10px}
+.rg-hint.ready{background:#eaf2df;border-color:#bdd0a9}
+.rg-meal-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rg-meal-card{border:1px solid #ead3d6;background:#fffdfb;border-radius:12px;padding:13px}
+.rg-meal-card h4{font-size:11px;color:#8c4963;text-transform:uppercase;letter-spacing:.11em;margin:0 0 7px}
+.rg-meal-card p{margin:0 0 9px;font-weight:650;font-size:13px;color:#563544}
+.rg-recipe-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.rg-recipe-card{padding:17px;border:1px solid #ead5d6;border-radius:14px;background:#fffdf9}
+.rg-recipe-card h4{font-family:'Fraunces',Georgia,serif;font-size:20px;color:#743a52;margin:0 0 6px}
+.rg-recipe-card .rg-recipe-meta{font-size:10px;color:#9a667c;margin-bottom:12px}
+.rg-recipe-card p{margin:6px 0;font-size:11px;color:#66515a}
+.rg-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.rg-small{padding:6px 9px;font-size:10px}
+.rg-tagrow{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.rg-check{display:flex;gap:11px;align-items:start;border-bottom:1px dashed #ecd7da;padding:11px 0;font-size:12px}
+.rg-check input{accent-color:#9d4e6b;margin-top:2px}
+.rg-check b{font-size:12px}.rg-check span{font-size:11px;color:#836c73}
+.rg-notice{font-size:11px;padding:12px;background:#fff6ef;border-left:3px solid #c89194;color:#78636a;line-height:1.65;border-radius:6px}
+.rg-table-wrap{overflow:auto}.rg-day-table{border-collapse:collapse;width:100%;font-size:11px;min-width:580px}.rg-day-table th{font-size:10px;text-align:left;color:#8e4964;padding:11px 10px;background:#fff0ef}.rg-day-table td{padding:10px;border-bottom:1px solid #f0e0e0;color:#684d59}.rg-day-table tr.current{background:#fcecf0}.rg-day-table button{border:0;background:none;text-decoration:underline;color:#8b1d3c;cursor:pointer;font-weight:700}
+.rg-count{font-size:11px;color:#a26077}
+@media(max-width:980px){.rg-cover{flex-direction:column;align-items:flex-start}.rg-grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-log-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:670px){.rg-cover{padding:22px 18px}.rg-grid,.rg-grid.three,.rg-meal-list,.rg-recipe-list,.rg-metrics,.rg-form-grid{grid-template-columns:1fr}.rg-log-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.rg-panel{padding:16px}.rg-metric strong{font-size:22px}}
