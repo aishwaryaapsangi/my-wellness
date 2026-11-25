@@ -57,3 +57,9 @@
 .rg-count{font-size:11px;color:#a26077}
 @media(max-width:980px){.rg-cover{flex-direction:column;align-items:flex-start}.rg-grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-log-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:670px){.rg-cover{padding:22px 18px}.rg-grid,.rg-grid.three,.rg-meal-list,.rg-recipe-list,.rg-metrics,.rg-form-grid{grid-template-columns:1fr}.rg-log-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.rg-panel{padding:16px}.rg-metric strong{font-size:22px}}
+
+/* Selected fitness date sits under the illustrated editorial banner. */
+.rg-date-line{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px 18px;margin:20px 0 13px;padding:11px 16px;border:1px dashed #ddabbc;border-radius:12px;background:#fffaf4;color:#9e5170;box-shadow:2px 3px 0 #eedde0}
+.rg-date-line-label{font-size:10px;font-weight:900;letter-spacing:.12em}
+.rg-date-line .rg-date-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media(max-width:620px){.rg-date-line{margin-top:17px;padding:10px 11px}.rg-date-line-label{font-size:9px}}
