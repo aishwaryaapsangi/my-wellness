@@ -1,61 +1,132 @@
-// Adaptive prescriptions are suggestions based on *documented* exercises,
-// not medical advice or untested strength estimates. Pure functions for testing.
-const asNumber=(value)=>value!==''&&value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value):null;
-const roundLoad=n=>Math.round(n*100)/100;
-const upper=(ex)=>ex.session?.startsWith('Upper')??false;
-export const defaultIncrement=ex=>ex.id==='weighted-straight-leg-captain-s-chair-raise'?1:
- upper(ex)?2.5:5;
-export const incrementFor=(ex,fitness={})=>asNumber(fitness.increments?.[ex.id])??defaultIncrement(ex);
+// Per-exercise DRAFT loads. These numbers are editable first-session trials,
+// NOT measurements of the user's strength. Machine stacks are not comparable.
+// Future session targets come from plan edits and completed actuals.
+import {RECOMP_START} from './bodyRecompData.js';
 
-export function lastActual(ex, date, fitness={}){
+const numeric=value=>value!==''&&value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value):null;
+const round=value=>Math.round(value*100)/100;
+const upper=ex=>ex.session?.startsWith('Upper')??false;
+export const STARTER_TRIALS={
+ 'machine-or-barbell-hip-thrust':{weight:70,unit:'lb total / machine setting',note:'Equipment resistance varies. Compare with the machine you use.'},
+ 'romanian-deadlift':{weight:20,unit:'lb per dumbbell',note:'20 lb in each hand = 40 lb external total.'},
+ 'leg-press':{weight:90,unit:'lb on machine display',note:'Machine/sled starting resistance varies widely.'},
+ 'seated-hip-abduction':{weight:60,unit:'lb stack setting'},
+ 'lat-pulldown':{weight:50,unit:'lb stack setting'},
+ 'chest-press':{weight:35,unit:'lb machine setting'},
+ 'seated-row':{weight:45,unit:'lb stack setting'},
+ 'dumbbell-shoulder-press':{weight:15,unit:'lb per dumbbell'},
+ 'weighted-straight-leg-captain-s-chair-raise':{weight:5,unit:'lb added',note:'This one is based on your reported +5 lb baseline.'},
+ 'glute-bridge':{weight:70,unit:'lb external total'},
+ 'supported-split-squat':{weight:15,unit:'lb per hand'},
+ 'seated-or-lying-hamstring-curl':{weight:40,unit:'lb machine setting'},
+ 'goblet-squat':{weight:30,unit:'lb single dumbbell'},
+ 'calf-raise':{weight:40,unit:'lb machine setting'},
+ 'seated-cable-row':{weight:50,unit:'lb cable setting'},
+ 'incline-chest-press':{weight:35,unit:'lb machine setting'},
+ 'lateral-raise':{weight:10,unit:'lb per dumbbell'},
+ 'biceps-curl':{weight:15,unit:'lb per dumbbell'},
+ 'triceps-pushdown':{weight:30,unit:'lb cable setting'},
+ 'pallof-press':{weight:20,unit:'lb cable setting'},
+ 'weighted-russian-twist':{weight:20,unit:'lb plate total',note:'This one is based on your reported 20 lb Russian twists.'}
+};
+export const weightUnit=ex=>STARTER_TRIALS[ex.id]?.unit||'lb (verify machine)';
+export const defaultIncrement=ex=>ex.id==='weighted-straight-leg-captain-s-chair-raise'?1:
+ weightUnit(ex).includes('per dumbbell')||weightUnit(ex).includes('per hand')?2.5:upper(ex)?2.5:5;
+export const incrementFor=(ex,fitness={})=>numeric(fitness.increments?.[ex.id])??defaultIncrement(ex);
+
+export function lastActual(ex,date,fitness={}){
  const dates=Object.keys(fitness.logs||{}).filter(d=>d<date&&fitness.logs[d]?.[ex.id]).sort().reverse();
  for(const d of dates){
   const l=fitness.logs[d][ex.id];
-  if(asNumber(l.weight)===null)continue;
-  const reps=(l.reps||[]).slice(0,ex.sets).map(asNumber);
+  if(numeric(l.weight)===null||Number(l.weight)<0)continue;
+  const reps=(l.reps||[]).slice(0,ex.sets).map(numeric);
   if(reps.length!==ex.sets||reps.some(v=>v===null||v<0))continue;
-  return {date:d,weight:Number(l.weight),reps,rir:asNumber(l.rir),pain:l.pain==='yes',form:l.form??'yes'};
+  return {date:d,weight:Number(l.weight),reps,rir:numeric(l.rir),pain:l.pain==='yes',form:l.form??'yes'};
  }
  return null;
 }
-export function getPrescription(ex,date,fitness={}){
- const previous=lastActual(ex,date,fitness);
- const basic=Array(ex.sets).fill(ex.low);
- const initial=asNumber(fitness.baselines?.[ex.id])??(asNumber(ex.startingWeight)??null);
- const base={sets:ex.sets,reps:basic,weight:initial,sourceDate:null,calibration:initial===null,increase:false,increment:incrementFor(ex,fitness),rest:upper(ex)?'90–120 sec':'120–180 sec'};
- if(!previous)return {...base,reason:initial===null?'Choose the load you already handle for THIS specific movement. Record the first session to personalize every future date.':'Starting from your reported resistance; adjust actual sets if needed.'};
- if(previous.pain||previous.form==='no')return {...base,weight:previous.weight,sourceDate:previous.date,calibration:false,reason:'Pain or form concerns: do not increase. Stop painful work and review technique or get qualified guidance.'};
- if(previous.rir!==null&&previous.rir>=1&&previous.rir<=3&&previous.reps.every(v=>v>=ex.high)){
-  const next=roundLoad(previous.weight+incrementFor(ex,fitness));
-  return {...base,weight:next,sourceDate:previous.date,calibration:false,increase:true,reason:'You completed all top-range reps with 1–3 in reserve. This is the next SMALL load to try only if the equipment allows it and recovery is good.'};
+const validReps=(reps,count)=>Array.isArray(reps)&&reps.length===count&&reps.every(v=>numeric(v)!==null&&Number(v)>=0);
+function afterActual(ex,log,fitness){
+ const weight=Number(log.weight),reps=log.reps.map(Number);
+ const base={sourceDate:log.date,calibration:false,source:'actual',rest:upper(ex)?'90–120 sec':'120–180 sec',
+  sets:ex.sets,increment:incrementFor(ex,fitness),unit:weightUnit(ex),trial:false};
+ if(log.pain||log.form==='no')return {...base,weight,reps:reps.map(v=>Math.max(ex.low,Math.min(ex.high,v))),increase:false,
+   reason:'Pain or unstable technique reported. Do not increase; stop if pain persists and check your form or seek guidance.'};
+ if(log.rir!==null&&log.rir>=1&&log.rir<=3&&reps.every(v=>v>=ex.high)){
+   return {...base,weight:round(weight+incrementFor(ex,fitness)),reps:Array(ex.sets).fill(ex.low),increase:true,
+    reason:'Last completed session met all top reps with control and 1–3 reps left. Try the smallest available increase if recovery is good.'};
  }
- const reps=previous.reps.map(v=>Math.max(ex.low,Math.min(ex.high,v)));
- if(previous.rir!==0){
-  const first=reps.findIndex(v=>v<ex.high);
-  if(first!==-1)reps[first]+=1;
- }
- const caution=previous.rir===0?'Last session was at your limit; keep load and aim for cleaner reps and recovery.':'Same load; aim to improve one controlled rep when ready.';
- return {...base,weight:previous.weight,reps,sourceDate:previous.date,calibration:false,reason:caution};
+ const next=reps.map(v=>Math.max(ex.low,Math.min(ex.high,v)));
+ if(log.rir!==0){const first=next.findIndex(v=>v<ex.high);if(first!==-1)next[first]+=1;}
+ return {...base,weight,reps:next,increase:false,
+  reason:log.rir===0?'You were at your limit; keep this load and focus on steady technique.':'Hold your previous actual load; aim for one more clean rep when ready.'};
 }
-// No forced rapid increases. User-recorded cardio sets the next suggested baseline.
-export function getCardioPrescription(date,fitness={}){
- const defaults={minutes:20,speed:2.8,incline:2,mode:'Treadmill',note:'Comfortable/moderate pace after lifting; use talk test. Edit to match your equipment and energy.'};
- const keys=Object.keys(fitness.cardio||{}).filter(d=>d<date).sort().reverse();
- for(const key of keys){const actual=fitness.cardio[key];if(!actual||actual.completed!==true)continue;
-  const minutes=asNumber(actual.minutes),speed=asNumber(actual.speed),incline=asNumber(actual.incline);
+export function getPrescription(ex,date,fitness={}){
+ const saved=numeric(fitness.baselines?.[ex.id]);
+ const reported=numeric(ex.startingWeight);
+ const trial=STARTER_TRIALS[ex.id];
+ const initial=saved??reported??trial?.weight??null;
+ let state={sets:ex.sets,reps:Array(ex.sets).fill(ex.low),weight:initial,unit:weightUnit(ex),
+  sourceDate:null,source:saved!==null?'personal baseline':reported!==null?'reported baseline':trial?'draft starting trial':'unmeasured',
+  calibration:initial===null,increase:false,trial:saved===null&&reported===null&&!!trial,
+  increment:incrementFor(ex,fitness),rest:upper(ex)?'90–120 sec':'120–180 sec',
+  reason:saved!==null||reported!==null?'Starting from your saved/reported weight; editable anytime.':trial?'Suggested first-session trial, NOT a measured personal best. Check against your own machine and adjust before lifting.':'No equipment-specific weight known: enter your usual load.'};
+ // The plan is prefilled for EVERY date, including days not yet completed.
+ // Changing a dated plan anchors all later dates until superseded by another
+ // dated edit or actual performance. No arbitrary increases on uncompleted days.
+ const start=Date.parse(RECOMP_START+'T12:00:00Z');
+ const selected=Date.parse(date+'T12:00:00Z');
+ for(let time=start;time<=selected&&time<start+56*86400000;time+=86400000){
+  const key=new Date(time).toISOString().slice(0,10);
+  // Include off-schedule workouts too: user may rearrange days.
+  const plan=fitness.planOverrides?.[key]?.[ex.id]||{};
+  const weight=numeric(plan.weight);
+  if(weight!==null&&weight>=0){
+   state={...state,weight,sourceDate:key,source:'plan edit',calibration:false,trial:false,increase:false,
+     reason:'Using the load you set on '+key+'. That edit carries forward until an actual workout or later edit changes it.'};
+  }
+  if(validReps(plan.reps,ex.sets)){
+    state={...state,reps:plan.reps.map(Number),sourceDate:key,source:state.source==='plan edit'?'plan edit':'rep-plan edit',
+      reason:'Using the set targets you edited. This change carries into later sessions until updated.'};
+  }
+  if(key===date)break;
+  const record=fitness.logs?.[key]?.[ex.id];
+  if(record&&numeric(record.weight)!==null&&Number(record.weight)>=0&&validReps(record.reps,ex.sets)){
+    state=afterActual(ex,{date:key,weight:Number(record.weight),reps:record.reps.map(Number),
+      rir:numeric(record.rir),pain:record.pain==='yes',form:record.form??'yes'},fitness);
+  }
+ }
+ return state;
+}
+// Treat StairMaster and treadmill as independent activities; never copy a
+// treadmill speed/incline onto StairMaster levels.
+export function getCardioPrescription(date,fitness={},mode='Treadmill'){
+ const machine=mode==='StairMaster'?'StairMaster':'Treadmill';
+ const defaults=machine==='StairMaster'
+  ?{mode:machine,minutes:25,level:6,trial:true,note:'StairMaster 25 minutes; level 6 is an editable first-session trial, not a known setting. You mentioned 20–30 minutes. Adapt intensity to your effort.'}
+  :{mode:machine,minutes:25,speed:3,incline:12,trial:false,note:'Your reported baseline: treadmill 3 mph, 12% incline, 20–30 minutes. Adjust duration to fatigue and recovery.'};
+ const dates=Object.keys(fitness.cardio||{}).filter(d=>d<date).sort().reverse();
+ for(const key of dates){
+  const l=fitness.cardio[key];
+  if(!l||l.completed!==true||(l.mode||'Treadmill')!==machine)continue;
+  const minutes=numeric(l.minutes),effort=numeric(l.effort);
+  if(machine==='StairMaster'){
+   const level=numeric(l.level);if(minutes===null||level===null)continue;
+   return {mode:machine,minutes,level,trial:false,sourceDate:key,
+    note:effort!==null&&effort>=7?'Last session felt hard; repeat or shorten it rather than automatically increasing.':'Use your latest completed StairMaster settings; change them anytime.'};
+  }
+  const speed=numeric(l.speed),incline=numeric(l.incline);
   if(minutes===null||speed===null||incline===null)continue;
-  const feel=asNumber(actual.effort);
-  return {minutes, speed,incline,mode:'Treadmill',sourceDate:key,
-   note:feel!==null&&feel>=7?'Prior cardio was difficult. Repeat or ease intensity; no automatic increase.':'Repeat your recorded comfortable settings. Cardio is for fitness and enjoyment, not punishment.'};
+  return {mode:machine,minutes,speed,incline,trial:false,sourceDate:key,
+   note:effort!==null&&effort>=7?'Your last treadmill session felt hard; repeat or ease intensity if needed.':'Use your latest completed treadmill settings; your reported 3 mph at 12% remains the original reference.'};
  }
  return defaults;
 }
-export function nextMatchingDates(ex, date, buildRecompDay, until, count=3){
- const out=[];let d=Date.parse(date+'T12:00:00Z');
- const end=Date.parse(until+'T12:00:00Z');
- while((d+=86400000)<=end&&out.length<count){
-  const key=new Date(d).toISOString().slice(0,10);
-  if(buildRecompDay(key)?.session===ex.session)out.push(key);
+export function nextMatchingDates(ex,date,buildDay,until,count=3){
+ const out=[];let time=Date.parse(date+'T12:00:00Z'),end=Date.parse(until+'T12:00:00Z');
+ while((time+=86400000)<=end&&out.length<count){
+  const key=new Date(time).toISOString().slice(0,10);
+  if(buildDay(key)?.session===ex.session)out.push(key);
  }
  return out;
 }

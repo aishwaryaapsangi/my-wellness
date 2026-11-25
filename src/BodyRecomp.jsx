@@ -1,7 +1,7 @@
 import React,{useMemo,useState} from 'react';
 import {RECOMP_START,RECOMP_END,RECOMP_REVIEWS,WEEK_FOCUS,buildRecompDay,allRecompDays,exercisesForSession} from './bodyRecompData.js';
 import {RICH_RECIPES,recipeById,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates} from './bodyRecompMeals.js';
-import {getPrescription,getCardioPrescription,nextMatchingDates,incrementFor} from './bodyRecompProgress.js';
+import {getPrescription,getCardioPrescription,nextMatchingDates,incrementFor,weightUnit} from './bodyRecompProgress.js';
 import BodyRecompBanner from './BodyRecompBanner.jsx';
 import './bodyRecomp.css';
 
@@ -12,6 +12,7 @@ const moveDate=(s,days)=>new Date(dateTime(s)+days*86400000).toISOString().slice
 const pretty=s=>new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
 const isTraining=session=>['Lower A','Lower B','Upper A + Core','Upper B + Core'].includes(session);
 const renderLb=value=>value===null||value===undefined?'set your baseline':String(value)+' lb';
+const renderWeight=(value,ex)=>value===null||value===undefined?'choose a trial load':String(value)+' '+weightUnit(ex);
 const emojiFor=type=>type.includes('Breakfast')?'🫐':type.includes('Snack')?'🍓':type.includes('Morning')?'🥬':type.includes('Dinner')?'🍲':'🥗';
 const sections=[['today','Daily plan'],['train','My workouts'],['meals','Meals'],['recipes','Recipe book'],['prep','Weekly groceries'],['health','Healthy rituals'],['checkins','Check-ins'],['calendar','8-week calendar']];
 
@@ -31,25 +32,37 @@ function ExercisePlan({ex,date,fitness,onChange}){
  const editBaseline=(value)=>onChange(old=>({...old,baselines:{...old.baselines,[ex.id]:value}}));
  const editIncrement=value=>onChange(old=>({...old,increments:{...old.increments,[ex.id]:value}}));
  const reps=Array.from({length:ex.sets},(_,i)=>log.reps?.[i]??'');
- const note=p.calibration?'This movement needs its first measured load. Pick a resistance you already handle with control.':'Based on '+(p.sourceDate?'your actual session on '+pretty(p.sourceDate):'your reported baseline');
+ const note=p.calibration?'Select your normal load for this movement.':p.trial?'Draft trial load — please check this equipment-specific starting setting before trying it.':p.source==='plan edit'||p.source==='rep-plan edit'?'Following your edited plan from '+pretty(p.sourceDate):'Based on '+(p.sourceDate?'your completed session on '+pretty(p.sourceDate):'your reported baseline');
  return <article className="rg-exercise">
    <div className="rg-exercise-top"><div><h4>{ex.name}</h4><p>{ex.cue}</p></div><span className="rg-badge">{ex.sets} sets · {ex.low}–{ex.high} reps</span></div>
    <div className="rg-target">
-     <div><span className="rg-label">Today's suggested load</span><strong>{renderLb(planWeight)}</strong></div>
+     <div><span className="rg-label">Today's suggested load</span><strong>{renderWeight(planWeight,ex)}</strong></div>
      <div><span className="rg-label">Target reps by set</span><strong>{planReps.join(' / ')}</strong></div>
      <div><span className="rg-label">Rest</span><strong>{p.rest}</strong></div>
    </div>
    <p className="rg-count">{note}. {p.reason}</p>
+   <div className="rg-quick-edit">
+    <NumberField label="Edit today's planned weight (lb)" step=".5" value={override.weight!==undefined&&override.weight!==''?override.weight:p.weight??''}
+       onChange={v=>editOverride({weight:v})} placeholder="Select a comfortable starting load"/>
+    <button type="button" className="rg-button rg-small" onClick={()=>editOverride({weight:'',reps:null,repsText:''})}>Reset this day's edit</button>
+    <span className="rg-soft">Changes cascade to future sessions unless you later enter a different plan or actual lift.</span>
+   </div>
+   <div className="rg-actions" style={{margin:'12px 0'}}>
+    <button className="rg-button primary" type="button" disabled={planWeight===null}
+     onClick={()=>editLog({weight:String(planWeight),reps:planReps.map(String),rir:'2',pain:'no',form:'yes'})}>
+      ✓ I completed this plan with good form and ~2 reps left
+    </button>
+   </div>
    <details className="rg-details"><summary>Customize today's plan / equipment increment</summary>
     <div className="rg-form-grid">
      <NumberField label="My baseline for this movement (lb)" step=".5" value={fitness.baselines?.[ex.id]??ex.startingWeight??''} onChange={editBaseline} placeholder="Measure first"/>
      <NumberField label="Smallest available weight step (lb)" step=".5" value={fitness.increments?.[ex.id]??incrementFor(ex,fitness)} onChange={editIncrement}/>
-     <NumberField label="Today's planned weight (lb)" step=".5" value={override.weight??p.weight??''} onChange={v=>editOverride({weight:v})} placeholder="Calibrate first"/>
+     
      <label className="rg-field"><span className="rg-label">Today's planned reps (one per set)</span><input className="rg-input" value={override.repsText??''} placeholder={p.reps.join(', ')} onChange={e=>{
        const t=e.target.value;const v=t.split(',').map(s=>Number(s.trim()));
        editOverride({repsText:t,reps:v.length===ex.sets&&v.every(n=>Number.isFinite(n)&&n>=0)?v.map(n=>Math.round(n)):null});
       }}/></label>
-    </div><p className="rg-soft">Changing the plan alone doesn't count as lifting it. Future sessions adapt from the actual completed sets below.</p>
+    </div><p className="rg-soft">The plan change carries forward even before you complete a session. Confirm completed sets above or edit your actuals below to trigger performance-based increases.</p>
    </details>
    <div className="rg-log-heading"><b>What I actually did</b><span>Editable anytime — this drives future suggestions</span></div>
    <div className="rg-log-grid">
@@ -63,28 +76,45 @@ function ExercisePlan({ex,date,fitness,onChange}){
     <label className="rg-field"><span className="rg-label">Notes</span><input className="rg-input" value={log.notes||''} placeholder="Machine, form, recovery..." onChange={e=>editLog({notes:e.target.value})}/></label>
    </div>
    {future.length>0&&<div className="rg-hint ready">
-    <b>Next matching session: {pretty(future[0])}</b> · {renderLb(getPrescription(ex,future[0],fitness).weight)} · {getPrescription(ex,future[0],fitness).reps.join(' / ')} reps.
+    <b>Next matching session: {pretty(future[0])}</b> · {renderWeight(getPrescription(ex,future[0],fitness).weight,ex)} · {getPrescription(ex,future[0],fitness).reps.join(' / ')} reps.
     {log.pain==='yes'?' Pain logged — no increase recommended.':''}
    </div>}
   </article>;
 }
 
-function CardioPlan({date,fitness,onChange}){
- const p=getCardioPrescription(date,fitness),log=fitness.cardio?.[date]||{};
+function CardioPlan({date,session,fitness,onChange}){
+ const log=fitness.cardio?.[date]||{};
+ // Upper days alternate to StairMaster by default; user can choose either.
+ const initialMode=session.startsWith('Upper')?'StairMaster':'Treadmill';
+ const mode=log.mode||initialMode;
+ const p=getCardioPrescription(date,fitness,mode);
  const edit=patch=>onChange(old=>({...old,cardio:{...old.cardio,[date]:{...(old.cardio?.[date]||{}),...patch}}}));
- return <Card tone="sage"><p className="rg-eyebrow">After your strength session · optional if you feel well</p><h3>Cardio finish ✳</h3>
-  <p><b>Suggested:</b> treadmill {p.minutes} minutes · {p.speed} mph · {p.incline}% incline. A moderate pace where you can still speak in sentences. Adjust to your stamina; never push through dizziness or pain.</p>
-  <div className="rg-form-grid">
-   <NumberField label="Actual minutes" value={log.minutes??''} placeholder={String(p.minutes)} onChange={v=>edit({minutes:v})}/>
-   <NumberField label="Actual speed (mph)" step=".1" value={log.speed??''} placeholder={String(p.speed)} onChange={v=>edit({speed:v})}/>
-   <NumberField label="Actual incline (%)" step=".5" value={log.incline??''} placeholder={String(p.incline)} onChange={v=>edit({incline:v})}/>
-   <Selection label="Effort" value={log.effort??''} onChange={v=>edit({effort:v})} items={[['','Not logged'],['3','3 easy'],['4','4 comfortable'],['5','5 moderate'],['6','6 somewhat hard'],['7','7 hard'],['8','8+ too hard']]}/>
+ const markPlanned=()=>edit({mode,completed:true,minutes:log.minutes??p.minutes,
+  ...(mode==='Treadmill'?{speed:log.speed??p.speed,incline:log.incline??p.incline}:{level:log.level??p.level})});
+ return <Card tone="sage">
+  <p className="rg-eyebrow">Your established cardio routine · after strength training</p>
+  <h3>Cardio finish ✳</h3>
+  <Selection label="Cardio machine" value={mode} onChange={v=>edit({mode:v,completed:false})}
+   items={[[ 'Treadmill','Incline treadmill'],['StairMaster','StairMaster']]}/>
+  {mode==='Treadmill'?<p><b>Today's plan:</b> {p.minutes} minutes at <b>{p.speed} mph, {p.incline}% incline</b>. This matches your reported 12–3 treadmill routine; 20–30 minutes is your usual range.</p>
+   :<p><b>Today's plan:</b> {p.minutes} minutes on StairMaster at <b>level {p.level}</b>. You reported 20–30 minutes; the machine level is a provisional trial until you change or confirm it.</p>}
+  <div className="rg-form-grid" style={{marginTop:12}}>
+   <NumberField label="Planned / actual minutes" value={log.minutes??p.minutes} onChange={v=>edit({minutes:v})}/>
+   {mode==='Treadmill'?<>
+    <NumberField label="Speed (mph)" step=".1" value={log.speed??p.speed} onChange={v=>edit({speed:v})}/>
+    <NumberField label="Incline (%)" step=".5" value={log.incline??p.incline} onChange={v=>edit({incline:v})}/>
+   </>:<NumberField label="StairMaster level" value={log.level??p.level} onChange={v=>edit({level:v})}/>}
+   <Selection label="Effort (optional)" value={log.effort??''} onChange={v=>edit({effort:v})}
+    items={[['','Not logged'],['3','3 · Easy'],['4','4 · Comfortable'],['5','5 · Moderate'],['6','6 · Challenging'],['7','7 · Hard'],['8','8+ · Very hard']]}/>
   </div>
-  <label className="rg-check"><input type="checkbox" checked={!!log.completed} onChange={e=>edit({completed:e.target.checked})}/><span><b>Finished / recorded this cardio session</b><br/>Only completed sessions affect next time's suggested settings.</span></label>
-  <p className="rg-soft">{p.note}</p>
+  <div className="rg-actions" style={{marginTop:13}}>
+   <button className="rg-button primary" onClick={markPlanned}>✓ I completed these cardio settings</button>
+   <label className="rg-check" style={{margin:0}}><input type="checkbox" checked={!!log.completed}
+    onChange={e=>edit({completed:e.target.checked})}/><span>Completed</span></label>
+  </div>
+  <p className="rg-soft">{p.note} If a session feels excessive, reduce it; training should not require pushing through dizziness, pain or exhaustion.</p>
  </Card>;
 }
-
 function RecompGarden({fitness={},onChange}){
  const now=new Date();const t=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
  const [date,setDate]=useState(t>=RECOMP_START&&t<=RECOMP_END?t:RECOMP_START);
@@ -130,7 +160,7 @@ function RecompGarden({fitness={},onChange}){
     <Card tone="blush"><p className="rg-eyebrow">AM · first little ritual</p><h3>{menu.morning.title}</h3><p>{menu.morning.detail}</p><label className="rg-check"><input type="checkbox" checked={!!marks.morning} onChange={e=>changeMark('morning',e.target.checked)}/><span>Done / enjoyed</span></label><p className="rg-soft">Gentle cleanse or water, moisturizer, broad-spectrum SPF 30+ when outdoors, and lip balm—especially during isotretinoin treatment.</p></Card>
     <Card><p className="rg-eyebrow">Breakfast · lunch · snack · dinner</p><h3>Food I look forward to ♡</h3>{kinds.map(kind=><div className="rg-meal-line" key={kind}><span>{kind}</span><strong>{maybeName(kind)}</strong></div>)}<button className="rg-button" style={{marginTop:11}} onClick={()=>setView('meals')}>Swap any meal ↗</button></Card>
     <Card tone="sage"><p className="rg-eyebrow">Today's movement</p><h3>{plan.session}</h3><p>{isTraining(plan.session)?'Your plan has specific sets, rep targets, and load suggestions for each exercise. Enter your actual lifts to update future dates.':plan.prep}</p>
-     {isTraining(plan.session)?<>{workout.map(ex=>{const p=getPrescription(ex,date,fitness);return <div className="rg-mini-lift" key={ex.id}><span>{ex.name}</span><strong>{p.sets} × {p.reps.join('/')} · {renderLb(p.weight)}</strong></div>})}<p className="rg-soft">Cardio: {getCardioPrescription(date,fitness).minutes} min · {getCardioPrescription(date,fitness).speed} mph · {getCardioPrescription(date,fitness).incline}% incline (editable).</p><button className="rg-button primary" onClick={()=>setView('train')}>Open workout + log actual sets ↗</button></>:<button className="rg-button" onClick={markDay}>{fitness.dayDone?.[date]?'✓ Done':'Mark recovery/activity day done'}</button>}</Card>
+     {isTraining(plan.session)?<>{workout.map(ex=>{const p=getPrescription(ex,date,fitness);return <div className="rg-mini-lift" key={ex.id}><span>{ex.name}</span><strong>{p.sets} × {p.reps.join('/')} · {renderWeight(p.weight,ex)}</strong></div>})}<p className="rg-soft">Cardio: {plan.session.startsWith('Upper')?'StairMaster · 25 min (level editable)':'Treadmill · 25 min · 3 mph · 12% incline'} — choose either machine in the workout tab.</p><button className="rg-button primary" onClick={()=>setView('train')}>Open workout + log actual sets ↗</button></>:<button className="rg-button" onClick={markDay}>{fitness.dayDone?.[date]?'✓ Done':'Mark recovery/activity day done'}</button>}</Card>
     <Card><p className="rg-eyebrow">Sleep, digestion and energy</p><h3>How my body feels</h3><div className="rg-form-grid">
       <NumberField label="Sleep (hours)" step=".5" max="24" value={daily.sleep} onChange={v=>changeDaily('sleep',v)}/>
       <NumberField label="Water (glasses of your size)" value={daily.water} onChange={v=>changeDaily('water',v)}/>
@@ -145,10 +175,10 @@ function RecompGarden({fitness={},onChange}){
 
   {view==='train'&&<>
    <div className="rg-grid">
-    <Card tone="blush"><p className="rg-eyebrow">{pretty(date)} · week {plan.week}</p><h3>{plan.session}</h3><p>{isTraining(plan.session)?'Each movement below has exact sets and target reps. Known loads appear automatically. The first session calibrates unknown machine/dumbbell loads so later prescriptions can use YOUR actual results.':"Today’s schedule is for recovery, an optional walk or meal preparation."}</p><p className="rg-notice">A future weight is a recommendation to test, not an automatic requirement. If pain, dizziness, poor form or unusual weakness occurs, stop or reduce the activity.</p></Card>
-    <Card tone="sage"><p className="rg-eyebrow">Progressive overload · automatically updated</p><h3>Actuals → next plan</h3><p>When all sets hit the high end with good form and 1–3 reps left, the next plan offers one small equipment-appropriate increase. Otherwise, it holds the load and targets an additional clean rep. Changing earlier logged reps automatically recalculates uncompleted future sessions.</p><p className="rg-soft">Known starting points: +5 lb straight-leg chair raise; 20 lb Russian twists (optional). Your 30-lb arm exercise needs its exact name before we assign that weight elsewhere.</p></Card>
+    <Card tone="blush"><p className="rg-eyebrow">{pretty(date)} · week {plan.week}</p><h3>{plan.session}</h3><p>{isTraining(plan.session)?'Each movement already has an exact, editable trial load, sets and reps. Edit the suggestion once if it does not match your equipment or your current strength, and your future plans update. Confirm the completed session with one tap, or log differences below.':"Today’s schedule is for recovery, an optional walk or meal preparation."}</p><p className="rg-notice">All exercises now include an editable starting trial load, with pounds explicitly labeled per hand, per dumbbell, total, or machine setting. These suggestions are not verified personal lifting records. If pain, dizziness, poor form or unusual weakness occurs, stop or adjust.</p></Card>
+    <Card tone="sage"><p className="rg-eyebrow">Progressive overload · automatically updated</p><h3>Actuals → next plan</h3><p>When all sets hit the high end with good form and 1–3 reps left, the next plan offers one small equipment-appropriate increase. Otherwise, it holds the load and targets an additional clean rep. Changing earlier logged reps automatically recalculates uncompleted future sessions.</p><p className="rg-soft">Your reported +5 lb straight-leg raise and 20 lb Russian twists are retained. The specific 30-lb arm movement is still unnamed, so the other suggested loads are adjustable trials, not measurements.</p></Card>
    </div>
-   {isTraining(plan.session)?<><div className="rg-session-list">{workout.map(ex=><ExercisePlan key={ex.id} ex={ex} date={date} fitness={fitness} onChange={update}/>)}</div><CardioPlan date={date} fitness={fitness} onChange={update}/>
+   {isTraining(plan.session)?<><div className="rg-session-list">{workout.map(ex=><ExercisePlan key={ex.id} ex={ex} date={date} fitness={fitness} onChange={update}/>)}</div><CardioPlan date={date} session={plan.session} fitness={fitness} onChange={update}/>
     <button className="rg-button primary" style={{marginTop:12}} onClick={markDay}>{fitness.dayDone?.[date]?'✓ Session marked complete':'Mark training day complete'}</button></>:
     <Card tone="sage"><h3>Recovery is productive too</h3><p>{plan.prep}. An enjoyable relaxed walk is optional. No need to compensate for rest days.</p></Card>}
   </>}
