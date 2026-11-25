@@ -1,6 +1,6 @@
 import React,{useMemo,useState} from 'react';
 import {RECOMP_START,RECOMP_END,RECOMP_REVIEWS,WEEK_FOCUS,buildRecompDay,allRecompDays,exercisesForSession} from './bodyRecompData.js';
-import {RICH_RECIPES,recipeById,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates} from './bodyRecompMeals.js';
+import {RICH_RECIPES,recipeById,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates,weeklyBatchSummary} from './bodyRecompMeals.js';
 import {getPrescription,getCardioPrescription,nextMatchingDates,incrementFor,weightUnit} from './bodyRecompProgress.js';
 import BodyRecompBanner from './BodyRecompBanner.jsx';
 import './bodyRecomp.css';
@@ -10,7 +10,7 @@ const kinds=['breakfast','lunch','dinner','snack'];
 const dateTime=s=>Date.parse(s+'T12:00:00Z');
 const moveDate=(s,days)=>new Date(dateTime(s)+days*86400000).toISOString().slice(0,10);
 const pretty=s=>new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-const isTraining=session=>['Lower A','Lower B','Upper A + Core','Upper B + Core'].includes(session);
+const isTraining=session=>['Lower A','Lower B','Upper A + Core','Upper B + Core','Abs + Core'].includes(session);
 const renderLb=value=>value===null||value===undefined?'set your baseline':String(value)+' lb';
 const renderWeight=(value,ex)=>value===null||value===undefined?'choose a trial load':String(value)+' '+weightUnit(ex);
 const emojiFor=type=>type.includes('Breakfast')?'🫐':type.includes('Snack')?'🍓':type.includes('Morning')?'🥬':type.includes('Dinner')?'🍲':'🥗';
@@ -115,6 +115,23 @@ function CardioPlan({date,session,fitness,onChange}){
   <p className="rg-soft">{p.note} If a session feels excessive, reduce it; training should not require pushing through dizziness, pain or exhaustion.</p>
  </Card>;
 }
+
+function WeekPrepPreview({week}){
+ const batch=weeklyBatchSummary(week);
+ if(!batch)return null;
+ return <Card tone="sage">
+  <p className="rg-eyebrow">Week {week} · cook in batches, not every day</p>
+  <h3>Two main meals + simple alternatives ✿</h3>
+  <div className="rg-prep-columns">{[['Lunch',batch.lunch],['Dinner',batch.dinner]].map(([label,meals])=>
+   <div key={label}><h4>{label}</h4>
+    {meals.map(item=><div className="rg-prep-entry" key={item.id}>
+      <strong>{item.name}</strong><span>{item.role} · {item.servings} planned portions</span>
+     </div>)}
+   </div>)}</div>
+  <p className="rg-soft">Prep the main dishes at the start of your planning week. Refrigerate what you'll eat within 3–4 days and freeze later portions right away, or prepare a smaller fresh batch midway through the week. Portions are adjustable; your appetite still matters.</p>
+ </Card>
+}
+
 function RecompGarden({fitness={},onChange}){
  const now=new Date();const t=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
  const [date,setDate]=useState(t>=RECOMP_START&&t<=RECOMP_END?t:RECOMP_START);
@@ -145,6 +162,7 @@ function RecompGarden({fitness={},onChange}){
   setShowNew(false);setNewRecipe({name:'',type:'Lunch / Dinner',ingredients:'',instructions:'',adjustments:'',nutrients:''});
  };
  const maybeName=(kind)=>namedMeal(date,kind,fitness);
+ const mealTag=kind=>fitness.mealOverrides?.[date]?.[kind]?'My swap':kind==='lunch'?menu.lunchPrep:kind==='dinner'?menu.dinnerPrep:'Flexible favorite';
  return <div className="recomp-garden">
   <BodyRecompBanner/>
   <div className="rg-date-line"><span className="rg-date-line-label">✿ 8-WEEK PERSONAL STRENGTH + WELLNESS PLANNER · NOV 25 — JAN 19</span>
@@ -155,10 +173,13 @@ function RecompGarden({fitness={},onChange}){
   <nav className="rg-tabbar" aria-label="Body recomp sections">{sections.map(([id,label])=><button className={'rg-tab '+(view===id?'active':'')} key={id} onClick={()=>setView(id)}>{label}</button>)}</nav>
 
   {view==='today'&&<>
+   {date==='2026-11-25'&&<div className="rg-notice" style={{marginBottom:14}}>
+    <b>High-school reunion day ✿</b> · Your planned workout is Abs + Core, not a rest day. It's a manageable session before your evening plans; enjoy your reunion and adjust cardio if time is tight.
+   </div>}
    <div className="rg-metrics"><div className="rg-metric"><small>Week</small><strong>{plan.week}/8</strong><span>{pretty(date)}</span></div><div className="rg-metric"><small>Workout</small><strong style={{fontSize:18}}>{plan.session}</strong><span>Editable by performance</span></div><div className="rg-metric"><small>Sets logged</small><strong>{allLogged}</strong><span>All sessions</span></div><div className="rg-metric"><small>Days checked</small><strong>{doneDays}/56</strong><span>Rest counts too</span></div></div>
    <div className="rg-grid">
     <Card tone="blush"><p className="rg-eyebrow">AM · first little ritual</p><h3>{menu.morning.title}</h3><p>{menu.morning.detail}</p><label className="rg-check"><input type="checkbox" checked={!!marks.morning} onChange={e=>changeMark('morning',e.target.checked)}/><span>Done / enjoyed</span></label><p className="rg-soft">Gentle cleanse or water, moisturizer, broad-spectrum SPF 30+ when outdoors, and lip balm—especially during isotretinoin treatment.</p></Card>
-    <Card><p className="rg-eyebrow">Breakfast · lunch · snack · dinner</p><h3>Food I look forward to ♡</h3>{kinds.map(kind=><div className="rg-meal-line" key={kind}><span>{kind}</span><strong>{maybeName(kind)}</strong></div>)}<button className="rg-button" style={{marginTop:11}} onClick={()=>setView('meals')}>Swap any meal ↗</button></Card>
+    <Card><p className="rg-eyebrow">Breakfast · lunch · snack · dinner</p><h3>Food I look forward to ♡</h3>{kinds.map(kind=><div className="rg-meal-line" key={kind}><span>{kind}</span><strong>{maybeName(kind)}{(kind==='lunch'||kind==='dinner')&&<small className="rg-meal-prep-tag">{mealTag(kind)}</small>}</strong></div>)}<button className="rg-button" style={{marginTop:11}} onClick={()=>setView('meals')}>Swap any meal ↗</button></Card>
     <Card tone="sage"><p className="rg-eyebrow">Today's movement</p><h3>{plan.session}</h3><p>{isTraining(plan.session)?'Your plan has specific sets, rep targets, and load suggestions for each exercise. Enter your actual lifts to update future dates.':plan.prep}</p>
      {isTraining(plan.session)?<>{workout.map(ex=>{const p=getPrescription(ex,date,fitness);return <div className="rg-mini-lift" key={ex.id}><span>{ex.name}</span><strong>{p.sets} × {p.reps.join('/')} · {renderWeight(p.weight,ex)}</strong></div>})}<p className="rg-soft">Cardio: {plan.session.startsWith('Upper')?'StairMaster · 25 min (level editable)':'Treadmill · 25 min · 3 mph · 12% incline'} — choose either machine in the workout tab.</p><button className="rg-button primary" onClick={()=>setView('train')}>Open workout + log actual sets ↗</button></>:<button className="rg-button" onClick={markDay}>{fitness.dayDone?.[date]?'✓ Done':'Mark recovery/activity day done'}</button>}</Card>
     <Card><p className="rg-eyebrow">Sleep, digestion and energy</p><h3>How my body feels</h3><div className="rg-form-grid">
@@ -184,8 +205,9 @@ function RecompGarden({fitness={},onChange}){
   </>}
 
   {view==='meals'&&<>
-   <div className="rg-grid"><Card tone="blush"><p className="rg-eyebrow">{pretty(date)}</p><h3>Your flexible menu</h3><p>Breakfast favorites can repeat. Lunch and dinner change throughout all eight weeks, with your Indian bhajis, soups, khichdi and other dishes.</p>
-    <div className="rg-meal-list">{kinds.map(kind=><div className="rg-meal-card" key={kind}><h4>{kind}</h4><p>{maybeName(kind)}</p><Selection label="Swap recipe" value={fitness.mealOverrides?.[date]?.[kind]||''} onChange={v=>chooseMeal(kind,v)} items={[['','Use planned recipe'],...recipes.filter(r=>fitness.recipeRatings?.[r.id]!=='skip').map(r=>[r.name,r.name])]}/></div>)}</div>
+   <WeekPrepPreview week={plan.week}/>
+   <div className="rg-grid" style={{marginTop:16}}><Card tone="blush"><p className="rg-eyebrow">{pretty(date)}</p><h3>Your flexible menu</h3><p>Within each week, the main lunch and dinner repeat for meal prep; each has two easy alternate days. Next week has different main dishes. Breakfast favorites can repeat, too.</p>
+    <div className="rg-meal-list">{kinds.map(kind=><div className="rg-meal-card" key={kind}><h4>{kind}{(kind==='lunch'||kind==='dinner')&&<small className="rg-meal-prep-tag">{mealTag(kind)}</small>}</h4><p>{maybeName(kind)}</p><Selection label="Swap recipe" value={fitness.mealOverrides?.[date]?.[kind]||''} onChange={v=>chooseMeal(kind,v)} items={[['','Use planned recipe'],...recipes.filter(r=>fitness.recipeRatings?.[r.id]!=='skip').map(r=>[r.name,r.name])]}/></div>)}</div>
    </Card><Card tone="sage"><p className="rg-eyebrow">Morning nourishment</p><h3>{menu.morning.title}</h3><p>{menu.morning.detail}</p><p>Protein, greens, carbohydrates, and fat in satisfying portions support training and health. Oil can be modest without banning necessary dietary fat. Dairy is optional when it bothers you; tofu is not a default meal.</p><p className="rg-notice">No automatic calorie deficit, detox, or prescribed supplement stack. With your previous missed periods and isotretinoin treatment, discuss personalized nutrition and supplements with your clinician/dietitian.</p></Card></div>
    <div className="rg-actions"><button className="rg-button" onClick={()=>{setGroceryWeek(plan.week);setView('prep')}}>See this week's groceries ↗</button><button className="rg-button" onClick={()=>setView('recipes')}>Browse detailed recipes ↗</button></div>
   </>}
@@ -210,13 +232,14 @@ function RecompGarden({fitness={},onChange}){
   </>}
 
   {view==='prep'&&<>
-   <div className="rg-grid"><Card tone="sage"><p className="rg-eyebrow">Each week, not one static grocery list</p><h3>Your weekly market basket</h3>
+   <WeekPrepPreview week={groceryWeek}/>
+   <div className="rg-grid" style={{marginTop:16}}><Card tone="sage"><p className="rg-eyebrow">Each week, not one static grocery list</p><h3>Your weekly market basket</h3>
      <Selection label="Choose week" value={String(groceryWeek)} onChange={v=>setGroceryWeek(Number(v))} items={Array.from({length:8},(_,i)=>[String(i+1),'Week '+(i+1)+' · '+pretty(weeklyMealDates(i+1)[0])])}/>
      <p>Calculated from that week's breakfast, lunch, dinner and snack recipes, including your day-by-day swaps. Quantities are estimates for one person, and every item is editable.</p>
      <p className="rg-notice">Use pantry ingredients you already have; actual needs depend on brands, portions, leftovers, and appetite.</p>
      <button className="rg-button" onClick={()=>update(old=>({...old,shopping:{...old.shopping,[groceryWeek]:{}}}))}>Clear this week's checks</button>
     </Card>
-    <Card><p className="rg-eyebrow">Prep routine</p><h3>Sunday batch + Wednesday refresh</h3><p>Cook one or two dals/beans, roast vegetables, wash leafy greens and prep breakfast jars. Use cooked refrigerated food within 3–4 days and freeze later meals. Make cilantro-lime yogurt dip or chutney so the food stays genuinely delicious.</p>
+    <Card><p className="rg-eyebrow">Prep routine</p><h3>Plan-start batch + midweek refresh</h3><p>Each planner week starts on Wednesday. Prep the main lunch and dinner in the first day or the evening before, then freeze later portions immediately or cook a smaller second batch over the weekend. Wash leafy greens and make overnight-oat jars for just a few days at a time. Keep cooked leftovers refrigerated for no more than 3–4 days.</p>
      <p className="rg-soft">Changing a planned recipe also changes this week's ingredient list automatically.</p>
     </Card></div>
    <div className="rg-grocery-grid">{['Protein','Greens','Vegetables','Produce','Fruit','Grains','Drinks','Pantry'].map(cat=>{

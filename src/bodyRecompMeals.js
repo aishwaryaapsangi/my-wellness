@@ -31,7 +31,7 @@ r('zucchini-wrap','Garlic mushroom feta pita','Lunch / Dinner',['mushrooms','zuc
 r('sabudana-bhaji','Vegetable sabudana bhaji with yogurt','Lunch / Dinner',['potato','peas','carrots','yogurt','peanut_butter','lemon','spices'],'Soaked sabudana (tapioca pearls), potato, peas, carrot, cumin, lemon, roasted ground peanuts; yogurt on side','Soak sabudana according to package, steam potato, toss briefly with vegetables and spices until pearls turn translucent.','Tapioca is mostly starch; pair with yogurt or eggs for protein. Confirm if this is the sabu bhaji you meant.','Carbs, vegetables; protein side')
 ];
 const breakfast=['overnight-oats','eggs-sourdough','chia-pudding','berry-smoothie','overnight-oats','eggs-sourdough','chia-pudding'];
-const snack=['berries','yogurt','apple','walnuts','berries','apple','yogurt'];
+const snack=['berry-smoothie','chia-pudding','eggs-sourdough'];
 export const MORNING_RITUALS=[
  {title:'Green smoothie with breakfast',detail:'Spinach + kiwi/berries + banana + water/soy milk. A food, not a cleanse.'},
  {title:'Ginger-lemon water',detail:'A small diluted ginger-lemon drink if you enjoy it; plain water is equally fine. Skip if reflux worsens.'},
@@ -41,23 +41,44 @@ export const MORNING_RITUALS=[
  {title:'Spinach smoothie',detail:'Greens + banana + fortified soy milk; have protein with breakfast.'},
  {title:'Water + yogurt if tolerated',detail:'Fermented yogurt is optional; probiotics are not a daily requirement for clear skin.'}
 ];
-// 8 deliberately DIFFERENT week menus; repeat favorite breakfasts, rotate mains.
-const WEEK=[
- [['veggie-khichdi','rajma-rice','chickpea-feta-wrap','spinach-dal','brinjal-bhaji','rajma-rice','veggie-khichdi'],['palak-paneer','bhindi-bhaji','butternut-soup','fajita-paneer','sheet-pan-veg','paneer-pizza','ginger-soup']],
- [['potato-pea-bhaji','lentil-pasta','jalapeno-wrap','rajma-rice','egg-bowl','spinach-dal','chickpea-feta-wrap'],['brinjal-bhaji','sheet-pan-veg','ginger-soup','palak-paneer','buffalo-cauliflower','veggie-khichdi','paneer-pizza']],
- [['brinjal-bhaji','chickpea-feta-wrap','veggie-khichdi','egg-bowl','rajma-rice','potato-pea-bhaji','lentil-pasta'],['butternut-soup','palak-paneer','sheet-pan-veg','ginger-soup','bhindi-bhaji','paneer-pizza','spinach-dal']],
- [['spinach-dal','jalapeno-wrap','rajma-rice','zucchini-wrap','veggie-khichdi','chickpea-feta-wrap','egg-bowl'],['fajita-paneer','brinjal-bhaji','butternut-soup','buffalo-cauliflower','palak-paneer','ginger-soup','bhindi-bhaji']],
- [['sabudana-bhaji','rajma-rice','zucchini-wrap','spinach-dal','chickpea-feta-wrap','egg-bowl','veggie-khichdi'],['palak-paneer','sheet-pan-veg','lentil-pasta','ginger-soup','fajita-paneer','butternut-soup','paneer-pizza']],
- [['bhindi-bhaji','veggie-khichdi','jalapeno-wrap','egg-bowl','rajma-rice','zucchini-wrap','chickpea-feta-wrap'],['spinach-dal','buffalo-cauliflower','brinjal-bhaji','ginger-soup','sheet-pan-veg','palak-paneer','lentil-pasta']],
- [['potato-pea-bhaji','lentil-pasta','veggie-khichdi','chickpea-feta-wrap','sabudana-bhaji','rajma-rice','egg-bowl'],['bhindi-bhaji','butternut-soup','paneer-pizza','brinjal-bhaji','ginger-soup','sheet-pan-veg','palak-paneer']],
- [['rajma-rice','chickpea-feta-wrap','spinach-dal','jalapeno-wrap','veggie-khichdi','lentil-pasta','egg-bowl'],['fajita-paneer','bhindi-bhaji','butternut-soup','buffalo-cauliflower','palak-paneer','paneer-pizza','ginger-soup']]
+// Week-level batch cooking: five planned servings of one main lunch/dinner,
+// two easy alternate meals in each category. Each new week changes both mains.
+// Freeze portions you will not eat within 3–4 days; refresh midweek.
+// The plan deliberately does NOT demand seven different home-cooked dishes.
+export const WEEKLY_BATCHES=[
+ {lunchMain:'veggie-khichdi',lunchAlt:'chickpea-feta-wrap',dinnerMain:'brinjal-bhaji',dinnerAlt:'sheet-pan-veg'},
+ {lunchMain:'rajma-rice',lunchAlt:'egg-bowl',dinnerMain:'palak-paneer',dinnerAlt:'ginger-soup'},
+ {lunchMain:'spinach-dal',lunchAlt:'jalapeno-wrap',dinnerMain:'bhindi-bhaji',dinnerAlt:'potato-pea-bhaji'},
+ {lunchMain:'lentil-pasta',lunchAlt:'egg-bowl',dinnerMain:'fajita-paneer',dinnerAlt:'butternut-soup'},
+ {lunchMain:'potato-pea-bhaji',lunchAlt:'chickpea-feta-wrap',dinnerMain:'sheet-pan-veg',dinnerAlt:'paneer-pizza'},
+ {lunchMain:'brinjal-bhaji',lunchAlt:'rajma-rice',dinnerMain:'ginger-soup',dinnerAlt:'palak-paneer'},
+ {lunchMain:'chickpea-feta-wrap',lunchAlt:'egg-bowl',dinnerMain:'buffalo-cauliflower',dinnerAlt:'spinach-dal'},
+ {lunchMain:'bhindi-bhaji',lunchAlt:'sabudana-bhaji',dinnerMain:'butternut-soup',dinnerAlt:'paneer-pizza'}
 ];
+const LUNCH_ALTERNATE_DAYS=[3,6];
+const DINNER_ALTERNATE_DAYS=[2,5];
+export function weeklyBatchSummary(week){
+ const plan=WEEKLY_BATCHES[week-1];
+ if(!plan)return null;
+ return {
+  lunch:[{id:plan.lunchMain,name:recipeById(plan.lunchMain)?.name,servings:5,role:'Main prep'},
+         {id:plan.lunchAlt,name:recipeById(plan.lunchAlt)?.name,servings:2,role:'Quick alternate'}],
+  dinner:[{id:plan.dinnerMain,name:recipeById(plan.dinnerMain)?.name,servings:5,role:'Main prep'},
+          {id:plan.dinnerAlt,name:recipeById(plan.dinnerAlt)?.name,servings:2,role:'Quick alternate'}]
+ };
+}
 const dateIndex=key=>Math.round((Date.parse(key+'T12:00:00Z')-Date.parse('2026-11-25T12:00:00Z'))/86400000);
 export const recipeById=id=>RICH_RECIPES.find(r=>r.id===id);
 export function mealIdsForDate(date){
  const idx=dateIndex(date);if(idx<0||idx>=56)return null;
  const week=Math.floor(idx/7),day=idx%7;
- return {week:week+1,breakfast:breakfast[(day+week)%7],lunch:WEEK[week][0][day],dinner:WEEK[week][1][day],snack:['berry-smoothie','chia-pudding','eggs-sourdough'][day%3],morning:MORNING_RITUALS[(day+week)%7]};
+ const batch=WEEKLY_BATCHES[week];
+ return {week:week+1,breakfast:breakfast[(day+week)%7],
+  lunch:LUNCH_ALTERNATE_DAYS.includes(day)?batch.lunchAlt:batch.lunchMain,
+  dinner:DINNER_ALTERNATE_DAYS.includes(day)?batch.dinnerAlt:batch.dinnerMain,
+  lunchPrep:LUNCH_ALTERNATE_DAYS.includes(day)?'Quick alternate':'Main meal prep',
+  dinnerPrep:DINNER_ALTERNATE_DAYS.includes(day)?'Quick alternate':'Main meal prep',
+  snack:snack[day%3],morning:MORNING_RITUALS[(day+week)%7]};
 }
 export function namedMeal(date,kind,fitness={}){
  const p=mealIdsForDate(date);if(!p)return null;

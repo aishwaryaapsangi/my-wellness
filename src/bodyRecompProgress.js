@@ -27,6 +27,7 @@ export const STARTER_TRIALS={
  'biceps-curl':{weight:15,unit:'lb per dumbbell'},
  'triceps-pushdown':{weight:30,unit:'lb cable setting'},
  'pallof-press':{weight:20,unit:'lb cable setting'},
+ 'controlled-leg-rainbow-with-ball':{weight:0,unit:'lb added (bodyweight + light ball)',note:'Bodyweight with a light ball between the feet. Add no extra weight by default.'},
  'weighted-russian-twist':{weight:20,unit:'lb plate total',note:'This one is based on your reported 20 lb Russian twists.'}
 };
 export const weightUnit=ex=>STARTER_TRIALS[ex.id]?.unit||'lb (verify machine)';

@@ -101,3 +101,14 @@
 .rg-exercise .rg-target strong{overflow-wrap:anywhere;font-size:clamp(14px,1.7vw,18px)}
 .rg-exercise .rg-actions>.rg-button.primary{white-space:normal;text-align:center;line-height:1.45}
 @media(max-width:670px){.rg-exercise .rg-target{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-quick-edit>.rg-field{max-width:none}.rg-quick-edit>.rg-button{font-size:11px}}
+
+/* 2026-11-25: Batch-prepped weekly menus with clear main/alternate labels */
+.rg-prep-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.rg-prep-columns>div{border:1px solid #d8ddc6;background:#fffefa;padding:13px;border-radius:12px}
+.rg-prep-columns h4{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#7b694d;margin:0 0 9px}
+.rg-prep-entry{border-top:1px dashed #e9e4d6;padding:10px 0;display:flex;flex-direction:column;gap:3px}
+.rg-prep-entry strong{font-size:13px;color:#694454;line-height:1.4}
+.rg-prep-entry span{font-size:10px;color:#8f6b70}
+.rg-meal-prep-tag{display:inline-block;margin:4px 0 0 7px;font-size:9px;letter-spacing:.04em;font-weight:700;color:#796044;background:#f5eddf;border:1px solid #e8d9bf;border-radius:6px;padding:2px 6px;white-space:nowrap}
+.rg-meal-card h4 .rg-meal-prep-tag{font-weight:700;text-transform:none;letter-spacing:normal}
+@media(max-width:550px){.rg-prep-columns{grid-template-columns:1fr}.rg-prep-columns>div{padding:10px}.rg-meal-line strong{max-width:75%}}
