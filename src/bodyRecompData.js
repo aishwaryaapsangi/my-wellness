@@ -199,6 +199,9 @@ export const RECOMP_EXERCISES=[
 ];
 // Preserve the user's reported weighted Russian-twist capability as an OPTIONAL core movement.
 RECOMP_EXERCISES.push({id:'weighted-russian-twist',session:'Upper B + Core',name:'Weighted Russian twist (optional)',sets:2,low:12,high:20,startingWeight:20,cue:'Count total slow, controlled touches. Keep your spine comfortable; skip if twisting hurts. This is optional alongside Pallof press.'});
+// Dedicated short abs-focused reunion-day workout. Reuses known core movements
+// so future progression can read the same training history.
+RECOMP_EXERCISES.push({id:'controlled-leg-rainbow-with-ball',session:'Abs + Core',name:'Controlled leg rainbows (ball between feet)',sets:2,low:8,high:12,startingWeight:0,cue:'Move extended legs in a small controlled arc with a light ball between your feet; no added weight. Keep lower back supported and stop if it strains.'});
 export const RECOMP_RECIPES=[
   {
     "id": "blueberry-overnight-oats",
@@ -503,12 +506,14 @@ export const dayIndex=key=>Math.round((utcDay(key)-utcDay(RECOMP_START))/DAY_MS)
 export function buildRecompDay(key){
  const i=dayIndex(key);if(!Number.isFinite(i)||i<0||i>=56)return null;
  const week=Math.floor(i/7)+1;
- const [session,breakfast,lunch,dinner,snack]=TWO_WEEK_MENU[i%14];
- const lifting=['Lower A','Lower B','Upper A + Core','Upper B + Core'].includes(session);
+ let [session,breakfast,lunch,dinner,snack]=TWO_WEEK_MENU[i%14];
+ if(key==='2026-11-25')session='Abs + Core';
+ const lifting=['Lower A','Lower B','Upper A + Core','Upper B + Core','Abs + Core'].includes(session);
  const recovery=session==='Recovery & skill';
  const prep=session==='Rest + meal prep';
- const cardio=lifting?'15–20 min comfortable incline walk or elliptical AFTER lifting':recovery||session==='Optional social activity'?'Optional relaxed 20–30 min walk':'Rest or optional gentle walk';
+ const cardio=lifting?'Your usual 20–30 min incline treadmill (3 mph, 12%) or StairMaster if you have time and energy':recovery||session==='Optional social activity'?'Optional relaxed 20–30 min walk':'Rest or optional gentle walk';
  let note=lifting?'Record load, reps, technique and recovery after training':'Rest counts';
+ if(key==='2026-11-25')note='High-school reunion day: dedicated abs + core session. Keep it manageable before the event; no need to chase exhaustion.';
  if(key==='2026-11-26'||key==='2026-12-25'||key==='2027-01-01')note='Holiday: move or shorten training if needed; no catch-up punishment';
  if(key==='2026-12-22'||key==='2027-01-19')note='Review strength, energy, appetite, cycle and digestion';
  return {date:key,week,session,breakfast,lunch,dinner,snack,cardio,note,focus:WEEK_FOCUS[week-1],prep:recovery?'10-minute greens/protein top-up':prep?'Batch-cook grains, legumes and 2–3 days of vegetables':'Pack next meal and training clothes; no rigid restriction'};
@@ -516,4 +521,10 @@ export function buildRecompDay(key){
 export function allRecompDays(){
  return Array.from({length:56},(_,i)=>buildRecompDay(new Date(utcDay(RECOMP_START)+DAY_MS*i).toISOString().slice(0,10)));
 }
-export function exercisesForSession(session){return RECOMP_EXERCISES.filter(x=>x.session===session)}
+export function exercisesForSession(session){
+ if(session==='Abs + Core'){
+  const chosen=['weighted-straight-leg-captain-s-chair-raise','weighted-russian-twist','pallof-press','controlled-leg-rainbow-with-ball'];
+  return chosen.map(id=>RECOMP_EXERCISES.find(ex=>ex.id===id)).filter(Boolean);
+ }
+ return RECOMP_EXERCISES.filter(x=>x.session===session);
+}
