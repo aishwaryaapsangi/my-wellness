@@ -41,7 +41,7 @@ export function getPrescription(ex,date,fitness={}){
 export function getCardioPrescription(date,fitness={}){
  const defaults={minutes:20,speed:2.8,incline:2,mode:'Treadmill',note:'Comfortable/moderate pace after lifting; use talk test. Edit to match your equipment and energy.'};
  const keys=Object.keys(fitness.cardio||{}).filter(d=>d<date).sort().reverse();
- for(const key of keys){const actual=fitness.cardio[key];if(!actual||actual.completed===false)continue;
+ for(const key of keys){const actual=fitness.cardio[key];if(!actual||actual.completed!==true)continue;
   const minutes=asNumber(actual.minutes),speed=asNumber(actual.speed),incline=asNumber(actual.incline);
   if(minutes===null||speed===null||incline===null)continue;
   const feel=asNumber(actual.effort);
