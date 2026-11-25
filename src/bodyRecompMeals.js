@@ -31,7 +31,7 @@ r('zucchini-wrap','Garlic mushroom feta pita','Lunch / Dinner',['mushrooms','zuc
 r('sabudana-bhaji','Vegetable sabudana bhaji with yogurt','Lunch / Dinner',['potato','peas','carrots','yogurt','peanut_butter','lemon','spices'],'Soaked sabudana (tapioca pearls), potato, peas, carrot, cumin, lemon, roasted ground peanuts; yogurt on side','Soak sabudana according to package, steam potato, toss briefly with vegetables and spices until pearls turn translucent.','Tapioca is mostly starch; pair with yogurt or eggs for protein. Confirm if this is the sabu bhaji you meant.','Carbs, vegetables; protein side')
 ];
 const breakfast=['overnight-oats','eggs-sourdough','chia-pudding','berry-smoothie','overnight-oats','eggs-sourdough','chia-pudding'];
-const snack=['berries','yogurt','apple','walnuts','berries','apple','yogurt'];
+const snack=['berry-smoothie','chia-pudding','eggs-sourdough'];
 export const MORNING_RITUALS=[
  {title:'Green smoothie with breakfast',detail:'Spinach + kiwi/berries + banana + water/soy milk. A food, not a cleanse.'},
  {title:'Ginger-lemon water',detail:'A small diluted ginger-lemon drink if you enjoy it; plain water is equally fine. Skip if reflux worsens.'},
@@ -57,17 +57,6 @@ export const WEEKLY_BATCHES=[
 ];
 const LUNCH_ALTERNATE_DAYS=[3,6];
 const DINNER_ALTERNATE_DAYS=[2,5];
-const breakfast=['overnight-oats','eggs-sourdough','chia-pudding','berry-smoothie','overnight-oats','eggs-sourdough','chia-pudding'];
-const snack=['berry-smoothie','chia-pudding','eggs-sourdough'];
-export const MORNING_RITUALS=[
- {title:'Green smoothie with breakfast',detail:'Spinach + kiwi/berries + banana + water/soy milk. A food, not a cleanse.'},
- {title:'Ginger-lemon water',detail:'A small diluted ginger-lemon drink if you enjoy it; plain water is equally fine. Skip if reflux worsens.'},
- {title:'Plain water + fruit',detail:'Water first; berries or banana alongside breakfast. No supplement required.'},
- {title:'Collagen water — optional',detail:'Collagen is not necessary for skin or muscle; evidence is limited. Water or a fruit smoothie is a fine alternative.'},
- {title:'Soaked chia with breakfast',detail:'Enjoy your soaked chia pudding; start with a smaller portion if it causes gas.'},
- {title:'Spinach smoothie',detail:'Greens + banana + fortified soy milk; have protein with breakfast.'},
- {title:'Water + yogurt if tolerated',detail:'Fermented yogurt is optional; probiotics are not a daily requirement for clear skin.'}
-];
 export function weeklyBatchSummary(week){
  const plan=WEEKLY_BATCHES[week-1];
  if(!plan)return null;
