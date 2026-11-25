@@ -13,12 +13,12 @@ test('eight-week program has 56 continuous dated days',()=>{
 });
 
 test('exercise prescriptions match the workbook by session',()=>{
- assert.equal(RECOMP_EXERCISES.length,22);
+ assert.equal(RECOMP_EXERCISES.length,24);
  assert.equal(exercisesForSession('Lower A').length,4);
- assert.equal(exercisesForSession('Upper A + Core').length,5);
+ assert.equal(exercisesForSession('Upper A + Core').length,6);
  assert.equal(exercisesForSession('Lower B').length,5);
- assert.equal(exercisesForSession('Upper B + Core').length,7);
- assert.equal(exercisesForSession('Abs + Core').length,4);
+ assert.equal(exercisesForSession('Upper B + Core').length,8);
+ assert.equal(exercisesForSession('Abs + Core').length,5);
  const raised=RECOMP_EXERCISES.find(x=>x.name.includes('straight-leg'));
  assert.equal(raised.startingWeight,5);
  assert.equal(raised.sets,3);
@@ -45,10 +45,32 @@ test('November 25 high-school reunion has an abs session, not rest',()=>{
  const d=buildRecompDay('2026-11-25');
  assert.equal(d.session,'Abs + Core');
  assert.match(d.note,/reunion/i);
- assert.equal(exercisesForSession(d.session).length,4);
+ assert.equal(exercisesForSession(d.session).length,5);
  const names=exercisesForSession(d.session).map(x=>x.name.toLowerCase());
  assert.ok(names.some(x=>x.includes('captain')));
  assert.ok(names.some(x=>x.includes('russian twist')));
  assert.ok(names.some(x=>x.includes('rainbow')));
  assert.equal(buildRecompDay('2026-11-26').session,'Lower A');
+});
+
+test('core moves are challenging and recur in both upper-day core sessions',()=>{
+ const abs=exercisesForSession('Abs + Core');
+ assert.ok(abs.find(x=>x.id==='weighted-dead-bug'&&x.startingWeight===30));
+ const chair=abs.find(x=>x.id==='weighted-straight-leg-captain-s-chair-raise');
+ assert.equal(chair.sets,3);assert.equal(chair.low,10);assert.equal(chair.high,15);
+ const twist=abs.find(x=>x.id==='weighted-russian-twist');
+ assert.equal(twist.sets,3);assert.equal(twist.low,18);assert.equal(twist.high,24);
+ assert.ok(abs.find(x=>x.id==='cable-crunch'));
+ assert.ok(exercisesForSession('Upper A + Core').some(x=>x.id==='weighted-dead-bug'));
+ assert.ok(exercisesForSession('Upper B + Core').some(x=>x.id==='cable-crunch'));
+});
+test('dumbbell-only hip thrusts and 10 lb arm baselines are explicitly used',()=>{
+ const a=exercisesForSession('Lower A').find(x=>x.id==='machine-or-barbell-hip-thrust');
+ const b=exercisesForSession('Lower B').find(x=>x.id==='glute-bridge');
+ assert.match(a.name,/Dumbbell/i);assert.match(b.name,/Dumbbell/i);
+ assert.ok(!/barbell/i.test(a.name));
+ for(const id of ['biceps-curl','dumbbell-shoulder-press','lateral-raise']){
+   const x=RECOMP_EXERCISES.find(x=>x.id===id);
+   assert.equal(x.startingWeight,10);
+ }
 });
