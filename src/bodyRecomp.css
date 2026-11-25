@@ -91,3 +91,13 @@
 .recomp-garden .rg-grid>.rg-panel{align-self:start}
 @media(max-width:860px){.rg-target{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-grocery-grid{grid-template-columns:1fr}}
 @media(max-width:670px){.rg-target{gap:6px;padding:11px}.rg-target strong{font-size:15px}.rg-log-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.rg-mini-lift strong{max-width:54%}.rg-grocery-grid{grid-template-columns:1fr}}
+
+/* One-tap planned lifts: the editable prescription is visible before logging. */
+.rg-quick-edit{display:flex;align-items:end;gap:10px;flex-wrap:wrap;padding:13px 15px;border:1px solid #e9c8d1;background:#fff7f7;border-radius:12px;margin:12px 0 10px}
+.rg-quick-edit>.rg-field{flex:1 1 195px;max-width:250px;margin:0}
+.rg-quick-edit>.rg-button{flex-shrink:0;margin-bottom:2px}
+.rg-quick-edit>.rg-soft{flex-basis:100%;margin:0;font-size:11px}
+.rg-exercise .rg-target{grid-template-columns:1.1fr 1fr .85fr}
+.rg-exercise .rg-target strong{overflow-wrap:anywhere;font-size:clamp(14px,1.7vw,18px)}
+.rg-exercise .rg-actions>.rg-button.primary{white-space:normal;text-align:center;line-height:1.45}
+@media(max-width:670px){.rg-exercise .rg-target{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-quick-edit>.rg-field{max-width:none}.rg-quick-edit>.rg-button{font-size:11px}}
