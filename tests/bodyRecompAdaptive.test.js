@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {getPrescription,getCardioPrescription,incrementFor,STARTER_TRIALS,weightUnit} from '../src/bodyRecompProgress.js';
-import {RICH_RECIPES,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates} from '../src/bodyRecompMeals.js';
+import {RICH_RECIPES,mealIdsForDate,namedMeal,weeklyGrocery,weeklyMealDates,weeklyBatchSummary} from '../src/bodyRecompMeals.js';
 import {RECOMP_EXERCISES} from '../src/bodyRecompData.js';
 
 const raised=RECOMP_EXERCISES.find(x=>x.name.includes('straight-leg'));
@@ -133,4 +133,41 @@ test('reported 12-3 incline treadmill and distinct StairMaster suggestions',()=>
    getCardioPrescription('2026-12-04',fitness,'Treadmill').incline],[3,12]);
  assert.deepEqual([getCardioPrescription('2026-12-04',fitness,'StairMaster').minutes,
    getCardioPrescription('2026-12-04',fitness,'StairMaster').level],[22,8]);
+});
+
+test('every week has five batch-prepped portions and two alternative days per meal',()=>{
+ for(let week=1;week<=8;week++){
+  const dates=weeklyMealDates(week);
+  const plan=weeklyBatchSummary(week);
+  assert.ok(plan,'missing batch plan week '+week);
+  assert.equal(plan.lunch[0].servings,5);
+  assert.equal(plan.lunch[1].servings,2);
+  assert.equal(plan.dinner[0].servings,5);
+  assert.equal(plan.dinner[1].servings,2);
+  for(const kind of ['lunch','dinner']){
+   const tally=new Map();
+   for(const day of dates){
+    const menu=mealIdsForDate(day);
+    tally.set(menu[kind],(tally.get(menu[kind])||0)+1);
+   }
+   assert.equal(tally.size,2,kind+' in week '+week+' should have only two batch choices');
+   assert.equal(tally.get(plan[kind][0].id),5);
+   assert.equal(tally.get(plan[kind][1].id),2);
+  }
+ }
+});
+test('main meal-prep lunches and dinners change each new week',()=>{
+ const mainLunches=Array.from({length:8},(_,i)=>weeklyBatchSummary(i+1).lunch[0].id);
+ const mainDinners=Array.from({length:8},(_,i)=>weeklyBatchSummary(i+1).dinner[0].id);
+ assert.equal(new Set(mainLunches).size,8);
+ assert.equal(new Set(mainDinners).size,8);
+});
+test('day-specific meal swaps still override the batched meal and update groceries',()=>{
+ const date='2026-11-26';
+ const before=namedMeal(date,'lunch',{});
+ const after=namedMeal(date,'lunch',{mealOverrides:{[date]:{lunch:'Egg & spinach rice bowl'}}});
+ assert.notEqual(before,after);
+ const normal=weeklyGrocery(1,{});
+ const altered=weeklyGrocery(1,{mealOverrides:{[date]:{lunch:'Egg & spinach rice bowl'}}});
+ assert.notDeepEqual(normal,altered);
 });
