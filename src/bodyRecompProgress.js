@@ -30,7 +30,7 @@ export const STARTER_TRIALS={
  'triceps-pushdown':{weight:20,unit:'lb cable setting',note:'Cable stack trials are separate from the user-reported 10 lb dumbbells.'},
  'pallof-press':{weight:15,unit:'lb cable setting'},
  'controlled-leg-rainbow-with-ball':{weight:0,unit:'lb added (bodyweight + light ball)',note:'Bodyweight with a light ball between the feet. Add no extra weight by default.'},
- 'weighted-dead-bug':{weight:20,unit:'lb single dumbbell held with both hands',note:'You reported up to 30 lb. Starting trial at 20 lb allows slow control; edit if comfortable.'},
+ 'weighted-dead-bug':{weight:30,unit:'lb single dumbbell held with both hands',note:'30 lb based on your reported held-weight dead-bug routine; edit down if form changes.'},
  'cable-crunch':{weight:25,unit:'lb cable stack setting',note:'Cable resistance varies. Choose a load that allows controlled spinal flexion, not momentum.'},
  'weighted-russian-twist':{weight:20,unit:'lb plate total',note:'This one is based on your reported 20 lb Russian twists.'}
 };
