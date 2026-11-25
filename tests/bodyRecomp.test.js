@@ -13,11 +13,11 @@ test('eight-week program has 56 continuous dated days',()=>{
 });
 
 test('exercise prescriptions match the workbook by session',()=>{
- assert.equal(RECOMP_EXERCISES.length,20);
+ assert.equal(RECOMP_EXERCISES.length,21);
  assert.equal(exercisesForSession('Lower A').length,4);
  assert.equal(exercisesForSession('Upper A + Core').length,5);
  assert.equal(exercisesForSession('Lower B').length,5);
- assert.equal(exercisesForSession('Upper B + Core').length,6);
+ assert.equal(exercisesForSession('Upper B + Core').length,7);
  const raised=RECOMP_EXERCISES.find(x=>x.name.includes('straight-leg'));
  assert.equal(raised.startingWeight,5);
  assert.equal(raised.sets,3);
