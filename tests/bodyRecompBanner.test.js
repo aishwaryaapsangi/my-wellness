@@ -18,7 +18,7 @@ test('body recomp banner uses dedicated art, not a coding scene',()=>{
  const banner=readFileSync(join('src','BodyRecompBanner.jsx'),'utf8');
  const page=readFileSync(join('src','BodyRecomp.jsx'),'utf8');
  assert.match(page,/<BodyRecompBanner\/>/);
- for(const name of ['woman','clouds','nyc-window'])assert.ok(banner.includes('name="'+name+'"'),'missing '+name);
- for(const name of ['drinks','gear'])assert.ok(!banner.includes('name="'+name+'"'),'banner too crowded with '+name);
+ for(const name of ['woman','nyc-window'])assert.ok(banner.includes('name="'+name+'"'),'missing '+name);
+ for(const name of ['drinks','gear','clouds'])assert.ok(!banner.includes('name="'+name+'"'),'banner too crowded with '+name);
  assert.doesNotMatch(banner,/laptop|coding|code editor|SWE\b/i);
 });
