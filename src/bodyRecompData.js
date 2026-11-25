@@ -197,6 +197,8 @@ export const RECOMP_EXERCISES=[
     "cue": "Resist rotation; count reps per side."
   }
 ];
+// Preserve the user's reported weighted Russian-twist capability as an OPTIONAL core movement.
+RECOMP_EXERCISES.push({id:'weighted-russian-twist',session:'Upper B + Core',name:'Weighted Russian twist (optional)',sets:2,low:12,high:20,startingWeight:20,cue:'Count total slow, controlled touches. Keep your spine comfortable; skip if twisting hurts. This is optional alongside Pallof press.'});
 export const RECOMP_RECIPES=[
   {
     "id": "blueberry-overnight-oats",
