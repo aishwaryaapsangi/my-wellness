@@ -63,3 +63,31 @@
 .rg-date-line-label{font-size:10px;font-weight:900;letter-spacing:.12em}
 .rg-date-line .rg-date-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 @media(max-width:620px){.rg-date-line{margin-top:17px;padding:10px 11px}.rg-date-line-label{font-size:9px}}
+
+
+/* Nov 2026: deliberate, easier-to-scan workout and nutrition journal */
+.rg-target{display:grid;grid-template-columns:1fr 1.1fr .85fr;gap:10px;margin:11px 0;padding:13px 14px;background:linear-gradient(110deg,#f9edf0,#fff9f3);border:1px solid #eed1d7;border-radius:12px}
+.rg-target strong{font-size:17px;color:#7f3853;font-family:'Fraunces',Georgia,serif;display:block;line-height:1.3}
+.rg-target .rg-label{font-size:9px}
+.rg-details{border:1px dashed #e6c7cd;background:#fffcf8;border-radius:10px;padding:10px 12px;margin:10px 0}
+.rg-details>summary{cursor:pointer;color:#8c4a62;font-weight:800;font-size:12px}
+.rg-details .rg-form-grid{padding:12px 0 4px}
+.rg-log-heading{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:14px 0 8px;border-top:1px solid #f0dcdf;padding-top:14px;color:#7c4058}
+.rg-log-heading b{font-size:12px}.rg-log-heading span{font-size:10px;color:#896e7a}
+.rg-mini-lift{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px dashed #e6d8d1}
+.rg-mini-lift span{font-size:11px;color:#76535e;flex:1}
+.rg-mini-lift strong{font-size:11px;text-align:right;color:#8c4862;white-space:normal;max-width:48%}
+.rg-meal-line{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px dashed #eddde0;padding:9px 0}
+.rg-meal-line span{font-size:10px;color:#a5687d;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.rg-meal-line strong{text-align:right;max-width:72%;font-size:12px;color:#6c4657}
+.rg-food-visual{min-height:84px;background:linear-gradient(120deg,#f8e7e8,#f6edd8);border:1px solid #ead7d4;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:49px;position:relative;margin-bottom:14px;overflow:hidden}
+.rg-food-visual span{position:absolute;right:19px;top:8px;color:#c38a9a;font-size:24px}
+.rg-recipe-card h4{margin-bottom:10px}.rg-recipe-card .rg-field{max-width:250px;margin:6px 0 12px}
+.rg-grocery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:16px}
+.rg-grocery-line{display:grid;grid-template-columns:minmax(0,1fr) 108px;gap:12px;padding:7px 0;border-bottom:1px dashed #eedce0;align-items:center}
+.rg-grocery-line label{display:flex;gap:8px;align-items:center;font-size:12px;color:#614856;min-width:0}
+.rg-grocery-line input[type=checkbox]{accent-color:#9d4e6b;flex-shrink:0}.rg-grocery-line .rg-input{padding:7px 8px;font-size:11px}
+.rg-session-list{margin:16px 0}.rg-session-list .rg-exercise{box-shadow:1px 2px 0 #f3e7e4}
+.recomp-garden .rg-grid>.rg-panel{align-self:start}
+@media(max-width:860px){.rg-target{grid-template-columns:repeat(2,minmax(0,1fr))}.rg-grocery-grid{grid-template-columns:1fr}}
+@media(max-width:670px){.rg-target{gap:6px;padding:11px}.rg-target strong{font-size:15px}.rg-log-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.rg-mini-lift strong{max-width:54%}.rg-grocery-grid{grid-template-columns:1fr}}
