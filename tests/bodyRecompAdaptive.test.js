@@ -92,7 +92,7 @@ test('every named exercise has a distinct editable trial prescription with corre
 test('changing an editable planned weight cascades even before a workout is completed',()=>{
  const hip=RECOMP_EXERCISES.find(x=>x.id==='machine-or-barbell-hip-thrust');
  const initial=getPrescription(hip,'2026-12-03',{});
- assert.equal(initial.weight,70);
+ assert.equal(initial.weight,25);
  const p={planOverrides:{'2026-11-26':{[hip.id]:{weight:'95',reps:[10,10,10]}}}};
  assert.equal(getPrescription(hip,'2026-11-26',p).weight,95);
  const future=getPrescription(hip,'2026-12-03',p);
@@ -170,4 +170,54 @@ test('day-specific meal swaps still override the batched meal and update groceri
  const normal=weeklyGrocery(1,{});
  const altered=weeklyGrocery(1,{mealOverrides:{[date]:{lunch:'Egg & spinach rice bowl'}}});
  assert.notDeepEqual(normal,altered);
+});
+
+test('updated dumbbell and core loads are prefilled for every future workout date',()=>{
+ const hip=RECOMP_EXERCISES.find(x=>x.id==='machine-or-barbell-hip-thrust');
+ const bridge=RECOMP_EXERCISES.find(x=>x.id==='glute-bridge');
+ const curl=RECOMP_EXERCISES.find(x=>x.id==='biceps-curl');
+ const shoulder=RECOMP_EXERCISES.find(x=>x.id==='dumbbell-shoulder-press');
+ const deadbug=RECOMP_EXERCISES.find(x=>x.id==='weighted-dead-bug');
+ const cable=RECOMP_EXERCISES.find(x=>x.id==='cable-crunch');
+ assert.equal(getPrescription(hip,'2026-11-26',{}).weight,25);
+ assert.equal(getPrescription(bridge,'2026-11-30',{}).weight,25);
+ assert.equal(weightUnit(hip),'lb single dumbbell total');
+ assert.equal(getPrescription(curl,'2026-12-01',{}).weight,10);
+ assert.equal(getPrescription(shoulder,'2026-11-27',{}).weight,10);
+ assert.equal(getPrescription(deadbug,'2026-11-25',{}).weight,30);
+ assert.equal(getPrescription(cable,'2026-11-25',{}).weight,25);
+});
+test('core sets completed Nov 25 recalculate the subsequent Friday core workout',()=>{
+ const ex=RECOMP_EXERCISES.find(x=>x.id==='weighted-dead-bug');
+ const fitness={logs:{'2026-11-25':{[ex.id]:{weight:'30',reps:['12','12','12'],rir:'2',pain:'no',form:'yes'}}}};
+ const next=getPrescription(ex,'2026-11-27',fitness);
+ assert.equal(next.weight,32.5);
+ assert.deepEqual(next.reps,[8,8,8]);
+ fitness.logs['2026-11-25'][ex.id].reps=['8','10','10'];
+ const corrected=getPrescription(ex,'2026-11-27',fitness);
+ assert.equal(corrected.weight,30);
+ assert.deepEqual(corrected.reps,[9,10,10]);
+});
+test('future Upper B + Core Russian twists react to prior log and editable actuals',()=>{
+ const ex=RECOMP_EXERCISES.find(x=>x.id==='weighted-russian-twist');
+ const fitness={logs:{'2026-11-25':{[ex.id]:{weight:'20',reps:['24','24','24'],rir:'2',pain:'no',form:'yes'}}}};
+ const dec1=getPrescription(ex,'2026-12-01',fitness);
+ assert.equal(dec1.weight,22.5);
+ fitness.logs['2026-11-25'][ex.id].reps=['20','18','20'];
+ assert.equal(getPrescription(ex,'2026-12-01',fitness).weight,20);
+});
+test('leg rainbows stay at bodyweight instead of adding 5 lb after top reps',()=>{
+ const ex=RECOMP_EXERCISES.find(x=>x.id==='controlled-leg-rainbow-with-ball');
+ const f={logs:{'2026-11-25':{[ex.id]:{weight:'0',reps:['14','14'],rir:'2',pain:'no',form:'yes'}}}};
+ const next=getPrescription(ex,'2026-11-27',f);
+ assert.equal(next.weight,0);
+ assert.equal(next.increase,false);
+ assert.match(next.reason,/tempo|slowing/i);
+});
+test('user-changed dumbbell loads are carried forward and do not revert to trials',()=>{
+ const ex=RECOMP_EXERCISES.find(x=>x.id==='machine-or-barbell-hip-thrust');
+ const data={planOverrides:{'2026-11-26':{[ex.id]:{weight:'35',reps:[10,10,10]}}}};
+ assert.equal(getPrescription(ex,'2026-12-10',data).weight,35);
+ data.planOverrides['2026-11-26'][ex.id].weight='20';
+ assert.equal(getPrescription(ex,'2026-12-10',data).weight,20);
 });
