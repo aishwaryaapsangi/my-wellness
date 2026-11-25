@@ -1,7 +1,7 @@
 // Per-exercise DRAFT loads. These numbers are editable first-session trials,
 // NOT measurements of the user's strength. Machine stacks are not comparable.
 // Future session targets come from plan edits and completed actuals.
-import {buildRecompDay,RECOMP_START} from './bodyRecompData.js';
+import {RECOMP_START} from './bodyRecompData.js';
 
 const numeric=value=>value!==''&&value!==null&&value!==undefined&&Number.isFinite(Number(value))?Number(value):null;
 const round=value=>Math.round(value*100)/100;
@@ -78,7 +78,7 @@ export function getPrescription(ex,date,fitness={}){
  const selected=Date.parse(date+'T12:00:00Z');
  for(let time=start;time<=selected&&time<start+56*86400000;time+=86400000){
   const key=new Date(time).toISOString().slice(0,10);
-  if(buildRecompDay(key)?.session!==ex.session)continue;
+  // Include off-schedule workouts too: user may rearrange days.
   const plan=fitness.planOverrides?.[key]?.[ex.id]||{};
   const weight=numeric(plan.weight);
   if(weight!==null&&weight>=0){
